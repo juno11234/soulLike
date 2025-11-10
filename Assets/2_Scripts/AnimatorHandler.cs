@@ -5,6 +5,7 @@ public class AnimatorHandler : MonoBehaviour
     public Animator anim;
     public InputHandler inputHandler;
     public PlayerLocomotion playerLocomotion;
+    private PlayerManager _playerManager;
 
     public bool canRotate;
 
@@ -13,6 +14,7 @@ public class AnimatorHandler : MonoBehaviour
 
     public void Initialize()
     {
+        _playerManager = GetComponentInParent<PlayerManager>();
         anim = GetComponent<Animator>();
         inputHandler = GetComponentInParent<InputHandler>();
         playerLocomotion = GetComponentInParent<PlayerLocomotion>();
@@ -20,7 +22,7 @@ public class AnimatorHandler : MonoBehaviour
         _horizontal = Animator.StringToHash("Horizontal");
     }
 
-    public void UpdateAnimatorValue(float verticalMovement, float horizontalMovement)
+    public void UpdateAnimatorValue(float verticalMovement, float horizontalMovement, bool isSprinting)
     {
         #region Vertical
 
@@ -76,6 +78,11 @@ public class AnimatorHandler : MonoBehaviour
 
         #endregion
 
+        if (isSprinting)
+        {
+            v = 2;
+        }
+
         anim.SetFloat(_vertical, v, 0.1f, Time.deltaTime);
         anim.SetFloat(_horizontal, h, 0.1f, Time.deltaTime);
     }
@@ -99,7 +106,7 @@ public class AnimatorHandler : MonoBehaviour
 
     private void OnAnimatorMove()
     {
-        if (inputHandler.isInteracting == false)
+        if (_playerManager.isInteracting == false)
             return;
 
         float delta = Time.deltaTime;
