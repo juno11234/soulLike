@@ -29,8 +29,10 @@ public class PlayerStateMachine : MonoBehaviour
     public float RollSpeed => rollSpeed;
     public float BackstepSpeed => backstepSpeed;
     public float MoveAmount => _moveAmount;
-    public bool SpaceBarPressed => _spacePressed;
     public Animator Animator => _animator;
+
+    public bool SpaceBarPressed => _spacePressed;
+    public bool LmbPressed => _lmbPressed;
 
     //참조들
     private InputManager _inputManager;
@@ -38,13 +40,16 @@ public class PlayerStateMachine : MonoBehaviour
     private Camera _mainCam;
     private Animator _animator;
 
+    //입력용
+    private bool _spacePressed;
+    private bool _lmbPressed;
+
     //로컬 변수들
     private float _currentSpeed;
     private IState _currentState;
     private float _yaw;
     private float _pitch;
     private float _moveAmount;
-    private bool _spacePressed;
     private Vector3 _velocity;
     private float _gravity = -9.81f;
     private bool _sphereHit;
@@ -62,7 +67,11 @@ public class PlayerStateMachine : MonoBehaviour
     private void Start()
     {
         _inputManager.OnSpaceBarInput += SpaceBarInput;
+        _inputManager.OnLMBInput += LMBInput;
+
         ChangeState(new WalkState(this));
+        Cursor.lockState = CursorLockMode.Locked;
+        Cursor.visible = false;
     }
 
     private void Update()
@@ -167,7 +176,7 @@ public class PlayerStateMachine : MonoBehaviour
         Gizmos.DrawWireSphere(origin + Vector3.down * groundCheckDistance, groundCheckRadius); // 끝점
     }
 
-    public void Rolling(float speed)
+    public void ForwardMove(float speed)
     {
         float s = Mathf.Lerp(speed, 0, Time.deltaTime * 3f);
         Vector3 moveVec = transform.forward * (s * Time.deltaTime);
@@ -186,8 +195,15 @@ public class PlayerStateMachine : MonoBehaviour
         _spacePressed = isPressed;
     }
 
-    public void PlayTargetAniClip(int hash)
+    public Action<bool> OnLMBAction;
+
+    private void LMBInput(bool isPressed)
     {
-        _animator.CrossFade(hash, 0.2f);
+        OnLMBAction?.Invoke(isPressed);
+    }
+
+    public void PlayTargetAniClip(int hash, float transition)
+    {
+        _animator.CrossFade(hash, transition);
     }
 }

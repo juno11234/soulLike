@@ -12,7 +12,7 @@ public class BackStepState : IState
 
     public void Enter()
     {
-        _player.PlayTargetAniClip(_backStep);
+        _player.PlayTargetAniClip(_backStep,0f);
     }
 
     public void UpdateLogic()

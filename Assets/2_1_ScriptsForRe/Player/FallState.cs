@@ -13,7 +13,7 @@ public class FallState : IState
 
     public void Enter()
     {
-        _player.PlayTargetAniClip(_fall);
+        _player.PlayTargetAniClip(_fall, 0.2f);
     }
 
     public void UpdateLogic()
@@ -26,6 +26,6 @@ public class FallState : IState
 
     public void Exit()
     {
-        _player.PlayTargetAniClip(_land);
+        _player.PlayTargetAniClip(_land, 0.2f);
     }
 }

@@ -13,6 +13,7 @@ public class WalkState : IState
 
     public void Enter()
     {
+        _player.OnLMBAction += EnterAttackState;
     }
 
     public void UpdateLogic()
@@ -21,7 +22,6 @@ public class WalkState : IState
         {
             _player.ChangeState(new FallState(_player));
         }
-
         
         if (_player.SpaceBarPressed)
         {
@@ -51,5 +51,14 @@ public class WalkState : IState
     public void Exit()
     {
         _timer = 0f;
+        _player.OnLMBAction -= EnterAttackState;
+    }
+
+    private void EnterAttackState(bool isPressed)
+    {
+        if (isPressed)
+        {
+            _player.ChangeState(new AttackState(_player));
+        }
     }
 }

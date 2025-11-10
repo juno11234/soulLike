@@ -12,12 +12,12 @@ public class RollState : IState
 
     public void Enter()
     {
-        _player.PlayTargetAniClip(_roll);
+        _player.PlayTargetAniClip(_roll,0.2f);
     }
 
     public void UpdateLogic()
     {
-        _player.Rolling(_player.RollSpeed);
+        _player.ForwardMove(_player.RollSpeed);
         AnimatorStateInfo stateInfo = _player.Animator.GetCurrentAnimatorStateInfo(0);
         if (stateInfo.IsName("Rolling") && stateInfo.normalizedTime >= 0.9f)
         {

@@ -10,7 +10,8 @@ public class InputManager : MonoBehaviour
     public delegate void InputButtonHandler(bool isPressed);
 
     public event InputButtonHandler OnSpaceBarInput;
-    
+    public event InputButtonHandler OnLMBInput;
+    public event InputButtonHandler OnShiftInput;
     public Vector2 MoveInput { get; private set; }
     public Vector2 CameraInput { get; private set; }
 
@@ -21,10 +22,15 @@ public class InputManager : MonoBehaviour
 
         _player.Move.performed += ctx => MoveInput = ctx.ReadValue<Vector2>();
         _player.Camera.performed += ctx => CameraInput = ctx.ReadValue<Vector2>();
-        
+
         _player.Roll.performed += ctx => OnSpaceBarInput?.Invoke(true);
         _player.Roll.canceled += ctx => OnSpaceBarInput?.Invoke(false);
-        
+
+        _player.Attack.performed += ctx => OnLMBInput?.Invoke(true);
+        _player.Attack.canceled += ctx => OnLMBInput?.Invoke(false);
+
+        _player.Shift.performed += ctx => OnShiftInput?.Invoke(true);
+        _player.Shift.canceled += ctx => OnShiftInput?.Invoke(false);
     }
 
     private void OnEnable()
