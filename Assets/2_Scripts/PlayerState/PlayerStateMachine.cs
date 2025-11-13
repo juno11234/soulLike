@@ -195,7 +195,7 @@ public class PlayerStateMachine : MonoBehaviour
         _spacePressed = isPressed;
     }
 
-    public Action<bool> OnLMBAction;
+    public event Action<bool> OnLMBAction;
 
     private void LMBInput(bool isPressed)
     {
