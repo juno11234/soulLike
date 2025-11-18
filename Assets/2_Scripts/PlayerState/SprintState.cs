@@ -3,7 +3,6 @@ using UnityEngine;
 public class SprintState : IState
 {
     private PlayerStateMachine _player;
-    private readonly int _backStep = Animator.StringToHash("BackStep");
 
     public SprintState(PlayerStateMachine player)
     {
@@ -12,10 +11,17 @@ public class SprintState : IState
 
     public void Enter()
     {
+        
     }
 
     public void UpdateLogic()
     {
+        if (_player.NoStamina)
+        {
+            _player.ChangeState(new WalkState(_player));
+            return;
+        }
+        
         if (_player.SpaceBarPressed == false)
         {
             _player.ChangeState(new WalkState(_player));

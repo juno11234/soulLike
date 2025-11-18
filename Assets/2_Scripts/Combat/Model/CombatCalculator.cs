@@ -12,16 +12,5 @@ public static class CombatCalculator
 
         return damage;
     }
-
-    public static int CalculateHeal(FighterStats target, int currentHp, int healAmount)
-    {
-        int healHp = currentHp + healAmount;
-
-        if (healHp > target.MaxHealth)
-        {
-            healHp = target.MaxHealth;
-        }
-
-        return healHp;
-    }
+    
 }

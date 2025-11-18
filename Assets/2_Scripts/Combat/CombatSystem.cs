@@ -36,7 +36,7 @@ public class CombatSystem : MonoBehaviour
                     inGameEvent.Receiver.TakeDamage(combatEvent);
                     break;
                 case InGameEvent.EventType.Heal:
-                    var healEvent = inGameEvent as CombatEvent;
+                    var healEvent = inGameEvent as HealthEvent;
                     inGameEvent.Receiver.TakeHeal(healEvent);
                     break;
             }
@@ -47,7 +47,7 @@ public class CombatSystem : MonoBehaviour
 
     public void RegisterMonster(IFighter monster)
     {
-        if (monsterDict.TryAdd(monster.MainCollider, monster) == false)
+        if (monsterDict.TryAdd(monster.mainModelCollider, monster) == false)
         {
             Debug.Log("몬스터가 이미존재 덮어씀");
         }

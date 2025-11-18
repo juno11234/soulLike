@@ -609,9 +609,10 @@ GameObject:
   - component: {fileID: 6550478306907817063}
   - component: {fileID: 4256363908022780162}
   - component: {fileID: 3311000502321163802}
+  - component: {fileID: 2610203081295225147}
   m_Layer: 0
   m_Name: Player_Re
-  m_TagString: Untagged
+  m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -685,10 +686,14 @@ MonoBehaviour:
   walkSpeed: 7
   sprintSpeed: 14
   rotationSpeed: 10
-  rollSpeed: 7
+  rollSpeed: 6
   backstepSpeed: 2
   groundCheckDistance: 0.9
   groundCheckRadius: 0.3
+  rollStamina: -30
+  backStepStamina: -10
+  attackStamina: -30
+  staminaRegenRate: 20
   cameraPivot: {fileID: 5281421290582985050}
   cameraSensitivity: 0.3
   cameraMinPitch: -30
@@ -719,6 +724,22 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5687f887c9f420d4aabbd01b424a892d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &2610203081295225147
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3015964465634868752}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6ca121e63a3ec854dbf47610abcb32f2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  stats: {fileID: 11400000, guid: 17319b6c1a33beb4a81858f27227b3db, type: 2}
+  hpBar: {fileID: 0}
+  staminaBar: {fileID: 0}
+  modelCollider: {fileID: 2156585219353377287}
 --- !u!1 &3103651646940218065
 GameObject:
   m_ObjectHideFlags: 0

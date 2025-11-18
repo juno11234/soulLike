@@ -12,7 +12,14 @@ public class BackStepState : IState
 
     public void Enter()
     {
-        _player.PlayTargetAniClip(_backStep,0f);
+        if (_player.NoStamina)
+        {
+            _player.ChangeState(new WalkState(_player));
+            return;
+        }
+        
+        _player.StaminaChange(_player.BackStepStamina);
+        _player.PlayTargetAniClip(_backStep, 0f);
     }
 
     public void UpdateLogic()

@@ -5,6 +5,7 @@ public class WalkState : IState
 {
     private PlayerStateMachine _player;
     private float _timer = 0f;
+    private float _staminaTimer = 0f;
 
     public WalkState(PlayerStateMachine player)
     {
@@ -22,7 +23,7 @@ public class WalkState : IState
         {
             _player.ChangeState(new FallState(_player));
         }
-        
+
         if (_player.SpaceBarPressed)
         {
             _timer += Time.deltaTime;
@@ -51,6 +52,7 @@ public class WalkState : IState
     public void Exit()
     {
         _timer = 0f;
+        _staminaTimer = 0f;
         _player.OnLMBAction -= EnterAttackState;
     }
 

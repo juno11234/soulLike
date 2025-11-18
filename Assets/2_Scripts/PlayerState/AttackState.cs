@@ -20,6 +20,13 @@ public class AttackState : IState
 
     public void Enter()
     {
+        if (_player.NoStamina)
+        {
+            _player.ChangeState(new WalkState(_player));
+            return;
+        }
+
+        _player.StaminaChange(_player.AttackStamina);
         _player.PlayTargetAniClip(_attack1, 0f);
         _player.OnLMBAction += SecondAttackReady;
         _player.OnLMBAction += ThirdAttackReady;
@@ -40,6 +47,7 @@ public class AttackState : IState
         {
             if (_thirdAttackReady && _2AnimationPlayed == false)
             {
+                _player.StaminaChange(_player.AttackStamina);
                 _player.PlayTargetAniClip(_attack3, 0.2f);
                 _2AnimationPlayed = true;
             }
@@ -53,6 +61,7 @@ public class AttackState : IState
         {
             if (_secondAttackReady && _animationPlayed == false)
             {
+                _player.StaminaChange(_player.AttackStamina);
                 _player.PlayTargetAniClip(_attack2, 0.2f);
                 _animationPlayed = true;
             }
@@ -62,6 +71,7 @@ public class AttackState : IState
             }
         }
     }
+
     public void Exit()
     {
         _player.OnLMBAction -= SecondAttackReady;
@@ -73,7 +83,7 @@ public class AttackState : IState
 
     private void SecondAttackReady(bool isPressed)
     {
-        if (isPressed)
+        if (isPressed && _player.NoStamina == false)
         {
             _secondAttackReady = true;
         }
@@ -81,7 +91,7 @@ public class AttackState : IState
 
     private void ThirdAttackReady(bool isPressed)
     {
-        if (isPressed && _animationPlayed)
+        if (isPressed && _animationPlayed && _player.NoStamina == false)
         {
             _thirdAttackReady = true;
         }

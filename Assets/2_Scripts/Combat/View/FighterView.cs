@@ -1,21 +1,25 @@
+using System;
 using UnityEngine;
 using UnityEngine.UI;
 
+
 public class FighterView : MonoBehaviour, IFighter
 {
-    [Header("Model")]
     [SerializeField] private FighterStats stats;
-
-    [Header("View Components")]
-    [SerializeField] private Animator animator;
     [SerializeField] private Slider hpBar; // 예시: HP 바
-    
+    [SerializeField] private Slider staminaBar; // 예시: HP 바
+    [SerializeField] private Collider modelCollider;
     public FighterViewModel ViewModel { get; private set; }
 
-    // IFighter 구현
-    public Collider MainCollider => GetComponent<Collider>();
-    public GameObject GameObject => gameObject;
+    public bool Invincible { get; set; }
 
+    public event Action<int> OnTakeDamage;
+    public event Action OnStaminaZero;
+    public event Action OnDied;
+    
+    // IFighter 구현
+    public Collider mainModelCollider => modelCollider;
+    public GameObject GameObject => gameObject;
 
     private void Awake()
     {
@@ -24,45 +28,59 @@ public class FighterView : MonoBehaviour, IFighter
 
         // 2. ViewModel의 데이터 변경을 View에 반영하도록 구독(Subscribe)합니다.
         ViewModel.CurrentHealth.Subscribe(UpdateHpBar);
+        ViewModel.CurrentStamina.Subscribe(UpdateStaminaBar);
         ViewModel.IsDead.Subscribe(OnDeathStateChanged);
 
-        // 3. ViewModel의 이벤트를 구독하여 애니메이션, 이펙트 등을 처리합니다.
-        ViewModel.OnDamaged += (damage) => animator.SetTrigger("Hit");
-        ViewModel.OnDied += () => animator.SetTrigger("Die");
+        ViewModel.OnTakeDamage+=OnTakeDamageInvoke;
+        ViewModel.OnDied += OnDiedInvoke;
+        ViewModel.OnStaminaZero += OnStaminaZeroInvoke;
     }
 
     private void UpdateHpBar(int newHealth)
     {
-        if (hpBar != null)
-        {
-            hpBar.value = (float)newHealth / stats.MaxHealth;
-        }
-        Debug.Log($"{gameObject.name}의 체력 변경: {newHealth}");
+        hpBar.value = (float)newHealth / stats.MaxHealth;
+    }
+
+    private void UpdateStaminaBar(float newStamina)
+    {
+        staminaBar.value = newStamina / stats.MaxStamina;
     }
 
     private void OnDeathStateChanged(bool isDead)
     {
-        if (isDead)
-        {
-            Debug.Log($"{gameObject.name}가 사망했습니다.");
-            // TODO: 추가적인 사망 처리 (예: 충돌 비활성화, AI 중지 등)
-        }
+        
     }
-    
+
+    private void OnTakeDamageInvoke(int damage)
+    {
+        OnTakeDamage?.Invoke(damage);
+    }
+
+    private void OnStaminaZeroInvoke()
+    {
+        OnStaminaZero?.Invoke();
+    }
+
+    private void OnDiedInvoke()
+    {
+        OnDied?.Invoke();
+    }
     // 기존 IFighter 인터페이스와의 호환성을 위한 메서드들
     // 이제 로직은 ViewModel에 위임합니다.
     public void TakeDamage(CombatEvent combatEvent)
     {
+        if (Invincible) return;
         // 이벤트 시스템을 통해 공격받는 경우
-        var attackerView = combatEvent.Sender as FighterView;
-        if (attackerView != null)
-        {
-            attackerView.ViewModel.Attack(this.ViewModel);
-        }
+        ViewModel.TakeDamage(combatEvent.Damage);
     }
 
-    public void TakeHeal(CombatEvent combatEvent)
+    public void StaminaChange(float stamina)
     {
-        // TODO: 힐 로직을 ViewModel에 구현해야 합니다.
+        ViewModel.StaminaChange(stamina);
+    }
+
+    public void TakeHeal(HealthEvent healEvent)
+    {
+        ViewModel.TakeHeal(healEvent.HealAmount);
     }
 }

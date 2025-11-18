@@ -15,6 +15,12 @@ public class PlayerStateMachine : MonoBehaviour
     [SerializeField] private float groundCheckDistance = 2f;
     [SerializeField] private float groundCheckRadius = 1.3f;
 
+    [Header(("StaminaAmount"))] [SerializeField]
+    private float rollStamina;
+
+    [SerializeField] private float backStepStamina;
+    [SerializeField] private float attackStamina;
+    [SerializeField] private float staminaRegenRate;
 
     [Header("CamSetting")] [SerializeField]
     private Transform cameraPivot;
@@ -31,18 +37,26 @@ public class PlayerStateMachine : MonoBehaviour
     public float MoveAmount => _moveAmount;
     public Animator Animator => _animator;
 
+    public float RollStamina => rollStamina;
+    public float BackStepStamina => backStepStamina;
+    public float AttackStamina => attackStamina;
+
     public bool SpaceBarPressed => _spacePressed;
     public bool LmbPressed => _lmbPressed;
+    public bool NoStamina => _noStamina;
 
     //참조들
     private InputManager _inputManager;
     private CharacterController _controller;
     private Camera _mainCam;
     private Animator _animator;
+    private FighterView _fighterView;
 
     //입력용
     private bool _spacePressed;
     private bool _lmbPressed;
+    private bool _noStamina;
+    public event Action<bool> OnLMBAction;
 
     //로컬 변수들
     private float _currentSpeed;
@@ -57,6 +71,7 @@ public class PlayerStateMachine : MonoBehaviour
 
     private void Awake()
     {
+        _fighterView = GetComponent<FighterView>();
         _inputManager = GetComponent<InputManager>();
         _controller = GetComponent<CharacterController>();
         _animator = GetComponentInChildren<Animator>();
@@ -67,7 +82,11 @@ public class PlayerStateMachine : MonoBehaviour
     private void Start()
     {
         _inputManager.OnSpaceBarInput += SpaceBarInput;
-        _inputManager.OnLMBInput += LMBInput;
+        _inputManager.OnLMBInput += LmbInput;
+
+        _fighterView.OnDied += Die;
+        _fighterView.OnTakeDamage += TakeDamage;
+        _fighterView.OnStaminaZero += StaminaZero;
 
         ChangeState(new WalkState(this));
         Cursor.lockState = CursorLockMode.Locked;
@@ -77,6 +96,9 @@ public class PlayerStateMachine : MonoBehaviour
     private void Update()
     {
         _currentState?.UpdateLogic();
+        //Debug.Log(_currentState);
+        HandleStaminaRegeneration();
+        
         _velocity.y += _gravity * Time.deltaTime;
         if (_velocity.y < _gravity)
         {
@@ -151,7 +173,7 @@ public class PlayerStateMachine : MonoBehaviour
             v = 0f;
         }
 
-        if (isSprinting)
+        if (isSprinting && v > 0)
         {
             v = 2f;
         }
@@ -183,6 +205,11 @@ public class PlayerStateMachine : MonoBehaviour
         _controller.Move(moveVec);
     }
 
+    public void ActiveInvisible(bool active)
+    {
+        _fighterView.Invincible = active;
+    }
+
     public void Backstep(float speed)
     {
         float s = Mathf.Lerp(speed, 0, Time.deltaTime * 3f);
@@ -195,9 +222,7 @@ public class PlayerStateMachine : MonoBehaviour
         _spacePressed = isPressed;
     }
 
-    public event Action<bool> OnLMBAction;
-
-    private void LMBInput(bool isPressed)
+    private void LmbInput(bool isPressed)
     {
         OnLMBAction?.Invoke(isPressed);
     }
@@ -205,5 +230,43 @@ public class PlayerStateMachine : MonoBehaviour
     public void PlayTargetAniClip(int hash, float transition)
     {
         _animator.CrossFade(hash, transition);
+    }
+
+    private void Die()
+    {
+        ChangeState(new DieState(this));
+    }
+
+    private void HandleStaminaRegeneration()
+    {
+        if (_currentState is WalkState)
+        {
+            if (NoStamina == false)
+            {
+                StaminaChange((staminaRegenRate * Time.deltaTime));
+            }
+        }
+    }
+
+    public void StaminaChange(float stamina)
+    {
+        _fighterView.StaminaChange(stamina);
+    }
+
+    public void StaminaZero()
+    {
+        _noStamina = true;
+    }
+
+    public void StaminaZeroCancel()
+    {
+        _noStamina = false;
+    }
+
+    private void TakeDamage(int damage)
+    {
+        if (_currentState is HitState) return;
+
+        ChangeState(new HitState(this));
     }
 }

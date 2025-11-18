@@ -4,7 +4,6 @@ using UnityEngine;
 public class FighterStats : ScriptableObject
 {
     public int MaxHealth = 100;
-    public int AttackPower = 10;
+    public float MaxStamina = 100f;
     public int Defense = 5;
-    
 }
