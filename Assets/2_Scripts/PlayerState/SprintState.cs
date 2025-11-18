@@ -11,7 +11,6 @@ public class SprintState : IState
 
     public void Enter()
     {
-        
     }
 
     public void UpdateLogic()
@@ -21,6 +20,8 @@ public class SprintState : IState
             _player.ChangeState(new WalkState(_player));
             return;
         }
+
+        _player.StaminaChange(-20f * Time.deltaTime);
         
         if (_player.SpaceBarPressed == false)
         {

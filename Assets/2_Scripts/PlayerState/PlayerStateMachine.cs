@@ -20,7 +20,8 @@ public class PlayerStateMachine : MonoBehaviour
 
     [SerializeField] private float backStepStamina;
     [SerializeField] private float attackStamina;
-    [SerializeField] private float staminaRegenRate;
+    [SerializeField] private float staminaRegenRateAmount;
+    [SerializeField] private float staminaRegenRateTime;
 
     [Header("CamSetting")] [SerializeField]
     private Transform cameraPivot;
@@ -64,6 +65,7 @@ public class PlayerStateMachine : MonoBehaviour
     private float _yaw;
     private float _pitch;
     private float _moveAmount;
+    private float _staminaTimer = 0f;
     private Vector3 _velocity;
     private float _gravity = -9.81f;
     private bool _sphereHit;
@@ -98,7 +100,18 @@ public class PlayerStateMachine : MonoBehaviour
         _currentState?.UpdateLogic();
         //Debug.Log(_currentState);
         HandleStaminaRegeneration();
-        
+
+        if (_noStamina)
+        {
+            _staminaTimer += Time.deltaTime;
+            if (_staminaTimer >= staminaRegenRateTime)
+            {
+                _noStamina = false;
+                _staminaTimer = 0f;
+            }
+        }
+
+
         _velocity.y += _gravity * Time.deltaTime;
         if (_velocity.y < _gravity)
         {
@@ -243,7 +256,7 @@ public class PlayerStateMachine : MonoBehaviour
         {
             if (NoStamina == false)
             {
-                StaminaChange((staminaRegenRate * Time.deltaTime));
+                StaminaChange((staminaRegenRateAmount * Time.deltaTime));
             }
         }
     }
@@ -256,11 +269,6 @@ public class PlayerStateMachine : MonoBehaviour
     public void StaminaZero()
     {
         _noStamina = true;
-    }
-
-    public void StaminaZeroCancel()
-    {
-        _noStamina = false;
     }
 
     private void TakeDamage(int damage)

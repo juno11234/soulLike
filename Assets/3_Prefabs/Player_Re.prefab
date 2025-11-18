@@ -693,7 +693,8 @@ MonoBehaviour:
   rollStamina: -30
   backStepStamina: -10
   attackStamina: -30
-  staminaRegenRate: 20
+  staminaRegenRateAmount: 20
+  staminaRegenRateTime: 1.5
   cameraPivot: {fileID: 5281421290582985050}
   cameraSensitivity: 0.3
   cameraMinPitch: -30
