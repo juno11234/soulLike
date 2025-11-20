@@ -33,6 +33,8 @@ public static class BuildAuto
         // 저장할 디렉토리 확인 및 생성
         Directory.CreateDirectory(buildPath);
         
+        Debug.Log($"Current working directory: {Directory.GetCurrentDirectory()}");
+        
         Debug.Log($"Starting build for target: {BuildTarget.StandaloneWindows64}");
         Debug.Log($"Scenes to build: {string.Join(", ", scenes)}");
         Debug.Log($"Output location: {locationPathName}");
