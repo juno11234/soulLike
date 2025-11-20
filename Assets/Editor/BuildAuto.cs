@@ -2,19 +2,18 @@ using UnityEngine;
 
 using UnityEditor;
 using UnityEditor.Build.Reporting;
-using UnityEngine;
 using System.Linq;
 using System.IO;
 
 public static class BuildAuto
 {
     /// <summary>
-    /// This method is called by Jenkins to build the project.
+    /// 젠킨스빌드를 위한 스크립트
     /// </summary>
     public static void Build()
     {
-        // Get enabled scenes from Build Settings
-        var scenes = EditorBuildSettings.scenes
+        // 씬의 이름을 가져옴 .활성화된 .경로정보만 .배열로변환
+        string[] scenes = EditorBuildSettings.scenes
             .Where(s => s.enabled)
             .Select(s => s.path)
             .ToArray();
@@ -26,19 +25,19 @@ public static class BuildAuto
             return;
         }
 
-        // Define build path and executable name
+        // 저장 경로 및 실행파일 이름
         string buildPath = "Builds/StandaloneWindows64";
         string exeName = "SoulLike.exe";
         string locationPathName = Path.Combine(buildPath, exeName);
 
-        // Ensure the target directory exists.
+        // 저장할 디렉토리 확인 및 생성
         Directory.CreateDirectory(buildPath);
         
         Debug.Log($"Starting build for target: {BuildTarget.StandaloneWindows64}");
         Debug.Log($"Scenes to build: {string.Join(", ", scenes)}");
         Debug.Log($"Output location: {locationPathName}");
 
-        // Configure build options
+        //  빌드옵션설정
         BuildPlayerOptions buildPlayerOptions = new BuildPlayerOptions
         {
             scenes = scenes,
@@ -47,11 +46,11 @@ public static class BuildAuto
             options = BuildOptions.None // No special options
         };
 
-        // Start the build
+        // 빌드 시작
         BuildReport report = BuildPipeline.BuildPlayer(buildPlayerOptions);
         BuildSummary summary = report.summary;
 
-        // Report the result and exit with a status code
+        // 결과 보고 및 종료
         if (summary.result == BuildResult.Succeeded)
         {
             Debug.Log($"Build succeeded!");
