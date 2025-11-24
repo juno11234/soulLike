@@ -13,31 +13,60 @@ using UnityEngine.AI;
 
 public class Leaf_CheckAttackRange : BtNode
 {
-    private Transform _self;
-    private Transform _target;
-    private Animator _animator;
-    private float _range;
-    private bool _isStarted;
+    private readonly Transform _self;
+    private readonly Transform _target;
+    private readonly Animator _animator;
+    private readonly NavMeshAgent _agent;
+    private readonly float _range;
 
-    public Leaf_CheckAttackRange(Transform self, Transform target, float range, Animator animator)
+    public Leaf_CheckAttackRange(Transform self, Transform target, float range, Animator animator, NavMeshAgent agent)
     {
         _self = self;
         _target = target;
         _range = range;
         _animator = animator;
+        _agent = agent;
     }
 
     public override NodeState Evaluate()
     {
-        if (_isStarted == false)
-        {
-            _isStarted = true;
-            _animator.SetFloat("Horizontal", 0);
-            _animator.SetFloat("Vertical", 0);
-        }
-
         float distance = Vector3.Distance(_self.position, _target.position);
-        return distance <= _range ? NodeState.Success : NodeState.Failure;
+        if (distance <= _range)
+        {
+            // [책임 추가] 범위 안에 들어왔으므로, 모든 이동을 확실하게 멈춘다.
+            _agent.isStopped = true;
+            _animator.SetFloat("Vertical", 0f);
+            _agent.ResetPath(); // 혹시 모를 이전 경로를 완전히 초기화
+            return NodeState.Success;
+        }
+        else
+        {
+            // [책임 추가] 범위 밖이므로, 다른 노드가 AI를 움직일 수 있도록 허용한다.
+            return NodeState.Failure;
+        }
+    }
+}
+
+public class Leaf_CheckSkillAble : BtNode
+{
+    private BossMonsterAI _boss;
+
+    public Leaf_CheckSkillAble(BossMonsterAI boss)
+    {
+        _boss = boss;
+    }
+
+    public override NodeState Evaluate()
+    {
+        if (_boss.secondPhase && _boss.skillCool == false)
+        {
+            _boss.skillCool = true;
+            return NodeState.Success;
+        }
+        else
+        {
+            return NodeState.Failure;
+        }
     }
 }
 
@@ -103,22 +132,28 @@ public class Leaf_Strafe : BtNode
 public class Leaf_Chase : BtNode
 {
     private static readonly int Vertical = Animator.StringToHash("Vertical");
+    private BossMonsterAI _boss;
     private Transform _self;
     private Transform _target;
     private Animator _animator;
     private NavMeshAgent _agent;
-    private float _range;
+    private float _attackRange;
+    private float _skillRange;
 
     private bool _isStarted;
     private float _timer;
 
-    public Leaf_Chase(Transform self, Transform target, Animator animator, NavMeshAgent agent, float range)
+
+    public Leaf_Chase(BossMonsterAI boss, Transform self, Transform target, Animator animator, NavMeshAgent agent,
+        float attackRange, float skillRange)
     {
+        _boss = boss;
         _self = self;
         _target = target;
         _animator = animator;
         _agent = agent;
-        _range = range;
+        _attackRange = attackRange;
+        _skillRange = skillRange;
         _timer = 0;
     }
 
@@ -135,25 +170,29 @@ public class Leaf_Chase : BtNode
         // 플레이어를 계속 바라보게 함
         Vector3 lookPos = _target.position;
         lookPos.y = _self.position.y;
-        _self.LookAt(lookPos);
+        //_self.LookAt(lookPos);
 
         float distance = Vector3.Distance(_self.position, _target.position);
 
-        if (distance > _range)
+        if (distance >= _skillRange && _boss.secondPhase)
+        {
+            _agent.SetDestination(_target.position);
+            return NodeState.Running;
+        }
+        else if (distance >= _attackRange)
         {
             // 목표 지점을 계속 업데이트하여 플레이어를 추적하게 함
             _agent.SetDestination(_target.position);
             return NodeState.Running;
         }
-        else
-        {
-            // 목표에 도달하면 멈춤
-            _agent.isStopped = true;
-            _isStarted = false; // 다음 추적을 위해 상태 초기화
-            _animator.SetFloat(Vertical, 0f); // 애니메이션 정지
-            _timer = 0;
-            return NodeState.Success;
-        }
+
+        // 목표에 도달하면 멈춤
+        _agent.isStopped = true;
+        _agent.ResetPath();
+        _isStarted = false; // 다음 추적을 위해 상태 초기화
+        _animator.SetFloat(Vertical, 0f); // 애니메이션 정지
+        _timer = 0;
+        return NodeState.Success;
     }
 }
 
@@ -189,23 +228,29 @@ public class Leaf_Wait : BtNode
 
 public class Leaf_PerformAttack : BtNode
 {
-    private Transform _self;
-    private Transform _target;
-    private MonsterAI _monster;
-    private Animator _animator;
-    private AttackData _attackData;
+    private readonly Transform _self;
+    private readonly Transform _target;
+    private readonly BossMonsterAI _bossMonster;
+    private readonly Animator _animator;
+    private readonly AttackData _attackData;
+    private RootMotionHandler _rootHandler;
 
+    private bool _useRoot;
     private float _timer;
     private bool _isAttacking;
     private bool _isDamaged;
 
-    public Leaf_PerformAttack(Transform self, Transform target, MonsterAI monster, Animator animator, AttackData data)
+    public Leaf_PerformAttack
+    (Transform self, Transform target, BossMonsterAI bossMonster, Animator animator, AttackData data, bool useRoot,
+        RootMotionHandler rootHandler)
     {
         _self = self;
         _target = target;
-        _monster = monster;
+        _bossMonster = bossMonster;
         _animator = animator;
         _attackData = data;
+        _useRoot = useRoot;
+        _rootHandler = rootHandler;
     }
 
     public override NodeState Evaluate()
@@ -216,7 +261,11 @@ public class Leaf_PerformAttack : BtNode
             _isAttacking = true;
             _isDamaged = false;
             _timer = 0f;
-            // 애니메이션 실행 및 전조 효과(빨간색 등)를 넣을 수 있음
+        }
+
+        if (_useRoot)
+        {
+            _animator.applyRootMotion = true;
         }
 
         _timer += Time.deltaTime;
@@ -224,8 +273,6 @@ public class Leaf_PerformAttack : BtNode
         // 2. 선딜레이 구간 (Wind-up)
         if (_timer < _attackData.windupTime)
         {
-            // 이 구간에서는 플레이어를 천천히 바라보게 할지, 멈출지 결정할 수 있음.
-            // 소울류는 보통 공격 직전까지는 방향을 살짝 보정해줌.
             RotateTowardsTarget();
             return NodeState.Running;
         }
@@ -239,18 +286,40 @@ public class Leaf_PerformAttack : BtNode
                 _isDamaged = true; // 데미지는 한 번만
             }
 
+            if (_useRoot)
+            {
+                Vector3 pos = _self.position + _rootHandler.DeltaPos;
+
+                pos.y = 0f;
+                _self.position = pos;
+                _self.rotation *= _rootHandler.DeltaRot;
+            }
+            else
+            {
+                // 루트 모션을 사용하지 않는 공격일 때만 수동으로 전진
+                float s = Mathf.Lerp(3f, 0, Time.deltaTime * 3f);
+                Vector3 moveVec = _self.forward * (s * Time.deltaTime);
+                _self.position += moveVec;
+            }
+
             return NodeState.Running;
         }
+
 
         // 4. 후딜레이 구간 (Recovery)
         if (_timer < _attackData.windupTime + _attackData.activeTime + _attackData.recoveryTime)
         {
-            // 이 구간에서는 몬스터가 움직이지 못함 (플레이어의 공격 기회)
             return NodeState.Running;
         }
 
         // 5. 종료 (모든 시간이 지남)
         _isAttacking = false; // 상태 초기화
+        if (_useRoot)
+        {
+            _animator.applyRootMotion = false;
+        }
+        // 루트 모션을 사용했었다면, 상태를 반드시 원래대로 되돌려서 다음 행동(추적 등)이 정상 작동하게 함
+
         return NodeState.Success; // 공격 행동 완료!
     }
 

@@ -2799,6 +2799,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4698510891800151897}
   - component: {fileID: 8624159512969208118}
+  - component: {fileID: 8933193265960868806}
   m_Layer: 0
   m_Name: Character_EvilGod_01
   m_TagString: Untagged
@@ -2854,6 +2855,18 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
+--- !u!114 &8933193265960868806
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8116641842916882840}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d533800a3558f3244ad17c0644c51a63, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &8498543936588576825
 GameObject:
   m_ObjectHideFlags: 0
@@ -2865,6 +2878,8 @@ GameObject:
   - component: {fileID: 4755192252329600955}
   - component: {fileID: 4354135693575843932}
   - component: {fileID: 4074675808489813722}
+  - component: {fileID: 6328843659588686378}
+  - component: {fileID: 6217314431387405653}
   m_Layer: 0
   m_Name: Boss
   m_TagString: Untagged
@@ -2901,11 +2916,15 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   player: {fileID: 0}
-  attackRange: 2
-  detectRange: 10
-  patrolPoints: []
-  attackData:
+  attackRange: 5
+  skillRange: 10
+  combo1:
   - {fileID: 11400000, guid: 2691b8cc10c20914fb6bec74cdfca55b, type: 2}
+  - {fileID: 11400000, guid: d42ff205a697795458c2b5240a3372ae, type: 2}
+  - {fileID: 11400000, guid: 95908878d31615546a783f517b3635e0, type: 2}
+  skillData:
+  - {fileID: 11400000, guid: 748f7b57ea7eabf4f9014b0bddba28ba, type: 2}
+  - {fileID: 11400000, guid: 8cd8509a1f8226643a004ad0f5554797, type: 2}
 --- !u!195 &4074675808489813722
 NavMeshAgent:
   m_ObjectHideFlags: 0
@@ -2928,6 +2947,56 @@ NavMeshAgent:
   m_BaseOffset: 0
   m_WalkableMask: 4294967295
   m_ObstacleAvoidanceType: 4
+--- !u!136 &6328843659588686378
+CapsuleCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8498543936588576825}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Radius: 0.6
+  m_Height: 5
+  m_Direction: 1
+  m_Center: {x: 0, y: 2.5, z: 0}
+--- !u!54 &6217314431387405653
+Rigidbody:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8498543936588576825}
+  serializedVersion: 4
+  m_Mass: 1
+  m_Drag: 0
+  m_AngularDrag: 0.05
+  m_CenterOfMass: {x: 0, y: 0, z: 0}
+  m_InertiaTensor: {x: 1, y: 1, z: 1}
+  m_InertiaRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ImplicitCom: 1
+  m_ImplicitTensor: 1
+  m_UseGravity: 1
+  m_IsKinematic: 1
+  m_Interpolate: 0
+  m_Constraints: 0
+  m_CollisionDetection: 0
 --- !u!1 &8780782378423601673
 GameObject:
   m_ObjectHideFlags: 0

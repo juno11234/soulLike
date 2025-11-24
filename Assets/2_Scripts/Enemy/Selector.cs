@@ -102,11 +102,11 @@ public class Sequence : BtNode
         return State;
     }
 }
-public class SequenceWithMemory : BtNode
+public class Sequence_Memory : BtNode
 {
     private int _lastRunningChildIndex = 0;
 
-    public SequenceWithMemory(List<BtNode> children) : base(children) { }
+    public Sequence_Memory(List<BtNode> children) : base(children) { }
 
     public override NodeState Evaluate()
     {

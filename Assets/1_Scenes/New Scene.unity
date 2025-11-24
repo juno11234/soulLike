@@ -1640,25 +1640,9 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 1901186782}
     - target: {fileID: 4354135693575843932, guid: 2045929046cbfdf4b9c01d78878ae670, type: 3}
-      propertyPath: attackRange
-      value: 5
+      propertyPath: skillRange
+      value: 11
       objectReference: {fileID: 0}
-    - target: {fileID: 4354135693575843932, guid: 2045929046cbfdf4b9c01d78878ae670, type: 3}
-      propertyPath: combo1.Array.size
-      value: 3
-      objectReference: {fileID: 0}
-    - target: {fileID: 4354135693575843932, guid: 2045929046cbfdf4b9c01d78878ae670, type: 3}
-      propertyPath: 'combo1.Array.data[0]'
-      value: 
-      objectReference: {fileID: 11400000, guid: 2691b8cc10c20914fb6bec74cdfca55b, type: 2}
-    - target: {fileID: 4354135693575843932, guid: 2045929046cbfdf4b9c01d78878ae670, type: 3}
-      propertyPath: 'combo1.Array.data[1]'
-      value: 
-      objectReference: {fileID: 11400000, guid: d42ff205a697795458c2b5240a3372ae, type: 2}
-    - target: {fileID: 4354135693575843932, guid: 2045929046cbfdf4b9c01d78878ae670, type: 3}
-      propertyPath: 'combo1.Array.data[2]'
-      value: 
-      objectReference: {fileID: 11400000, guid: 95908878d31615546a783f517b3635e0, type: 2}
     - target: {fileID: 4755192252329600955, guid: 2045929046cbfdf4b9c01d78878ae670, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0
