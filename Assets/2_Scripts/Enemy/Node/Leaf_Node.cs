@@ -15,17 +15,13 @@ public class Leaf_CheckAttackRange : BtNode
 {
     private readonly Transform _self;
     private readonly Transform _target;
-    private readonly Animator _animator;
-    private readonly NavMeshAgent _agent;
     private readonly float _range;
 
-    public Leaf_CheckAttackRange(Transform self, Transform target, float range, Animator animator, NavMeshAgent agent)
+    public Leaf_CheckAttackRange(Transform self, Transform target, float range)
     {
         _self = self;
         _target = target;
         _range = range;
-        _animator = animator;
-        _agent = agent;
     }
 
     public override NodeState Evaluate()
@@ -34,9 +30,7 @@ public class Leaf_CheckAttackRange : BtNode
         if (distance <= _range)
         {
             // [책임 추가] 범위 안에 들어왔으므로, 모든 이동을 확실하게 멈춘다.
-            _agent.isStopped = true;
-            _animator.SetFloat("Vertical", 0f);
-            _agent.ResetPath(); // 혹시 모를 이전 경로를 완전히 초기화
+            // 혹시 모를 이전 경로를 완전히 초기화
             return NodeState.Success;
         }
         else
@@ -44,6 +38,28 @@ public class Leaf_CheckAttackRange : BtNode
             // [책임 추가] 범위 밖이므로, 다른 노드가 AI를 움직일 수 있도록 허용한다.
             return NodeState.Failure;
         }
+    }
+}
+
+public class Leaf_Cleaner : BtNode
+{
+    private readonly Animator _animator;
+    private readonly NavMeshAgent _agent;
+
+    public Leaf_Cleaner(Animator animator, NavMeshAgent agent)
+    {
+        _animator = animator;
+        _agent = agent;
+    }
+
+    public override NodeState Evaluate()
+    {
+        _animator.SetFloat("Vertical", 0f);
+        _animator.SetFloat("Horizontal", 0f);
+        _agent.isStopped = true;
+        _agent.ResetPath();
+        
+        return NodeState.Success;
     }
 }
 
@@ -100,10 +116,10 @@ public class Leaf_Strafe : BtNode
         {
             _isStarted = true;
             _strafeDirection = Random.Range(0, 2) == 0 ? -1 : 1;
-            _animator.SetFloat(Horizontal, _strafeDirection);
             _agent.updateRotation = false;
         }
 
+        _animator.SetFloat(Horizontal, _strafeDirection, 0.12f, Time.deltaTime);
         _timer += Time.deltaTime;
         // 바라보기
         Vector3 lookPos = _target.position;
@@ -116,11 +132,12 @@ public class Leaf_Strafe : BtNode
         Vector3 strafeDir = Vector3.Cross(targetDir, Vector3.up) * _strafeDirection;
         // 이동 실행
         _agent.Move(strafeDir * (_agent.speed * Time.deltaTime));
-        if (_timer >= _strafeDuration * 0.9)
+
+        if (_timer >= _strafeDuration)
         {
             _timer = 0;
-            _animator.SetFloat(Horizontal, 0);
             _isStarted = false;
+            _animator.SetFloat(Horizontal, 0);
             _agent.updateRotation = true;
             return NodeState.Success;
         }
@@ -137,23 +154,18 @@ public class Leaf_Chase : BtNode
     private Transform _target;
     private Animator _animator;
     private NavMeshAgent _agent;
-    private float _attackRange;
-    private float _skillRange;
+
 
     private bool _isStarted;
     private float _timer;
 
-
-    public Leaf_Chase(BossMonsterAI boss, Transform self, Transform target, Animator animator, NavMeshAgent agent,
-        float attackRange, float skillRange)
+    public Leaf_Chase(BossMonsterAI boss, Transform self, Transform target, Animator animator, NavMeshAgent agent)
     {
         _boss = boss;
         _self = self;
         _target = target;
         _animator = animator;
         _agent = agent;
-        _attackRange = attackRange;
-        _skillRange = skillRange;
         _timer = 0;
     }
 
@@ -162,55 +174,52 @@ public class Leaf_Chase : BtNode
         if (_isStarted == false)
         {
             _isStarted = true;
-            _animator.SetFloat(Vertical, 1f);
+
             _agent.isStopped = false; // 에이전트 이동 시작
         }
 
         _timer += Time.deltaTime;
+        _animator.SetFloat(Vertical, 1f, 0.12f, Time.deltaTime);
+
         // 플레이어를 계속 바라보게 함
         Vector3 lookPos = _target.position;
         lookPos.y = _self.position.y;
         //_self.LookAt(lookPos);
 
-        float distance = Vector3.Distance(_self.position, _target.position);
-
-        if (distance >= _skillRange && _boss.secondPhase)
+        if (_timer >= 3f)
         {
-            _agent.SetDestination(_target.position);
-            return NodeState.Running;
-        }
-        else if (distance >= _attackRange)
-        {
-            // 목표 지점을 계속 업데이트하여 플레이어를 추적하게 함
-            _agent.SetDestination(_target.position);
-            return NodeState.Running;
+            _agent.isStopped = true;
+            _agent.ResetPath();
+            _isStarted = false; // 다음 추적을 위해 상태 초기화
+            _animator.SetFloat(Vertical, 0f);
+            _timer = 0f;
+            return NodeState.Success;
         }
 
-        // 목표에 도달하면 멈춤
-        _agent.isStopped = true;
-        _agent.ResetPath();
-        _isStarted = false; // 다음 추적을 위해 상태 초기화
-        _animator.SetFloat(Vertical, 0f); // 애니메이션 정지
-        _timer = 0;
-        return NodeState.Success;
+        _agent.SetDestination(_target.position);
+        return NodeState.Running;
     }
 }
 
 public class Leaf_Wait : BtNode
 {
     private Animator _animator;
+    private NavMeshAgent _agent;
     private bool _isStarted;
     private float _timer;
 
-    public Leaf_Wait(Animator animator)
+    public Leaf_Wait(Animator animator, NavMeshAgent agent)
     {
         _animator = animator;
+        _agent = agent;
     }
 
     public override NodeState Evaluate()
     {
         if (_isStarted == false)
         {
+            _agent.ResetPath();
+
             _isStarted = true;
         }
 

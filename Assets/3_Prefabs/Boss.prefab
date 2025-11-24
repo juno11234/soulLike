@@ -2917,7 +2917,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   player: {fileID: 0}
   attackRange: 5
-  skillRange: 10
+  skillRange: 11
   combo1:
   - {fileID: 11400000, guid: 2691b8cc10c20914fb6bec74cdfca55b, type: 2}
   - {fileID: 11400000, guid: d42ff205a697795458c2b5240a3372ae, type: 2}
@@ -2925,6 +2925,9 @@ MonoBehaviour:
   skillData:
   - {fileID: 11400000, guid: 748f7b57ea7eabf4f9014b0bddba28ba, type: 2}
   - {fileID: 11400000, guid: 8cd8509a1f8226643a004ad0f5554797, type: 2}
+  secondPhase: 0
+  skillCool: 0
+  skillTimer: 0
 --- !u!195 &4074675808489813722
 NavMeshAgent:
   m_ObjectHideFlags: 0

@@ -56,13 +56,16 @@ public class BossMonsterAI : MonoBehaviour
 
         BtNode checkSkillAble = new Leaf_CheckSkillAble(this);
         BtNode strafeAction = new Leaf_Strafe(transform, player, _agent, _animator, 2f);
-        BtNode chase = new Leaf_Chase(this, transform, player, _animator, _agent, attackRange, skillRange);
+        BtNode chase = new Leaf_Chase(this, transform, player, _animator, _agent);
         BtNode checkAttackRange =
-            new Leaf_CheckAttackRange(transform, player, attackRange, _animator, _agent);
-        BtNode checkSkillRange = new Leaf_CheckAttackRange(transform, player, skillRange, _animator, _agent);
-        BtNode wait = new Leaf_Wait(_animator);
+            new Leaf_CheckAttackRange(transform, player, attackRange);
+        BtNode checkSkillRange = new Leaf_CheckAttackRange(transform, player, skillRange);
+        BtNode wait = new Leaf_Wait(_animator, _agent);
+        BtNode cleaner = new Leaf_Cleaner(_animator, _agent);
 
         #endregion
+
+        //이름 통일하기 시퀀스는 Sequence 랜덩은 ran 셀렉터는 Or
 
         #region 공격 관련
 
@@ -83,19 +86,19 @@ public class BossMonsterAI : MonoBehaviour
         Sequence_Memory fullComboSequence
             = new Sequence_Memory(new List<BtNode>()
             {
-                checkAttackRange, comboNodes[0], comboNodes[1], comboNodes[2]
+                checkAttackRange, cleaner, comboNodes[0], comboNodes[1], comboNodes[2]
             });
 
         Sequence_Memory halfComboSequence
             = new Sequence_Memory(new List<BtNode>()
             {
-                checkAttackRange, comboNodes[0], comboNodes[1]
+                checkAttackRange, cleaner, comboNodes[0], comboNodes[1]
             });
 
         Selector_Random comboOrStrafeAction =
             new Selector_Random(new List<BtNode>()
             {
-                fullComboSequence, halfComboSequence, strafeAction
+                fullComboSequence, halfComboSequence
             });
         Selector_Random skillRangeAction = new Selector_Random(new List<BtNode>()
         {
@@ -103,7 +106,7 @@ public class BossMonsterAI : MonoBehaviour
         });
         Sequence_Memory skillUseSequence = new Sequence_Memory(new List<BtNode>()
         {
-            checkSkillRange, checkSkillAble, skillRangeAction
+            checkSkillRange, checkSkillAble, cleaner, skillRangeAction
         });
 
         Selector skillOrCombo = new Selector(new List<BtNode>()
@@ -114,13 +117,19 @@ public class BossMonsterAI : MonoBehaviour
         #endregion
 
         // 공격 범위 밖일 때, 추적 또는 회피 행동을 확률적으로 선택하는 노드
-        Selector_Random outOfRangeAction = new Selector_Random(new List<BtNode>() { chase, wait });
+        Sequence_Memory outOfRangeAction = new Sequence_Memory(new List<BtNode>() { chase, wait });
 
+        Selector walkCheck = new Selector(new List<BtNode>()
+        {
+            checkAttackRange, outOfRangeAction
+        });
 
-        Sequence_Memory inRangeAction =
-            new Sequence_Memory(new List<BtNode>() { outOfRangeAction, skillOrCombo });
+        Selector_Random randomOutAction = new Selector_Random(new List<BtNode>() { walkCheck, strafeAction });
+
+        Selector inRangeAction =
+            new Selector(new List<BtNode>() { skillOrCombo, randomOutAction, });
 
         //실행
-        _rootNode = skillOrCombo;
+        _rootNode = inRangeAction;
     }
 }

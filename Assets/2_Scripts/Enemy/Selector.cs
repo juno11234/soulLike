@@ -46,7 +46,7 @@ public class Selector_Random : BtNode
         if (State != NodeState.Running || _chosenNode == null)
         {
              int randomIndex = Random.Range(0, Children.Count);
-            _chosenNode = Children[randomIndex]; // 디버깅을 위해 강제로 1번 자식(strafe)을 선택
+            _chosenNode = Children[randomIndex]; 
         }
 
         if (_chosenNode == null)
