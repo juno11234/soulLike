@@ -71,7 +71,7 @@ public class Leaf_Strafe : BtNode
         {
             _isStarted = true;
             _strafeDirection = Random.Range(0, 2) == 0 ? -1 : 1;
-            //_animator.SetFloat(Horizontal, _strafeDirection);
+            _animator.SetFloat(Horizontal, _strafeDirection);
             _agent.updateRotation = false;
         }
 
@@ -87,9 +87,11 @@ public class Leaf_Strafe : BtNode
         Vector3 strafeDir = Vector3.Cross(targetDir, Vector3.up) * _strafeDirection;
         // 이동 실행
         _agent.Move(strafeDir * (_agent.speed * Time.deltaTime));
-        if (_timer >= _strafeDuration)
+        if (_timer >= _strafeDuration * 0.9)
         {
             _timer = 0;
+            _animator.SetFloat(Horizontal, 0);
+            _isStarted = false;
             _agent.updateRotation = true;
             return NodeState.Success;
         }
@@ -108,6 +110,7 @@ public class Leaf_Chase : BtNode
     private float _range;
 
     private bool _isStarted;
+    private float _timer;
 
     public Leaf_Chase(Transform self, Transform target, Animator animator, NavMeshAgent agent, float range)
     {
@@ -116,6 +119,7 @@ public class Leaf_Chase : BtNode
         _animator = animator;
         _agent = agent;
         _range = range;
+        _timer = 0;
     }
 
     public override NodeState Evaluate()
@@ -124,25 +128,62 @@ public class Leaf_Chase : BtNode
         {
             _isStarted = true;
             _animator.SetFloat(Vertical, 1f);
+            _agent.isStopped = false; // 에이전트 이동 시작
         }
 
+        _timer += Time.deltaTime;
+        // 플레이어를 계속 바라보게 함
         Vector3 lookPos = _target.position;
         lookPos.y = _self.position.y;
         _self.LookAt(lookPos);
+
         float distance = Vector3.Distance(_self.position, _target.position);
+
         if (distance > _range)
         {
-            Vector3 targetDir = (_target.position - _self.position).normalized;
-            targetDir.y = 0;
-            _agent.Move(targetDir * (_agent.speed * 1.5f * Time.deltaTime));
+            // 목표 지점을 계속 업데이트하여 플레이어를 추적하게 함
+            _agent.SetDestination(_target.position);
             return NodeState.Running;
         }
-        else if (distance <= _range)
+        else
         {
+            // 목표에 도달하면 멈춤
+            _agent.isStopped = true;
+            _isStarted = false; // 다음 추적을 위해 상태 초기화
+            _animator.SetFloat(Vertical, 0f); // 애니메이션 정지
+            _timer = 0;
+            return NodeState.Success;
+        }
+    }
+}
+
+public class Leaf_Wait : BtNode
+{
+    private Animator _animator;
+    private bool _isStarted;
+    private float _timer;
+
+    public Leaf_Wait(Animator animator)
+    {
+        _animator = animator;
+    }
+
+    public override NodeState Evaluate()
+    {
+        if (_isStarted == false)
+        {
+            _isStarted = true;
+        }
+
+        _timer += Time.deltaTime;
+
+        if (_timer >= 1f)
+        {
+            _timer = 0;
             return NodeState.Success;
         }
 
-        return NodeState.Failure;
+        return NodeState.Running;
     }
 }
 
@@ -228,7 +269,7 @@ public class Sequence_Combo : BtNode
     private readonly Transform _self;
     private readonly Transform _target;
     private readonly float _range;
-    
+
     private int _currentIndex = 0;
 
     public Sequence_Combo(List<BtNode> children, Transform self, Transform target, float range) : base(children)
@@ -249,10 +290,11 @@ public class Sequence_Combo : BtNode
                 // 거리가 멀면 콤보를 시작조차 하지 않고 실패 반환
                 return NodeState.Failure;
             }
+
             // 거리가 가깝다면 콤보 인덱스 초기화 후 시작
             _currentIndex = 0;
         }
-        
+
         // 보호 코드: 자식이 없으면 실패
         if (Children.Count == 0) return NodeState.Failure;
 

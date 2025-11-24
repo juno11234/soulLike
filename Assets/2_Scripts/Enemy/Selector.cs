@@ -45,8 +45,8 @@ public class Selector_Random : BtNode
         // 이 노드의 이전 상태가 'Running'이 아니었거나, 선택된 자식 노드가 없다면 새로운 자식을 선택합니다.
         if (State != NodeState.Running || _chosenNode == null)
         {
-            int randomIndex = Random.Range(0, Children.Count);
-            _chosenNode = Children[randomIndex];
+             int randomIndex = Random.Range(0, Children.Count);
+            _chosenNode = Children[randomIndex]; // 디버깅을 위해 강제로 1번 자식(strafe)을 선택
         }
 
         if (_chosenNode == null)
@@ -99,6 +99,50 @@ public class Sequence : BtNode
         }
 
         State = anyChildIsRunning ? NodeState.Running : NodeState.Success;
+        return State;
+    }
+}
+public class SequenceWithMemory : BtNode
+{
+    private int _lastRunningChildIndex = 0;
+
+    public SequenceWithMemory(List<BtNode> children) : base(children) { }
+
+    public override NodeState Evaluate()
+    {
+        // 이 시퀀스가 이전에 실행 중(Running) 상태가 아니었다면, 처음부터 시작합니다.
+        if (State != NodeState.Running)
+        {
+            _lastRunningChildIndex = 0;
+        }
+
+        for (int i = _lastRunningChildIndex; i < Children.Count; i++)
+        {
+            NodeState childState = Children[i].Evaluate();
+
+            switch (childState)
+            {
+                case NodeState.Failure:
+                    // 자식 중 하나라도 실패하면, 이 시퀀스 전체가 실패입니다.
+                    _lastRunningChildIndex = 0; // 상태 초기화
+                    State = NodeState.Failure;
+                    return State;
+
+                case NodeState.Success:
+                    // 자식이 성공하면, 루프를 계속 진행하여 다음 자식을 평가합니다.
+                    continue;
+
+                case NodeState.Running:
+                    // 자식이 아직 실행 중이라면, 어디까지 실행했는지 기억하고 이 시퀀스 전체도 Running 상태가 됩니다.
+                    _lastRunningChildIndex = i;
+                    State = NodeState.Running;
+                    return State;
+            }
+        }
+
+        // 모든 자식들이 성공적으로 실행 완료되었습니다.
+        _lastRunningChildIndex = 0; // 상태 초기화
+        State = NodeState.Success;
         return State;
     }
 }
