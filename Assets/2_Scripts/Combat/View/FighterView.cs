@@ -16,7 +16,7 @@ public class FighterView : MonoBehaviour, IFighter
     public event Action<int> OnTakeDamage;
     public event Action OnStaminaZero;
     public event Action OnDied;
-    
+
     // IFighter 구현
     public Collider mainModelCollider => modelCollider;
     public GameObject GameObject => gameObject;
@@ -31,9 +31,16 @@ public class FighterView : MonoBehaviour, IFighter
         ViewModel.CurrentStamina.Subscribe(UpdateStaminaBar);
         ViewModel.IsDead.Subscribe(OnDeathStateChanged);
 
-        ViewModel.OnTakeDamage+=OnTakeDamageInvoke;
+        ViewModel.OnTakeDamage += OnTakeDamageInvoke;
         ViewModel.OnDied += OnDiedInvoke;
         ViewModel.OnStaminaZero += OnStaminaZeroInvoke;
+
+        
+    }
+
+    private void Start()
+    {
+        CombatSystem.Instance.RegisterFighter(this);
     }
 
     private void UpdateHpBar(int newHealth)
@@ -48,7 +55,6 @@ public class FighterView : MonoBehaviour, IFighter
 
     private void OnDeathStateChanged(bool isDead)
     {
-        
     }
 
     private void OnTakeDamageInvoke(int damage)
@@ -65,6 +71,7 @@ public class FighterView : MonoBehaviour, IFighter
     {
         OnDied?.Invoke();
     }
+
     // 기존 IFighter 인터페이스와의 호환성을 위한 메서드들
     // 이제 로직은 ViewModel에 위임합니다.
     public void TakeDamage(CombatEvent combatEvent)

@@ -2879,7 +2879,7 @@ GameObject:
   - component: {fileID: 4354135693575843932}
   - component: {fileID: 4074675808489813722}
   - component: {fileID: 6328843659588686378}
-  - component: {fileID: 6217314431387405653}
+  - component: {fileID: 8548361158678683773}
   m_Layer: 0
   m_Name: Boss
   m_TagString: Untagged
@@ -2973,33 +2973,22 @@ CapsuleCollider:
   m_Height: 5
   m_Direction: 1
   m_Center: {x: 0, y: 2.5, z: 0}
---- !u!54 &6217314431387405653
-Rigidbody:
+--- !u!114 &8548361158678683773
+MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 8498543936588576825}
-  serializedVersion: 4
-  m_Mass: 1
-  m_Drag: 0
-  m_AngularDrag: 0.05
-  m_CenterOfMass: {x: 0, y: 0, z: 0}
-  m_InertiaTensor: {x: 1, y: 1, z: 1}
-  m_InertiaRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ImplicitCom: 1
-  m_ImplicitTensor: 1
-  m_UseGravity: 1
-  m_IsKinematic: 1
-  m_Interpolate: 0
-  m_Constraints: 0
-  m_CollisionDetection: 0
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6ca121e63a3ec854dbf47610abcb32f2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  stats: {fileID: 11400000, guid: 883e6257020712345b80e7544eae33c5, type: 2}
+  hpBar: {fileID: 0}
+  staminaBar: {fileID: 0}
+  modelCollider: {fileID: 6328843659588686378}
 --- !u!1 &8780782378423601673
 GameObject:
   m_ObjectHideFlags: 0

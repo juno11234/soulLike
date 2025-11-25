@@ -9,11 +9,12 @@ public class CombatSystem : MonoBehaviour
     public class Callback
     {
         public Action<CombatEvent> OnCombatEvent;
+        public Action<HealthEvent> OnHealEvent;
     }
 
     public static CombatSystem Instance;
 
-    private Dictionary<Collider, IFighter> monsterDict = new Dictionary<Collider, IFighter>();
+    private Dictionary<Collider, IFighter> fightersDict = new Dictionary<Collider, IFighter>();
     private Queue<InGameEvent> eventQueue = new Queue<InGameEvent>();
     public readonly Callback Events = new Callback();
 
@@ -45,22 +46,22 @@ public class CombatSystem : MonoBehaviour
         }
     }
 
-    public void RegisterMonster(IFighter monster)
+    public void RegisterFighter(IFighter monster)
     {
-        if (monsterDict.TryAdd(monster.mainModelCollider, monster) == false)
+        if (fightersDict.TryAdd(monster.mainModelCollider, monster) == false)
         {
             Debug.Log("몬스터가 이미존재 덮어씀");
         }
     }
 
-    public IFighter GetMonster(Collider coll)
+    public IFighter GetFighter(Collider coll)
     {
-        return monsterDict[coll];
+        return fightersDict[coll];
     }
 
-    public void RemoveMonster(Collider coll)
+    public void RemoveFighter(Collider coll)
     {
-        monsterDict.Remove(coll);
+        fightersDict.Remove(coll);
     }
 
     public void AddInGameEvent(InGameEvent e)

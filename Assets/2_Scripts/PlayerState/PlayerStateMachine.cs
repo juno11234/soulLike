@@ -85,6 +85,7 @@ public class PlayerStateMachine : MonoBehaviour
     {
         _inputManager.OnSpaceBarInput += SpaceBarInput;
         _inputManager.OnLMBInput += LmbInput;
+        _inputManager.OnMiddleMouseButtonInput += LockOn;
 
         _fighterView.OnDied += Die;
         _fighterView.OnTakeDamage += TakeDamage;
@@ -138,6 +139,12 @@ public class PlayerStateMachine : MonoBehaviour
         _pitch = Mathf.Clamp(_pitch, cameraMinPitch, cameraMaxPitch);
 
         cameraPivot.rotation = Quaternion.Euler(_pitch, _yaw, 0.0f);
+    }
+
+    public void LockOn(bool isPressed)
+    {
+        if (isPressed == false) return;
+        
     }
 
     public void Movement(float speed)

@@ -12,6 +12,7 @@ public class InputManager : MonoBehaviour
     public event InputButtonHandler OnSpaceBarInput;
     public event InputButtonHandler OnLMBInput;
     public event InputButtonHandler OnShiftInput;
+    public event InputButtonHandler OnMiddleMouseButtonInput;
     public Vector2 MoveInput { get; private set; }
     public Vector2 CameraInput { get; private set; }
 
@@ -31,6 +32,8 @@ public class InputManager : MonoBehaviour
 
         _player.Shift.performed += ctx => OnShiftInput?.Invoke(true);
         _player.Shift.canceled += ctx => OnShiftInput?.Invoke(false);
+
+        _player.LockOn.performed += ctx => OnMiddleMouseButtonInput?.Invoke(true);
     }
 
     private void OnEnable()
