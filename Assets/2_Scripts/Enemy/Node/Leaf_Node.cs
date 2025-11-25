@@ -58,7 +58,7 @@ public class Leaf_Cleaner : BtNode
         _animator.SetFloat("Horizontal", 0f);
         _agent.isStopped = true;
         _agent.ResetPath();
-        
+
         return NodeState.Success;
     }
 }
@@ -174,7 +174,6 @@ public class Leaf_Chase : BtNode
         if (_isStarted == false)
         {
             _isStarted = true;
-
             _agent.isStopped = false; // 에이전트 이동 시작
         }
 
@@ -228,6 +227,59 @@ public class Leaf_Wait : BtNode
         if (_timer >= 1f)
         {
             _timer = 0;
+            return NodeState.Success;
+        }
+
+        return NodeState.Running;
+    }
+}
+
+public class Leaf_BackMove : BtNode
+{
+    private static readonly int Vertical = Animator.StringToHash("Vertical");
+    private Transform _self;
+    private Transform _target;
+    private Animator _animator;
+    private NavMeshAgent _agent;
+
+    private float _timer;
+    private bool _isStarted;
+
+    public Leaf_BackMove(Animator animator, NavMeshAgent agent, Transform self, Transform target)
+    {
+        _animator = animator;
+        _agent = agent;
+        _self = self;
+        _target = target;
+    }
+
+    public override NodeState Evaluate()
+    {
+        if (_isStarted == false)
+        {
+            _isStarted = true;
+            _agent.updateRotation = false;
+        }
+
+        _timer += Time.deltaTime;
+        _animator.SetFloat(Vertical, -1f, 0.12f, Time.deltaTime);
+
+        Vector3 lookPos = _target.position;
+        lookPos.y = _self.position.y;
+        _self.LookAt(lookPos);
+
+        // 이동 방향 계산
+        Vector3 targetDir = (_target.position - _self.position).normalized;
+        targetDir.y = 0;
+        // 이동 실행
+        _agent.Move(-targetDir * (_agent.speed * Time.deltaTime));
+
+        if (_timer >= 2f)
+        {
+            _animator.SetFloat(Vertical, 0f);
+            _isStarted = false;
+            _agent.updateRotation = true;
+            _timer = 0f;
             return NodeState.Success;
         }
 

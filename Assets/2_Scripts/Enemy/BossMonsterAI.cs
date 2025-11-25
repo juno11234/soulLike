@@ -62,10 +62,16 @@ public class BossMonsterAI : MonoBehaviour
         BtNode checkSkillRange = new Leaf_CheckAttackRange(transform, player, skillRange);
         BtNode wait = new Leaf_Wait(_animator, _agent);
         BtNode cleaner = new Leaf_Cleaner(_animator, _agent);
+        BtNode backMove = new Leaf_BackMove(_animator, _agent, transform, player);
 
         #endregion
 
+        Sequence_Memory backMoveAndWait = new Sequence_Memory(new List<BtNode>() { backMove, wait });
         //이름 통일하기 시퀀스는 Sequence 랜덩은 ran 셀렉터는 Or
+        Sequence_Memory backWalkCheck = new Sequence_Memory(new List<BtNode>()
+        {
+            checkAttackRange, cleaner, backMoveAndWait
+        });
 
         #region 공격 관련
 
@@ -94,12 +100,17 @@ public class BossMonsterAI : MonoBehaviour
             {
                 checkAttackRange, cleaner, comboNodes[0], comboNodes[1]
             });
-
+        Sequence_Memory innerStrafeSequence
+            = new Sequence_Memory(new List<BtNode>()
+            {
+                checkAttackRange, cleaner, strafeAction
+            });
         Selector_Random comboOrStrafeAction =
             new Selector_Random(new List<BtNode>()
             {
-                fullComboSequence, halfComboSequence
+                fullComboSequence, halfComboSequence, innerStrafeSequence, backWalkCheck
             });
+
         Selector_Random skillRangeAction = new Selector_Random(new List<BtNode>()
         {
             skillNodes[0], skillNodes[1]
@@ -119,12 +130,15 @@ public class BossMonsterAI : MonoBehaviour
         // 공격 범위 밖일 때, 추적 또는 회피 행동을 확률적으로 선택하는 노드
         Sequence_Memory outOfRangeAction = new Sequence_Memory(new List<BtNode>() { chase, wait });
 
+
         Selector walkCheck = new Selector(new List<BtNode>()
         {
             checkAttackRange, outOfRangeAction
         });
 
-        Selector_Random randomOutAction = new Selector_Random(new List<BtNode>() { walkCheck, strafeAction });
+
+        Selector_Random randomOutAction =
+            new Selector_Random(new List<BtNode>() { walkCheck, strafeAction });
 
         Selector inRangeAction =
             new Selector(new List<BtNode>() { skillOrCombo, randomOutAction, });

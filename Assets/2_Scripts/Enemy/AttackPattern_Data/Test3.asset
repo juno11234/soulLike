@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   aniName: TestAttack
   damage: 10
-  windupTime: 0.5
+  windupTime: 1
   activeTime: 1
   recoveryTime: 0.5
   probability: 0
