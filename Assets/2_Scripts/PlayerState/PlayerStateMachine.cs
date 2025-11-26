@@ -23,12 +23,7 @@ public class PlayerStateMachine : MonoBehaviour
     [SerializeField] private float staminaRegenRateAmount;
     [SerializeField] private float staminaRegenRateTime;
 
-    [Header("CamSetting")] [SerializeField]
-    private Transform cameraPivot;
-
-    [SerializeField] private float cameraSensitivity = 0.3f;
-    [SerializeField] private float cameraMinPitch = -30f;
-    [SerializeField] private float cameraMaxPitch = 70f;
+ 
 
     //상태 객체용 변수
     public float WalkSpeed => walkSpeed;
@@ -62,8 +57,7 @@ public class PlayerStateMachine : MonoBehaviour
     //로컬 변수들
     private float _currentSpeed;
     private IState _currentState;
-    private float _yaw;
-    private float _pitch;
+    
     private float _moveAmount;
     private float _staminaTimer = 0f;
     private Vector3 _velocity;
@@ -120,7 +114,7 @@ public class PlayerStateMachine : MonoBehaviour
         }
 
         _controller.Move(_velocity * Time.deltaTime);
-        HandleCamera();
+        
     }
 
     public void ChangeState(IState newState)
@@ -130,16 +124,7 @@ public class PlayerStateMachine : MonoBehaviour
         _currentState?.Enter();
     }
 
-    public void HandleCamera()
-    {
-        Vector2 input = _inputManager.CameraInput;
-
-        _yaw += input.x * cameraSensitivity;
-        _pitch -= input.y * cameraSensitivity;
-        _pitch = Mathf.Clamp(_pitch, cameraMinPitch, cameraMaxPitch);
-
-        cameraPivot.rotation = Quaternion.Euler(_pitch, _yaw, 0.0f);
-    }
+ 
 
     public void LockOn(bool isPressed)
     {
