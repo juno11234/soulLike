@@ -819,7 +819,7 @@ GameObject:
   - component: {fileID: 1617495277}
   - component: {fileID: 1617495276}
   - component: {fileID: 1617495275}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: Cube (1)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -995,7 +995,7 @@ GameObject:
   - component: {fileID: 1685296223}
   - component: {fileID: 1685296222}
   - component: {fileID: 1685296221}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: Cube (2)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1103,7 +1103,7 @@ GameObject:
   - component: {fileID: 1851721140}
   - component: {fileID: 1851721139}
   - component: {fileID: 1851721138}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: Cube
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1442,6 +1442,14 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 2701601358095354249, guid: 75dd8a9138d84eb4699151dd190f755a, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2701601358095354249, guid: 75dd8a9138d84eb4699151dd190f755a, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: -4
+      objectReference: {fileID: 0}
     - target: {fileID: 3214693505591297806, guid: 75dd8a9138d84eb4699151dd190f755a, type: 3}
       propertyPath: player
       value: 
@@ -1450,6 +1458,18 @@ PrefabInstance:
       propertyPath: inputManager
       value: 
       objectReference: {fileID: 518011470883313806}
+    - target: {fileID: 3214693505591297806, guid: 75dd8a9138d84eb4699151dd190f755a, type: 3}
+      propertyPath: cameraTransform
+      value: 
+      objectReference: {fileID: 1659588781157969130}
+    - target: {fileID: 3214693505591297806, guid: 75dd8a9138d84eb4699151dd190f755a, type: 3}
+      propertyPath: referenceTransform
+      value: 
+      objectReference: {fileID: 9083392707530513289}
+    - target: {fileID: 3214693505591297806, guid: 75dd8a9138d84eb4699151dd190f755a, type: 3}
+      propertyPath: collisionLayer.m_Bits
+      value: 512
+      objectReference: {fileID: 0}
     - target: {fileID: 7316797250912981027, guid: 75dd8a9138d84eb4699151dd190f755a, type: 3}
       propertyPath: m_Name
       value: CamHolder
@@ -1743,6 +1763,11 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 5ce075acf77a1d447bcb883618b7722e, type: 3}
+--- !u!4 &1659588781157969130 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 2701601358095354249, guid: 75dd8a9138d84eb4699151dd190f755a, type: 3}
+  m_PrefabInstance: {fileID: 125932010123196213}
+  m_PrefabAsset: {fileID: 0}
 --- !u!114 &5046835094480946230 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 6970784439484667541, guid: 6ed22fccdd4ec9641b68ae4d9e189658, type: 3}
@@ -1816,7 +1841,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8498543936588576825, guid: 2045929046cbfdf4b9c01d78878ae670, type: 3}
       propertyPath: m_IsActive
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8548361158678683773, guid: 2045929046cbfdf4b9c01d78878ae670, type: 3}
       propertyPath: hpBar

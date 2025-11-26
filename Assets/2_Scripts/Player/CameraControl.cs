@@ -5,8 +5,10 @@ public class CameraControl : MonoBehaviour
 {
     [SerializeField] private InputManager inputManager;
     [SerializeField] private Transform player;
-    
-    [Header("chaserSetting")] [SerializeField] private float smoothSpeed = 10f;
+
+    [Header("chaserSetting")] [SerializeField]
+    private float smoothSpeed = 10f;
+
     [SerializeField] private Vector3 offset;
 
     [Header("CamSetting")] [SerializeField]
@@ -22,13 +24,16 @@ public class CameraControl : MonoBehaviour
 
     [Header("debug")] [SerializeField] private LockOnTarget currentTarget;
     [SerializeField] private bool isLockedOn = false;
-    
-    [Header("collisionSetting")]
-    public LayerMask collisionLayer; 
-    public float collideOffset = 0.2f; 
-    public float cameraRadius = 0.3f; 
-    public float moveSpeed = 15f; 
 
+    [Header("collisionSetting")] public LayerMask collisionLayer;
+    public float collideOffset = 0.2f;
+    public float cameraRadius = 0.3f;
+    public float moveSpeed = 15f;
+
+    private Vector3 _cameraVelocity;
+    private float _defaultDistance;
+
+    private Camera _cam;
     private float _yaw;
     private float _pitch;
 
@@ -36,17 +41,27 @@ public class CameraControl : MonoBehaviour
     private void Start()
     {
         inputManager.OnMiddleMouseButtonInput += LockOn;
+        _cam = Camera.main;
+        _defaultDistance = Vector3.Distance(cameraPivot.position,
+            cameraTransform.position);
+            
+        // --- DEBUG: 시작 시 설정 값 확인 ---
+        if (collisionLayer.value == 0)
+        {
+            Debug.LogWarning("[CameraCollision] 'Collision Layer'가 설정되지 않았습니다. 인스펙터에서 레이어를 선택했는지 확인해주세요.", this.gameObject);
+        }
     }
 
     void Update()
     {
         HandleCamera();
-        LockOnCamControl();
     }
 
     private void LateUpdate()
     {
         FollowPlayer();
+        LockOnCamControl();
+        CameraCollision();
     }
 
     private void FollowPlayer()
@@ -66,6 +81,27 @@ public class CameraControl : MonoBehaviour
         _pitch = Mathf.Clamp(_pitch, cameraMinPitch, cameraMaxPitch);
 
         cameraPivot.rotation = Quaternion.Euler(_pitch, _yaw, 0.0f);
+    }
+
+    private void CameraCollision()
+    {
+        float targetDistance = _defaultDistance;
+        Vector3 direction = -cameraPivot.forward;
+        // --- DEBUG: Scene 뷰에서 SphereCast 경로를 시각적으로 표시 ---
+        Debug.DrawRay(cameraPivot.position, direction * _defaultDistance, Color.red);
+                             
+        if (Physics.SphereCast(cameraPivot.position, cameraRadius, direction,
+                out RaycastHit hit, _defaultDistance, collisionLayer))
+        {
+            // --- DEBUG: 충돌 시 콘솔에 로그 출력 ---
+            targetDistance = hit.distance - collideOffset;
+        }
+
+        Vector3 targetPosition = cameraPivot.position + direction *
+            targetDistance;
+        cameraTransform.position =
+            Vector3.SmoothDamp(cameraTransform.position, targetPosition, ref
+                _cameraVelocity, 1f / moveSpeed);
     }
 
     private void LockOn(bool isPressed)
@@ -126,6 +162,6 @@ public class CameraControl : MonoBehaviour
         Quaternion targetRotation = Quaternion.LookRotation(dir);
         targetRotation.x = 0.0f;
         targetRotation.z = 0.0f;
-        cameraTransform.rotation = targetRotation;
+        cameraPivot.rotation = targetRotation;
     }
 }
