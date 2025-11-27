@@ -28,14 +28,14 @@ public class FighterView : MonoBehaviour, IFighter
 
         // 2. ViewModel의 데이터 변경을 View에 반영하도록 구독(Subscribe)합니다.
         ViewModel.CurrentHealth.Subscribe(UpdateHpBar);
-        ViewModel.CurrentStamina.Subscribe(UpdateStaminaBar);
         ViewModel.IsDead.Subscribe(OnDeathStateChanged);
-
         ViewModel.OnTakeDamage += OnTakeDamageInvoke;
         ViewModel.OnDied += OnDiedInvoke;
-        ViewModel.OnStaminaZero += OnStaminaZeroInvoke;
-
-        
+        if (staminaBar != null)
+        {
+            ViewModel.CurrentStamina.Subscribe(UpdateStaminaBar);
+            ViewModel.OnStaminaZero += OnStaminaZeroInvoke;
+        }
     }
 
     private void Start()

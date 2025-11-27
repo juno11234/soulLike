@@ -3,6 +3,9 @@ using UnityEngine;
 
 public class CameraControl : MonoBehaviour
 {
+    public bool IsLockedOn => isLockedOn;
+    public LockOnTarget CurrentTarget => currentTarget;
+
     [SerializeField] private InputManager inputManager;
     [SerializeField] private Transform player;
 
@@ -10,6 +13,7 @@ public class CameraControl : MonoBehaviour
     private float smoothSpeed = 10f;
 
     [SerializeField] private Vector3 offset;
+    [SerializeField] private float lockOnHeightOffset = 1f;
 
     [Header("CamSetting")] [SerializeField]
     private Transform cameraPivot;
@@ -22,6 +26,9 @@ public class CameraControl : MonoBehaviour
     [SerializeField] private float searchRadius = 10f;
     [SerializeField] private LayerMask targetLayer;
 
+    [Header("LockOn UI")] [SerializeField] private RectTransform lockOnIndicator;
+    
+
     [Header("debug")] [SerializeField] private LockOnTarget currentTarget;
     [SerializeField] private bool isLockedOn = false;
 
@@ -33,7 +40,6 @@ public class CameraControl : MonoBehaviour
     private Vector3 _cameraVelocity;
     private float _defaultDistance;
 
-    private Camera _cam;
     private float _yaw;
     private float _pitch;
 
@@ -41,15 +47,11 @@ public class CameraControl : MonoBehaviour
     private void Start()
     {
         inputManager.OnMiddleMouseButtonInput += LockOn;
-        _cam = Camera.main;
+        inputManager.OnQKeyInput += HandleTargetSwitching;
+        inputManager.OnEKeyInput += HandleTargetSwitching;
         _defaultDistance = Vector3.Distance(cameraPivot.position,
             cameraTransform.position);
-            
-        // --- DEBUG: 시작 시 설정 값 확인 ---
-        if (collisionLayer.value == 0)
-        {
-            Debug.LogWarning("[CameraCollision] 'Collision Layer'가 설정되지 않았습니다. 인스펙터에서 레이어를 선택했는지 확인해주세요.", this.gameObject);
-        }
+        lockOnIndicator.gameObject.SetActive(false);
     }
 
     void Update()
@@ -64,9 +66,86 @@ public class CameraControl : MonoBehaviour
         CameraCollision();
     }
 
+    private void HandleTargetSwitching(bool isLeft)
+    {
+        if (isLockedOn == false) return;
+
+      
+
+        // Q 키 입력 확인 (왼쪽으로 전환)
+        if (isLeft)
+        {
+            FindAndSwitchTarget(true); // false for left
+        }
+        // E 키 입력 확인 (오른쪽으로 전환)
+        else if (isLeft == false)
+        {
+            FindAndSwitchTarget(false); // true for right
+        }
+    }
+
+    private void FindAndSwitchTarget(bool isLeft)
+    {
+        // 1. 주변의 모든 잠재적 타겟을 찾습니다.
+        Collider[] colliders = Physics.OverlapSphere(player.position, searchRadius, targetLayer);
+        var potentialTargets = new System.Collections.Generic.List<LockOnTarget>();
+        foreach (var coll in colliders)
+        {
+            var target = coll.GetComponentInChildren<LockOnTarget>();
+            // 현재 타겟이 아니고, 활성화된 타겟만 리스트에 추가합니다.
+            if (target != null && target != currentTarget && target.gameObject.activeInHierarchy)
+            {
+                potentialTargets.Add(target);
+            }
+        }
+
+        if (potentialTargets.Count == 0) return; // 바꿀 타겟이 없음
+
+        // 2. 가장 적합한 타겟을 찾습니다.
+        LockOnTarget bestTarget = null;
+        float bestScore = Mathf.Infinity;
+
+        Vector3 currentScreenPos = Camera.main.WorldToScreenPoint(currentTarget.transform.position);
+
+        foreach (var pTarget in potentialTargets)
+        {
+            Vector3 potentialScreenPos = Camera.main.WorldToScreenPoint(pTarget.transform.position);
+
+            if (potentialScreenPos.z < 0) continue; // 카메라 뒤에 있는 타겟은 제외
+
+            float horizontalDiff = potentialScreenPos.x - currentScreenPos.x;
+
+            // 마우스 방향과 타겟의 상대적 위치가 일치하는지 확인
+            bool isInDirection = (isLeft==false && horizontalDiff > 0) || (isLeft && horizontalDiff < 0);
+
+            if (isInDirection)
+            {
+                // 화면상에서 수평 거리가 가장 가까운 타겟을 최고 점수로 선정
+                float score = Mathf.Abs(horizontalDiff);
+                if (score < bestScore)
+                {
+                    bestScore = score;
+                    bestTarget = pTarget;
+                }
+            }
+        }
+
+        // 3. 적합한 타겟을 찾았다면 교체합니다.
+        if (bestTarget != null)
+        {
+            currentTarget = bestTarget;
+        }
+    }
+
+
     private void FollowPlayer()
     {
         Vector3 desiredPosition = player.position + offset;
+        if (isLockedOn)
+        {
+            desiredPosition.y += lockOnHeightOffset;
+        }
+
         Vector3 smoothedPosition = Vector3.Lerp(transform.position, desiredPosition, smoothSpeed * Time.deltaTime);
         transform.position = smoothedPosition;
     }
@@ -87,21 +166,18 @@ public class CameraControl : MonoBehaviour
     {
         float targetDistance = _defaultDistance;
         Vector3 direction = -cameraPivot.forward;
-        // --- DEBUG: Scene 뷰에서 SphereCast 경로를 시각적으로 표시 ---
-        Debug.DrawRay(cameraPivot.position, direction * _defaultDistance, Color.red);
-                             
+
         if (Physics.SphereCast(cameraPivot.position, cameraRadius, direction,
                 out RaycastHit hit, _defaultDistance, collisionLayer))
         {
-            // --- DEBUG: 충돌 시 콘솔에 로그 출력 ---
             targetDistance = hit.distance - collideOffset;
         }
 
         Vector3 targetPosition = cameraPivot.position + direction *
             targetDistance;
-        cameraTransform.position =
-            Vector3.SmoothDamp(cameraTransform.position, targetPosition, ref
-                _cameraVelocity, 1f / moveSpeed);
+
+        cameraTransform.position = Vector3.SmoothDamp(cameraTransform.position, targetPosition,
+            ref _cameraVelocity, 1f / moveSpeed);
     }
 
     private void LockOn(bool isPressed)
@@ -118,9 +194,9 @@ public class CameraControl : MonoBehaviour
         LockOnTarget nearestTarget = null;
         float shortestDistance = Mathf.Infinity;
 
-        foreach (Collider collider in colliders)
+        foreach (Collider coll in colliders)
         {
-            LockOnTarget target = collider.GetComponentInChildren<LockOnTarget>();
+            LockOnTarget target = coll.GetComponentInChildren<LockOnTarget>();
             if (target != null)
             {
                 float distance = Vector3.Distance(transform.position, target.transform.position);
@@ -136,6 +212,9 @@ public class CameraControl : MonoBehaviour
         {
             currentTarget = nearestTarget;
             isLockedOn = true;
+
+
+            lockOnIndicator.gameObject.SetActive(true);
         }
     }
 
@@ -143,17 +222,27 @@ public class CameraControl : MonoBehaviour
     {
         isLockedOn = false;
         currentTarget = null;
+
+        lockOnIndicator.gameObject.SetActive(false);
     }
 
     private void LockOnCamControl()
     {
-        if (isLockedOn == false || currentTarget == null) return;
+        if (isLockedOn == false) return;
 
         if (currentTarget.gameObject.activeInHierarchy == false)
         {
             UnlockOn();
             return;
         }
+
+        // 타겟의 월드 좌표를 스크린 좌표로 변환
+        Vector3 screenPos = Camera.main.WorldToScreenPoint(currentTarget.transform.position);
+        lockOnIndicator.position = screenPos;
+
+        // 타겟이 화면 뒤(카메라 뒤)에 있으면 UI를 숨김
+        lockOnIndicator.gameObject.SetActive(screenPos.z > 0);
+
 
         Vector3 dir = currentTarget.transform.position - cameraPivot.position;
         if (dir == Vector3.zero) return;
@@ -162,6 +251,7 @@ public class CameraControl : MonoBehaviour
         Quaternion targetRotation = Quaternion.LookRotation(dir);
         targetRotation.x = 0.0f;
         targetRotation.z = 0.0f;
+
         cameraPivot.rotation = targetRotation;
     }
 }

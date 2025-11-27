@@ -1586,6 +1586,51 @@ Transform:
   - {fileID: 598937533913276849}
   m_Father: {fileID: 261308938411479823}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &5041264682464563421
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 9189306840279136803}
+  - component: {fileID: 3366740820921007810}
+  m_Layer: 8
+  m_Name: Target
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &9189306840279136803
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5041264682464563421}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 2.45, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 4755192252329600955}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &3366740820921007810
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5041264682464563421}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 00552c08d7a269b4f82ce23362035c98, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  aimPoint: {fileID: 9189306840279136803}
 --- !u!1 &5056987188219940438
 GameObject:
   m_ObjectHideFlags: 0
@@ -2880,7 +2925,7 @@ GameObject:
   - component: {fileID: 4074675808489813722}
   - component: {fileID: 6328843659588686378}
   - component: {fileID: 8548361158678683773}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Boss
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2901,6 +2946,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 4698510891800151897}
+  - {fileID: 9189306840279136803}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &4354135693575843932
@@ -2917,11 +2963,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   player: {fileID: 0}
   attackRange: 5
-  skillRange: 11
-  combo1:
+  attackData:
   - {fileID: 11400000, guid: 2691b8cc10c20914fb6bec74cdfca55b, type: 2}
   - {fileID: 11400000, guid: d42ff205a697795458c2b5240a3372ae, type: 2}
   - {fileID: 11400000, guid: 95908878d31615546a783f517b3635e0, type: 2}
+  skillRange: 11
   skillData:
   - {fileID: 11400000, guid: 748f7b57ea7eabf4f9014b0bddba28ba, type: 2}
   - {fileID: 11400000, guid: 8cd8509a1f8226643a004ad0f5554797, type: 2}

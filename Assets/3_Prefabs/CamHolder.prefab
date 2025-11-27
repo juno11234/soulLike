@@ -25,14 +25,14 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 7316797250912981027}
   serializedVersion: 2
-  m_LocalRotation: {x: -0, y: -0.9999399, z: -0, w: 0.010962137}
+  m_LocalRotation: {x: 0, y: -0.99994, z: 0, w: 0.010960478}
   m_LocalPosition: {x: -0.7, y: 1.42, z: -25.3}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 2701601358095354249}
   m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: -178.744, z: 0}
 --- !u!114 &3214693505591297806
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -49,18 +49,24 @@ MonoBehaviour:
   player: {fileID: 0}
   smoothSpeed: 10
   offset: {x: 0, y: 0, z: 0}
+  lockOnHeightOffset: 2
   cameraPivot: {fileID: 1211195123103325567}
   cameraSensitivity: 0.3
   cameraMinPitch: -30
   cameraMaxPitch: 30
-  cameraTransform: {fileID: 1211195123103325567}
+  cameraTransform: {fileID: 2701601358095354249}
   searchRadius: 10
   targetLayer:
     serializedVersion: 2
     m_Bits: 256
-  rotationSpeed: 5
   currentTarget: {fileID: 0}
   isLockedOn: 0
+  collisionLayer:
+    serializedVersion: 2
+    m_Bits: 512
+  collideOffset: 0.2
+  cameraRadius: 0.3
+  moveSpeed: 15
 --- !u!1 &7358268493126226476
 GameObject:
   m_ObjectHideFlags: 0
@@ -89,7 +95,7 @@ Transform:
   m_GameObject: {fileID: 7358268493126226476}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 1.3, z: -3.59}
+  m_LocalPosition: {x: 0, y: 1.5, z: -4}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []

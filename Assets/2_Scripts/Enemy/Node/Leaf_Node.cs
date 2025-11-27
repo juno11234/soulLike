@@ -129,7 +129,7 @@ public class Leaf_Strafe : BtNode
         // 이동 방향 계산
         Vector3 targetDir = (_target.position - _self.position).normalized;
         targetDir.y = 0;
-        Vector3 strafeDir = Vector3.Cross(targetDir, Vector3.up) * _strafeDirection;
+        Vector3 strafeDir = Vector3.Cross(targetDir, Vector3.up) * -_strafeDirection;
         // 이동 실행
         _agent.Move(strafeDir * (_agent.speed * Time.deltaTime));
 
@@ -149,7 +149,6 @@ public class Leaf_Strafe : BtNode
 public class Leaf_Chase : BtNode
 {
     private static readonly int Vertical = Animator.StringToHash("Vertical");
-    private BossMonsterAI _boss;
     private Transform _self;
     private Transform _target;
     private Animator _animator;
@@ -159,9 +158,8 @@ public class Leaf_Chase : BtNode
     private bool _isStarted;
     private float _timer;
 
-    public Leaf_Chase(BossMonsterAI boss, Transform self, Transform target, Animator animator, NavMeshAgent agent)
+    public Leaf_Chase(Transform self, Transform target, Animator animator, NavMeshAgent agent)
     {
-        _boss = boss;
         _self = self;
         _target = target;
         _animator = animator;
@@ -291,7 +289,6 @@ public class Leaf_PerformAttack : BtNode
 {
     private readonly Transform _self;
     private readonly Transform _target;
-    private readonly BossMonsterAI _bossMonster;
     private readonly Animator _animator;
     private readonly AttackData _attackData;
     private RootMotionHandler _rootHandler;
@@ -300,18 +297,19 @@ public class Leaf_PerformAttack : BtNode
     private float _timer;
     private bool _isAttacking;
     private bool _isDamaged;
+    private float _moveSpeed;
 
     public Leaf_PerformAttack
-    (Transform self, Transform target, BossMonsterAI bossMonster, Animator animator, AttackData data, bool useRoot,
-        RootMotionHandler rootHandler)
+    (Transform self, Transform target, Animator animator, AttackData data, bool useRoot,
+        RootMotionHandler rootHandler, float moveSpeed)
     {
         _self = self;
         _target = target;
-        _bossMonster = bossMonster;
         _animator = animator;
         _attackData = data;
         _useRoot = useRoot;
         _rootHandler = rootHandler;
+        _moveSpeed = moveSpeed;
     }
 
     public override NodeState Evaluate()
@@ -358,7 +356,7 @@ public class Leaf_PerformAttack : BtNode
             else
             {
                 // 루트 모션을 사용하지 않는 공격일 때만 수동으로 전진
-                float s = Mathf.Lerp(3f, 0, Time.deltaTime * 3f);
+                float s = Mathf.Lerp(_moveSpeed, 0, Time.deltaTime);
                 Vector3 moveVec = _self.forward * (s * Time.deltaTime);
                 _self.position += moveVec;
             }

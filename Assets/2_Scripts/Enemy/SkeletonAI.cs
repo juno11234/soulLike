@@ -1,21 +1,16 @@
-using UnityEngine;
+using System;
 using System.Collections.Generic;
-using UnityEngine.AI; // NavMeshAgent 사용 가정
-using N=CommonNodes;
-public class BossMonsterAI : EnemyAIBase
-{
-    public float skillRange = 5f;
-    public AttackData[] skillData;
+using UnityEngine;
+using UnityEngine.AI;
+using N = CommonNodes;
 
-    [Header("Debug")] public bool secondPhase = false;
-    public bool skillCool = false;
-    public float skillTimer = 0f;
+public class SkeletonAI : EnemyAIBase
+{
 
     private void Awake()
     {
         _agent = GetComponent<NavMeshAgent>();
         _animator = GetComponentInChildren<Animator>();
-        _rootMotionHandler = _animator.gameObject.GetComponent<RootMotionHandler>();
     }
 
     private void Start()
@@ -25,18 +20,6 @@ public class BossMonsterAI : EnemyAIBase
 
     private void Update()
     {
-        if (skillCool)
-        {
-            skillTimer += Time.deltaTime;
-        }
-
-        if (skillTimer >= 15f)
-        {
-            skillCool = false;
-            skillTimer = 0f;
-        }
-
-        // 매 프레임 트리를 평가하여 행동 결정
         if (_rootNode != null)
             _rootNode.Evaluate();
     }
@@ -45,16 +28,9 @@ public class BossMonsterAI : EnemyAIBase
     {
         base.ConstructBehaviorTree();
 
-        #region 노드들
-
-        BtNode checkSkillAble = new Leaf_CheckSkillAble(this);
-        BtNode checkSkillRange = new Leaf_CheckAttackRange(transform, player, skillRange);
-
-        #endregion
-
         Sequence_Memory backMoveAndWait = new Sequence_Memory(new List<BtNode>()
         {
-            commonNodes[N.BackMove],  commonNodes[N.Wait]
+            commonNodes[N.BackMove], commonNodes[N.Wait]
         });
         Sequence_Memory backWalkCheck = new Sequence_Memory(new List<BtNode>()
         {
@@ -65,20 +41,13 @@ public class BossMonsterAI : EnemyAIBase
             commonNodes[N.CheckAttackRange], commonNodes[N.Cleaner], commonNodes[N.Strafe]
         });
 
-        #region 공격 관련
+        #region 공격 행동
 
         List<BtNode> attackNodes = new List<BtNode>();
         foreach (var data in attackData)
         {
             attackNodes.Add(new Leaf_PerformAttack(transform, player, _animator, data,
-                false, _rootMotionHandler,3f));
-        }
-
-        List<BtNode> skillNodes = new List<BtNode>();
-        foreach (var data in skillData)
-        {
-            skillNodes.Add(new Leaf_PerformAttack(transform, player, _animator, data,
-                true, _rootMotionHandler,3f));
+                false, _rootMotionHandler, 1f));
         }
 
         Sequence_Memory fullComboSequence = new Sequence_Memory(new List<BtNode>()
@@ -86,30 +55,14 @@ public class BossMonsterAI : EnemyAIBase
             commonNodes[N.CheckAttackRange], commonNodes[N.Cleaner],
             attackNodes[0], attackNodes[1], attackNodes[2]
         });
-
         Sequence_Memory halfComboSequence = new Sequence_Memory(new List<BtNode>()
         {
             commonNodes[N.CheckAttackRange], commonNodes[N.Cleaner],
             attackNodes[0], attackNodes[1]
         });
-
         Selector_Random comboOrStrafeAction = new Selector_Random(new List<BtNode>()
         {
             fullComboSequence, halfComboSequence, innerStrafeSequence, backWalkCheck
-        });
-
-        Selector_Random skillRangeAction = new Selector_Random(new List<BtNode>()
-        {
-            skillNodes[0], skillNodes[1]
-        });
-        Sequence_Memory skillUseSequence = new Sequence_Memory(new List<BtNode>()
-        {
-            checkSkillRange, checkSkillAble, commonNodes[N.Cleaner], skillRangeAction
-        });
-
-        Selector skillOrCombo = new Selector(new List<BtNode>()
-        {
-            skillUseSequence, comboOrStrafeAction
         });
 
         #endregion
@@ -118,25 +71,19 @@ public class BossMonsterAI : EnemyAIBase
         {
             commonNodes[N.Chase], commonNodes[N.Wait]
         });
-
-
         Selector walkCheck = new Selector(new List<BtNode>()
         {
             commonNodes[N.CheckAttackRange], outOfRangeAction
         });
-
-
         Selector_Random randomOutAction = new Selector_Random(new List<BtNode>()
         {
             walkCheck, commonNodes[N.Strafe]
         });
-
         Selector actions = new Selector(new List<BtNode>()
         {
-            skillOrCombo, randomOutAction,
+            comboOrStrafeAction, randomOutAction,
         });
 
-        //실행
         _rootNode = actions;
     }
 }

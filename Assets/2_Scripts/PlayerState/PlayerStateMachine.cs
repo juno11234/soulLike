@@ -23,7 +23,6 @@ public class PlayerStateMachine : MonoBehaviour
     [SerializeField] private float staminaRegenRateAmount;
     [SerializeField] private float staminaRegenRateTime;
 
- 
 
     //상태 객체용 변수
     public float WalkSpeed => walkSpeed;
@@ -47,6 +46,10 @@ public class PlayerStateMachine : MonoBehaviour
     private Camera _mainCam;
     private Animator _animator;
     private FighterView _fighterView;
+    private CameraControl _cameraControl;
+
+    public CameraControl CameraControl => _cameraControl;
+
 
     //입력용
     private bool _spacePressed;
@@ -57,7 +60,7 @@ public class PlayerStateMachine : MonoBehaviour
     //로컬 변수들
     private float _currentSpeed;
     private IState _currentState;
-    
+
     private float _moveAmount;
     private float _staminaTimer = 0f;
     private Vector3 _velocity;
@@ -72,6 +75,7 @@ public class PlayerStateMachine : MonoBehaviour
         _controller = GetComponent<CharacterController>();
         _animator = GetComponentInChildren<Animator>();
         _mainCam = Camera.main;
+        _cameraControl = _mainCam.GetComponentInParent<CameraControl>();
         _groundLayer = (1 << 9);
     }
 
@@ -114,7 +118,6 @@ public class PlayerStateMachine : MonoBehaviour
         }
 
         _controller.Move(_velocity * Time.deltaTime);
-        
     }
 
     public void ChangeState(IState newState)
@@ -124,12 +127,10 @@ public class PlayerStateMachine : MonoBehaviour
         _currentState?.Enter();
     }
 
- 
 
     public void LockOn(bool isPressed)
     {
         if (isPressed == false) return;
-        
     }
 
     public void Movement(float speed)

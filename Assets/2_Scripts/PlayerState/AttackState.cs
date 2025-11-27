@@ -26,10 +26,26 @@ public class AttackState : IState
             return;
         }
 
+        LookAtTarget();
+
         _player.StaminaChange(_player.AttackStamina);
         _player.PlayTargetAniClip(_attack1, 0f);
         _player.OnLMBAction += SecondAttackReady;
         _player.OnLMBAction += ThirdAttackReady;
+    }
+
+    private void LookAtTarget()
+    {
+        if (_player.CameraControl.IsLockedOn)
+        {
+            Vector3 targetDirection =
+                _player.CameraControl.CurrentTarget.transform.position - _player.transform.position;
+            targetDirection.y = 0;
+            if (targetDirection != Vector3.zero)
+            {
+                _player.transform.rotation = Quaternion.LookRotation(targetDirection);
+            }
+        }
     }
 
 
@@ -47,6 +63,7 @@ public class AttackState : IState
         {
             if (_thirdAttackReady && _2AnimationPlayed == false)
             {
+                LookAtTarget();
                 _player.StaminaChange(_player.AttackStamina);
                 _player.PlayTargetAniClip(_attack3, 0.2f);
                 _2AnimationPlayed = true;
@@ -61,6 +78,7 @@ public class AttackState : IState
         {
             if (_secondAttackReady && _animationPlayed == false)
             {
+                LookAtTarget();
                 _player.StaminaChange(_player.AttackStamina);
                 _player.PlayTargetAniClip(_attack2, 0.2f);
                 _animationPlayed = true;
