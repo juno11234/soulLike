@@ -2661,6 +2661,9 @@ GameObject:
   - component: {fileID: 598937533913276849}
   - component: {fileID: 4109825474426498558}
   - component: {fileID: 8279767026415964922}
+  - component: {fileID: 2310184662869134773}
+  - component: {fileID: 4443060710910996222}
+  - component: {fileID: 5073757153101038882}
   m_Layer: 0
   m_Name: Boss_Weapon
   m_TagString: Untagged
@@ -2736,6 +2739,66 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
+--- !u!65 &2310184662869134773
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7614146870840763501}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 1
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 0.19222608, y: 1.9638203, z: 0.42621797}
+  m_Center: {x: 0.0000004181833, y: 0.6641473, z: -0.020826029}
+--- !u!54 &4443060710910996222
+Rigidbody:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7614146870840763501}
+  serializedVersion: 4
+  m_Mass: 1
+  m_Drag: 0
+  m_AngularDrag: 0.05
+  m_CenterOfMass: {x: 0, y: 0, z: 0}
+  m_InertiaTensor: {x: 1, y: 1, z: 1}
+  m_InertiaRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ImplicitCom: 1
+  m_ImplicitTensor: 1
+  m_UseGravity: 1
+  m_IsKinematic: 1
+  m_Interpolate: 0
+  m_Constraints: 0
+  m_CollisionDetection: 0
+--- !u!114 &5073757153101038882
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7614146870840763501}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 13227a6783502ae4fb4a8a5e17c2fa3c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &7674548780756446033
 GameObject:
   m_ObjectHideFlags: 0
@@ -2925,6 +2988,7 @@ GameObject:
   - component: {fileID: 4074675808489813722}
   - component: {fileID: 6328843659588686378}
   - component: {fileID: 8548361158678683773}
+  - component: {fileID: 6210228540776247617}
   m_Layer: 8
   m_Name: Boss
   m_TagString: Untagged
@@ -2967,11 +3031,15 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 2691b8cc10c20914fb6bec74cdfca55b, type: 2}
   - {fileID: 11400000, guid: d42ff205a697795458c2b5240a3372ae, type: 2}
   - {fileID: 11400000, guid: 95908878d31615546a783f517b3635e0, type: 2}
+  viewAngle: 0
+  viewDistance: 0
+  patrolPoint: []
+  findPlayer: 0
   skillRange: 11
   skillData:
   - {fileID: 11400000, guid: 748f7b57ea7eabf4f9014b0bddba28ba, type: 2}
   - {fileID: 11400000, guid: 8cd8509a1f8226643a004ad0f5554797, type: 2}
-  secondPhase: 0
+  secondPhase: 1
   skillCool: 0
   skillTimer: 0
 --- !u!195 &4074675808489813722
@@ -3035,6 +3103,19 @@ MonoBehaviour:
   hpBar: {fileID: 0}
   staminaBar: {fileID: 0}
   modelCollider: {fileID: 6328843659588686378}
+--- !u!114 &6210228540776247617
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8498543936588576825}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 263fb2c4ef9c49a4fb447b0fb1e74aed, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  attackData: []
 --- !u!1 &8780782378423601673
 GameObject:
   m_ObjectHideFlags: 0

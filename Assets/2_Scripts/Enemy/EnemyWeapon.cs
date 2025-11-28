@@ -1,25 +1,25 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class PlayerWeapon : MonoBehaviour
+public class EnemyWeapon : MonoBehaviour
 {
-    private LayerMask _enemyLayer;
+    private LayerMask _playerLayer;
     private Collider _collider;
     private HashSet<FighterView> _damaged = new HashSet<FighterView>();
-    private int _damage;
 
-    void Start()
+    private int _damage;
+    private void Start()
     {
-        _collider = GetComponentInChildren<Collider>();
+        _collider = GetComponent<Collider>();
         _collider.enabled = false;
-        _enemyLayer = 1 << 8;
+        _playerLayer = 1<<7;
     }
 
     public void ActiveCollider(int damage)
     {
         _collider.enabled = true;
         
-        _damage = damage;
+        _damage=damage;
     }
 
     public void DisableCollider()
@@ -30,21 +30,21 @@ public class PlayerWeapon : MonoBehaviour
 
     void OnTriggerEnter(Collider other)
     {
-        if ((_enemyLayer & (1 << other.gameObject.layer)) != 0)
+        if ((_playerLayer & (1 << other.gameObject.layer)) != 0)
         {
-            var monster = CombatSystem.Instance.GetFighter(other);
-            if (monster != null && _damaged.Contains(monster) == false)
+            var player = CombatSystem.Instance.GetFighter(other);
+            if (player != null && _damaged.Contains(player) == false)
             {
                 CombatEvent e = new CombatEvent()
                 {
-                    Receiver = monster,
+                    Receiver = player,
                     HitPosition = other.ClosestPoint(transform.position),
                     Collider = other,
                     Damage = _damage,
                 };
-                
+
                 CombatSystem.Instance.AddInGameEvent(e);
-                _damaged.Add(monster);
+                _damaged.Add(player);
             }
         }
     }

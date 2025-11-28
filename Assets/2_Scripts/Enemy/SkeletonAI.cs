@@ -6,7 +6,6 @@ using N = CommonNodes;
 
 public class SkeletonAI : EnemyAIBase
 {
-
     private void Awake()
     {
         _agent = GetComponent<NavMeshAgent>();
@@ -20,25 +19,27 @@ public class SkeletonAI : EnemyAIBase
 
     private void Update()
     {
+        if (IsDead) return;
+
         if (_rootNode != null)
             _rootNode.Evaluate();
     }
 
-    public override void ConstructBehaviorTree()
+    protected override void ConstructBehaviorTree()
     {
         base.ConstructBehaviorTree();
 
         Sequence_Memory backMoveAndWait = new Sequence_Memory(new List<BtNode>()
         {
-            commonNodes[N.BackMove], commonNodes[N.Wait]
+            nodeDict[N.BackMove], nodeDict[N.Wait]
         });
         Sequence_Memory backWalkCheck = new Sequence_Memory(new List<BtNode>()
         {
-            commonNodes[N.CheckAttackRange], commonNodes[N.Cleaner], backMoveAndWait
+            nodeDict[N.CheckAttackRange], nodeDict[N.Cleaner], backMoveAndWait
         });
         Sequence_Memory innerStrafeSequence = new Sequence_Memory(new List<BtNode>()
         {
-            commonNodes[N.CheckAttackRange], commonNodes[N.Cleaner], commonNodes[N.Strafe]
+            nodeDict[N.CheckAttackRange], nodeDict[N.Cleaner], nodeDict[N.Strafe]
         });
 
         #region 공격 행동
@@ -52,12 +53,12 @@ public class SkeletonAI : EnemyAIBase
 
         Sequence_Memory fullComboSequence = new Sequence_Memory(new List<BtNode>()
         {
-            commonNodes[N.CheckAttackRange], commonNodes[N.Cleaner],
+            nodeDict[N.CheckAttackRange], nodeDict[N.Cleaner],
             attackNodes[0], attackNodes[1], attackNodes[2]
         });
         Sequence_Memory halfComboSequence = new Sequence_Memory(new List<BtNode>()
         {
-            commonNodes[N.CheckAttackRange], commonNodes[N.Cleaner],
+            nodeDict[N.CheckAttackRange], nodeDict[N.Cleaner],
             attackNodes[0], attackNodes[1]
         });
         Selector_Random comboOrStrafeAction = new Selector_Random(new List<BtNode>()
@@ -67,23 +68,36 @@ public class SkeletonAI : EnemyAIBase
 
         #endregion
 
+        Sequence_Memory patrolSequence = new Sequence_Memory(new List<BtNode>()
+        {
+            nodeDict[N.Patrol], nodeDict[N.Wait]
+        });
+
         Sequence_Memory outOfRangeAction = new Sequence_Memory(new List<BtNode>()
         {
-            commonNodes[N.Chase], commonNodes[N.Wait]
+            nodeDict[N.Chase], nodeDict[N.Wait]
         });
         Selector walkCheck = new Selector(new List<BtNode>()
         {
-            commonNodes[N.CheckAttackRange], outOfRangeAction
+            nodeDict[N.CheckAttackRange], outOfRangeAction
         });
         Selector_Random randomOutAction = new Selector_Random(new List<BtNode>()
         {
-            walkCheck, commonNodes[N.Strafe]
+            walkCheck, nodeDict[N.Strafe]
         });
-        Selector actions = new Selector(new List<BtNode>()
+        Selector moveOrAttack = new Selector(new List<BtNode>()
         {
             comboOrStrafeAction, randomOutAction,
         });
+        Sequence_Memory findAndAttack = new Sequence_Memory(new List<BtNode>()
+        {
+            nodeDict[N.WatchPlayer], moveOrAttack
+        });
+        Selector action = new Selector(new List<BtNode>()
+        {
+            findAndAttack, patrolSequence,
+        });
 
-        _rootNode = actions;
+        _rootNode = action;
     }
 }

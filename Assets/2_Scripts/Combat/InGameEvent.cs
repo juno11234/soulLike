@@ -9,8 +9,8 @@ public abstract class InGameEvent
         Heal
     }
 
-    public IFighter Sender { get; set; }
-    public IFighter Receiver { get; set; }
+    public FighterView Sender { get; set; }
+    public FighterView Receiver { get; set; }
     public abstract EventType Type { get; }
 }
 

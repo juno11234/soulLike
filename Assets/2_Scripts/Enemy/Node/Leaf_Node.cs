@@ -392,72 +392,111 @@ public class Leaf_PerformAttack : BtNode
     }
 }
 
-public class Sequence_Combo : BtNode
+public class Leaf_Patrol : BtNode
 {
-    private readonly Transform _self;
-    private readonly Transform _target;
-    private readonly float _range;
+    private static readonly int Vertical = Animator.StringToHash("Vertical");
+    private Animator _animator;
+    private NavMeshAgent _agent;
+    private Transform[] _patrolPoints;
+    private int _index;
+    private bool _isStarted;
 
-    private int _currentIndex = 0;
-
-    public Sequence_Combo(List<BtNode> children, Transform self, Transform target, float range) : base(children)
+    public Leaf_Patrol(Transform[] patrolPoints, NavMeshAgent agent, Animator animator)
     {
-        _self = self;
-        _target = target;
-        _range = range;
+        _patrolPoints = patrolPoints;
+        _agent = agent;
+        _animator = animator;
+        _index = 0;
     }
 
     public override NodeState Evaluate()
     {
-        // 이 노드가 새로 시작될 때만 거리 체크를 수행
-        if (State != NodeState.Running)
+        if (_isStarted == false)
         {
-            float distance = Vector3.Distance(_self.position, _target.position);
-            if (distance > _range)
+            _isStarted = true;
+            _agent.SetDestination(_patrolPoints[_index].position);
+            _animator.SetFloat(Vertical, 1f);
+        }
+
+        if (_agent.pathPending == false && _agent.remainingDistance <= _agent.stoppingDistance)
+        {
+            if (_index < _patrolPoints.Length - 1)
             {
-                // 거리가 멀면 콤보를 시작조차 하지 않고 실패 반환
-                return NodeState.Failure;
+                _index++;
+            }
+            else
+            {
+                _index = 0;
             }
 
-            // 거리가 가깝다면 콤보 인덱스 초기화 후 시작
-            _currentIndex = 0;
+            _agent.ResetPath();
+            _isStarted = false;
+            _animator.SetFloat(Vertical, 0f);
+            return NodeState.Success;
         }
 
-        // 보호 코드: 자식이 없으면 실패
-        if (Children.Count == 0) return NodeState.Failure;
+        return NodeState.Running;
+    }
+}
 
-        // 현재 진행 중인 공격(자식 노드) 가져오기
-        BtNode currentAttack = Children[_currentIndex];
-        NodeState result = currentAttack.Evaluate();
-        switch (result) //자식의 공격 노드 성공 여부
+public class Leaf_WatchPlayer : BtNode
+{
+    private Transform _self;
+    private Transform _target;
+    private float _viewAngle;
+    private float _viewDistance;
+    private int _playerLayer;
+    private EnemyAIBase _enemy;
+
+    public Leaf_WatchPlayer(Transform target, Transform self, float viewAngle, float viewDistance, EnemyAIBase enemy)
+    {
+        _target = target;
+        _self = self;
+        _viewAngle = viewAngle;
+        _viewDistance = viewDistance;
+        _enemy = enemy;
+
+        _playerLayer = LayerMask.NameToLayer("Player");
+    }
+
+    public override NodeState Evaluate()
+    {
+        if (_enemy.findPlayer)
         {
-            case NodeState.Running:
-                // 현재 공격이 진행 중이면 상태 유지
-                State = NodeState.Running;
-                return State;
-
-            case NodeState.Failure:
-                // 공격 중 하나라도 실패(캔슬 등)하면 콤보 전체 중단
-                _currentIndex = 0;
-                State = NodeState.Failure;
-                return State;
-
-            case NodeState.Success:
-                // 현재 공격이 성공적으로 끝남 (Recovery까지 완료)
-                if (_currentIndex >= Children.Count - 1)
-                {
-                    // 마지막 콤보였으면 전체 성공
-                    _currentIndex = 0;
-                    State = NodeState.Success;
-                    return State;
-                }
-
-                // 다음 공격으로 진행
-                _currentIndex++;
-                State = NodeState.Running; // 트리 자체는 아직 '실행 중'으로 유지
-                return State;
+            return NodeState.Success;
         }
 
-        return NodeState.Failure; // 기본적으로 실패를 반환하는 것이 더 안전합니다.
+
+        Vector3 direction = _target.position - _self.position;
+        float distance = direction.magnitude;
+
+        if (distance > _viewDistance)
+        {
+            return NodeState.Failure;
+        }
+
+        direction.y = 0;
+
+        float angle = Vector3.Angle(_self.forward, direction);
+        if (angle > _viewAngle * 0.5f)
+        {
+            return NodeState.Failure;
+        }
+
+        Vector3 rayStartPoint = _self.position + Vector3.up;
+        Debug.DrawRay(rayStartPoint, direction * _viewDistance, Color.magenta, 2f);
+
+        if (Physics.Raycast(rayStartPoint, direction, out RaycastHit hit,
+                _viewDistance))
+        {
+            if (hit.collider.gameObject.layer == _playerLayer)
+            {
+                _enemy.findPlayer = true;
+                return NodeState.Success;
+            }
+        }
+
+
+        return NodeState.Failure;
     }
 }

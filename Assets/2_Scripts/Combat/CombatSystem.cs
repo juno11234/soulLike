@@ -14,7 +14,7 @@ public class CombatSystem : MonoBehaviour
 
     public static CombatSystem Instance;
 
-    private Dictionary<Collider, IFighter> fightersDict = new Dictionary<Collider, IFighter>();
+    private Dictionary<Collider, FighterView> fightersDict = new Dictionary<Collider, FighterView>();
     private Queue<InGameEvent> eventQueue = new Queue<InGameEvent>();
     public readonly Callback Events = new Callback();
 
@@ -46,7 +46,7 @@ public class CombatSystem : MonoBehaviour
         }
     }
 
-    public void RegisterFighter(IFighter monster)
+    public void RegisterFighter(FighterView monster)
     {
         if (fightersDict.TryAdd(monster.mainModelCollider, monster) == false)
         {
@@ -54,7 +54,7 @@ public class CombatSystem : MonoBehaviour
         }
     }
 
-    public IFighter GetFighter(Collider coll)
+    public FighterView GetFighter(Collider coll)
     {
         return fightersDict[coll];
     }

@@ -7,32 +7,31 @@ public class FighterViewModel
     // View가 구독할 수 있는 데이터
     public readonly Observable<int> CurrentHealth;
     public readonly Observable<float> CurrentStamina;
-    public readonly Observable<bool> IsDead;
 
     // View에게 특정 액션을 알리는 이벤트
     public event Action<int> OnTakeDamage;
     public event Action OnStaminaZero;
     public event Action OnDied;
 
+    private bool _isDead;
+
     public FighterViewModel(FighterStats stats)
     {
         _stats = stats;
         CurrentHealth = new Observable<int>(_stats.MaxHealth);
         CurrentStamina = new Observable<float>(_stats.MaxStamina);
-        IsDead = new Observable<bool>(false);
     }
 
     // View로부터 호출될 명령(메서드)
     public void TakeDamage(int damage)
     {
-        if (IsDead.Value) return;
-
+        if (_isDead) return;
         CurrentHealth.Value -= damage;
 
         if (CurrentHealth.Value <= 0)
         {
+            _isDead = true;
             CurrentHealth.Value = 0;
-            IsDead.Value = true;
             OnDied?.Invoke();
         }
         else
@@ -43,7 +42,7 @@ public class FighterViewModel
 
     public void StaminaChange(float value)
     {
-        if (IsDead.Value) return;
+        if (_isDead) return;
         CurrentStamina.Value += value;
 
         if (CurrentStamina.Value <= 0)
@@ -60,8 +59,7 @@ public class FighterViewModel
 
     public void TakeHeal(int heal)
     {
-        if (IsDead.Value) return;
-
+        if (_isDead) return;
         CurrentHealth.Value += heal;
 
         if (CurrentHealth.Value > _stats.MaxHealth)

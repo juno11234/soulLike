@@ -1,7 +1,7 @@
 using System;
 using UnityEngine;
 
-public class PlayerStateMachine : MonoBehaviour
+public class PlayerStateMachine : MonoBehaviour, IAttackAble
 {
     private readonly int _vertical = Animator.StringToHash("Vertical");
     private readonly int _horizontal = Animator.StringToHash("Horizontal");
@@ -24,21 +24,23 @@ public class PlayerStateMachine : MonoBehaviour
     [SerializeField] private float staminaRegenRateTime;
 
 
-    //상태 객체용 변수
+    #region 상태에서 사용할 프로퍼티
+
+    public CameraControl CameraControl => _cameraControl;
+    public Animator Animator => _animator;
     public float WalkSpeed => walkSpeed;
     public float SprintSpeed => sprintSpeed;
     public float RollSpeed => rollSpeed;
     public float BackstepSpeed => backstepSpeed;
     public float MoveAmount => _moveAmount;
-    public Animator Animator => _animator;
-
     public float RollStamina => rollStamina;
     public float BackStepStamina => backStepStamina;
     public float AttackStamina => attackStamina;
 
     public bool SpaceBarPressed => _spacePressed;
-    public bool LmbPressed => _lmbPressed;
     public bool NoStamina => _noStamina;
+
+    #endregion
 
     //참조들
     private InputManager _inputManager;
@@ -47,26 +49,25 @@ public class PlayerStateMachine : MonoBehaviour
     private Animator _animator;
     private FighterView _fighterView;
     private CameraControl _cameraControl;
-
-    public CameraControl CameraControl => _cameraControl;
-
+    private PlayerWeapon _weapon;
 
     //입력용
+    public event Action<bool> OnLMBAction;
     private bool _spacePressed;
     private bool _lmbPressed;
     private bool _noStamina;
-    public event Action<bool> OnLMBAction;
 
     //로컬 변수들
+    private bool _isDead;
     private float _currentSpeed;
     private IState _currentState;
-
     private float _moveAmount;
     private float _staminaTimer = 0f;
     private Vector3 _velocity;
     private float _gravity = -9.81f;
     private bool _sphereHit;
     private LayerMask _groundLayer;
+    private IAttackAble _iAttackAbleImplementation;
 
     private void Awake()
     {
@@ -81,9 +82,9 @@ public class PlayerStateMachine : MonoBehaviour
 
     private void Start()
     {
+        _weapon = GetComponentInChildren<PlayerWeapon>();
         _inputManager.OnSpaceBarInput += SpaceBarInput;
         _inputManager.OnLMBInput += LmbInput;
-        _inputManager.OnMiddleMouseButtonInput += LockOn;
 
         _fighterView.OnDied += Die;
         _fighterView.OnTakeDamage += TakeDamage;
@@ -96,6 +97,7 @@ public class PlayerStateMachine : MonoBehaviour
 
     private void Update()
     {
+        if (_isDead) return;
         _currentState?.UpdateLogic();
         //Debug.Log(_currentState);
         HandleStaminaRegeneration();
@@ -127,11 +129,29 @@ public class PlayerStateMachine : MonoBehaviour
         _currentState?.Enter();
     }
 
-
-    public void LockOn(bool isPressed)
+    private void SpaceBarInput(bool isPressed)
     {
-        if (isPressed == false) return;
+        _spacePressed = isPressed;
     }
+
+    private void LmbInput(bool isPressed)
+    {
+        OnLMBAction?.Invoke(isPressed);
+    }
+
+    public void PlayTargetAniClip(int hash, float transition)
+    {
+        _animator.CrossFade(hash, transition);
+    }
+
+    private void OnDrawGizmos()
+    {
+        Vector3 origin = transform.position;
+        Gizmos.color = _sphereHit ? Color.cyan : new Color(0, 1, 1, 0.3f);
+        Gizmos.DrawWireSphere(origin + Vector3.down * groundCheckDistance, groundCheckRadius); // 끝점
+    }
+
+    #region 이동 관련
 
     public void Movement(float speed)
     {
@@ -197,23 +217,11 @@ public class PlayerStateMachine : MonoBehaviour
         return _sphereHit && _controller.isGrounded;
     }
 
-    private void OnDrawGizmos()
-    {
-        Vector3 origin = transform.position;
-        Gizmos.color = _sphereHit ? Color.cyan : new Color(0, 1, 1, 0.3f);
-        Gizmos.DrawWireSphere(origin + Vector3.down * groundCheckDistance, groundCheckRadius); // 끝점
-    }
-
     public void ForwardMove(float speed)
     {
         float s = Mathf.Lerp(speed, 0, Time.deltaTime * 3f);
         Vector3 moveVec = transform.forward * (s * Time.deltaTime);
         _controller.Move(moveVec);
-    }
-
-    public void ActiveInvisible(bool active)
-    {
-        _fighterView.Invincible = active;
     }
 
     public void Backstep(float speed)
@@ -223,24 +231,13 @@ public class PlayerStateMachine : MonoBehaviour
         _controller.Move(-moveVec);
     }
 
-    private void SpaceBarInput(bool isPressed)
-    {
-        _spacePressed = isPressed;
-    }
+    #endregion
 
-    private void LmbInput(bool isPressed)
-    {
-        OnLMBAction?.Invoke(isPressed);
-    }
+    #region 스태미나 관련
 
-    public void PlayTargetAniClip(int hash, float transition)
+    private void StaminaZero()
     {
-        _animator.CrossFade(hash, transition);
-    }
-
-    private void Die()
-    {
-        ChangeState(new DieState(this));
+        _noStamina = true;
     }
 
     private void HandleStaminaRegeneration()
@@ -259,9 +256,23 @@ public class PlayerStateMachine : MonoBehaviour
         _fighterView.StaminaChange(stamina);
     }
 
-    public void StaminaZero()
+    #endregion
+
+    #region 전투 관련
+
+    public void AttackForCollEnable()
     {
-        _noStamina = true;
+        _weapon.ActiveCollider(35);
+    }
+
+    public void AttackForCollDisEnable()
+    {
+        _weapon.DisableCollider();
+    }
+
+    public void ActiveInvisible(bool active)
+    {
+        _fighterView.Invincible = active;
     }
 
     private void TakeDamage(int damage)
@@ -270,4 +281,12 @@ public class PlayerStateMachine : MonoBehaviour
 
         ChangeState(new HitState(this));
     }
+
+    private void Die()
+    {
+        ChangeState(new DieState(this));
+        _isDead = true;
+    }
+
+    #endregion
 }

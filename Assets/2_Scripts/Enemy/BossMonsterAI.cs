@@ -1,7 +1,8 @@
 using UnityEngine;
 using System.Collections.Generic;
 using UnityEngine.AI; // NavMeshAgent 사용 가정
-using N=CommonNodes;
+using N = CommonNodes;
+
 public class BossMonsterAI : EnemyAIBase
 {
     public float skillRange = 5f;
@@ -25,6 +26,8 @@ public class BossMonsterAI : EnemyAIBase
 
     private void Update()
     {
+        if (IsDead) return;
+        
         if (skillCool)
         {
             skillTimer += Time.deltaTime;
@@ -41,7 +44,8 @@ public class BossMonsterAI : EnemyAIBase
             _rootNode.Evaluate();
     }
 
-    public override void ConstructBehaviorTree()
+
+    protected override void ConstructBehaviorTree()
     {
         base.ConstructBehaviorTree();
 
@@ -54,15 +58,15 @@ public class BossMonsterAI : EnemyAIBase
 
         Sequence_Memory backMoveAndWait = new Sequence_Memory(new List<BtNode>()
         {
-            commonNodes[N.BackMove],  commonNodes[N.Wait]
+            nodeDict[N.BackMove], nodeDict[N.Wait]
         });
         Sequence_Memory backWalkCheck = new Sequence_Memory(new List<BtNode>()
         {
-            commonNodes[N.CheckAttackRange], commonNodes[N.Cleaner], backMoveAndWait
+            nodeDict[N.CheckAttackRange], nodeDict[N.Cleaner], backMoveAndWait
         });
         Sequence_Memory innerStrafeSequence = new Sequence_Memory(new List<BtNode>()
         {
-            commonNodes[N.CheckAttackRange], commonNodes[N.Cleaner], commonNodes[N.Strafe]
+            nodeDict[N.CheckAttackRange], nodeDict[N.Cleaner], nodeDict[N.Strafe]
         });
 
         #region 공격 관련
@@ -71,25 +75,25 @@ public class BossMonsterAI : EnemyAIBase
         foreach (var data in attackData)
         {
             attackNodes.Add(new Leaf_PerformAttack(transform, player, _animator, data,
-                false, _rootMotionHandler,3f));
+                false, _rootMotionHandler, 3f));
         }
 
         List<BtNode> skillNodes = new List<BtNode>();
         foreach (var data in skillData)
         {
             skillNodes.Add(new Leaf_PerformAttack(transform, player, _animator, data,
-                true, _rootMotionHandler,3f));
+                true, _rootMotionHandler, 3f));
         }
 
         Sequence_Memory fullComboSequence = new Sequence_Memory(new List<BtNode>()
         {
-            commonNodes[N.CheckAttackRange], commonNodes[N.Cleaner],
+            nodeDict[N.CheckAttackRange], nodeDict[N.Cleaner],
             attackNodes[0], attackNodes[1], attackNodes[2]
         });
 
         Sequence_Memory halfComboSequence = new Sequence_Memory(new List<BtNode>()
         {
-            commonNodes[N.CheckAttackRange], commonNodes[N.Cleaner],
+            nodeDict[N.CheckAttackRange], nodeDict[N.Cleaner],
             attackNodes[0], attackNodes[1]
         });
 
@@ -104,7 +108,7 @@ public class BossMonsterAI : EnemyAIBase
         });
         Sequence_Memory skillUseSequence = new Sequence_Memory(new List<BtNode>()
         {
-            checkSkillRange, checkSkillAble, commonNodes[N.Cleaner], skillRangeAction
+            checkSkillRange, checkSkillAble, nodeDict[N.Cleaner], skillRangeAction
         });
 
         Selector skillOrCombo = new Selector(new List<BtNode>()
@@ -116,19 +120,19 @@ public class BossMonsterAI : EnemyAIBase
 
         Sequence_Memory outOfRangeAction = new Sequence_Memory(new List<BtNode>()
         {
-            commonNodes[N.Chase], commonNodes[N.Wait]
+            nodeDict[N.Chase], nodeDict[N.Wait]
         });
 
 
         Selector walkCheck = new Selector(new List<BtNode>()
         {
-            commonNodes[N.CheckAttackRange], outOfRangeAction
+            nodeDict[N.CheckAttackRange], outOfRangeAction
         });
 
 
         Selector_Random randomOutAction = new Selector_Random(new List<BtNode>()
         {
-            walkCheck, commonNodes[N.Strafe]
+            walkCheck, nodeDict[N.Strafe]
         });
 
         Selector actions = new Selector(new List<BtNode>()

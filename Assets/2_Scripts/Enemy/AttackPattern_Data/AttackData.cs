@@ -3,7 +3,7 @@ using UnityEngine;
 public class AttackData : ScriptableObject
 {
     public string aniName;
-    public float damage;
+    public int damage;
     
     public float windupTime;
     public float activeTime;

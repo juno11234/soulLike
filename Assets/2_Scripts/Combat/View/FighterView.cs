@@ -3,13 +3,13 @@ using UnityEngine;
 using UnityEngine.UI;
 
 
-public class FighterView : MonoBehaviour, IFighter
+public class FighterView : MonoBehaviour
 {
     [SerializeField] private FighterStats stats;
     [SerializeField] private Slider hpBar; // 예시: HP 바
     [SerializeField] private Slider staminaBar; // 예시: HP 바
     [SerializeField] private Collider modelCollider;
-    public FighterViewModel ViewModel { get; private set; }
+    private FighterViewModel ViewModel { get; set; }
 
     public bool Invincible { get; set; }
 
@@ -28,7 +28,6 @@ public class FighterView : MonoBehaviour, IFighter
 
         // 2. ViewModel의 데이터 변경을 View에 반영하도록 구독(Subscribe)합니다.
         ViewModel.CurrentHealth.Subscribe(UpdateHpBar);
-        ViewModel.IsDead.Subscribe(OnDeathStateChanged);
         ViewModel.OnTakeDamage += OnTakeDamageInvoke;
         ViewModel.OnDied += OnDiedInvoke;
         if (staminaBar != null)
@@ -53,10 +52,6 @@ public class FighterView : MonoBehaviour, IFighter
         staminaBar.value = newStamina / stats.MaxStamina;
     }
 
-    private void OnDeathStateChanged(bool isDead)
-    {
-    }
-
     private void OnTakeDamageInvoke(int damage)
     {
         OnTakeDamage?.Invoke(damage);
@@ -70,6 +65,13 @@ public class FighterView : MonoBehaviour, IFighter
     private void OnDiedInvoke()
     {
         OnDied?.Invoke();
+        CombatSystem.Instance.RemoveFighter(modelCollider);
+        modelCollider.enabled = false;
+        hpBar.gameObject.SetActive(false);
+        if (staminaBar != null)
+        {
+            staminaBar.gameObject.SetActive(false);
+        }
     }
 
     // 기존 IFighter 인터페이스와의 호환성을 위한 메서드들
