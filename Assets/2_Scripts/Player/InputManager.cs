@@ -8,12 +8,14 @@ public class InputManager : MonoBehaviour
     private PlayerInput.PlayerActions _player;
 
     public delegate void InputButtonHandler(bool isPressed);
+
     public delegate void InputQEHandler(bool left);
 
     public event InputButtonHandler OnSpaceBarInput;
     public event InputButtonHandler OnLMBInput;
     public event InputButtonHandler OnShiftInput;
     public event InputButtonHandler OnMiddleMouseButtonInput;
+    public event InputButtonHandler OnRInput;
     public event InputQEHandler OnEKeyInput;
     public event InputQEHandler OnQKeyInput;
     public Vector2 MoveInput { get; private set; }
@@ -37,6 +39,8 @@ public class InputManager : MonoBehaviour
         _player.Shift.canceled += ctx => OnShiftInput?.Invoke(false);
 
         _player.LockOn.performed += ctx => OnMiddleMouseButtonInput?.Invoke(true);
+
+        _player.R.performed += ctx => OnRInput?.Invoke(true);
         
         _player.Q.performed += ctx => OnQKeyInput?.Invoke(true);
         _player.E.performed += ctx => OnEKeyInput?.Invoke(false);

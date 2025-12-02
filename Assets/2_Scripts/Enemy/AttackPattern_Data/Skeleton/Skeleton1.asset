@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0ccd5abff48b3e446af66adc582fb0a6, type: 3}
   m_Name: Skeleton1
   m_EditorClassIdentifier: 
-  aniName: SkeletonAttack_1
+  attackName: SkeletonAttack1
   damage: 10
   windupTime: 1
   activeTime: 1

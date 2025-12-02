@@ -2,7 +2,7 @@ using UnityEngine;
 [CreateAssetMenu(fileName = "New Attack",menuName = "AI/Attack Data")]
 public class AttackData : ScriptableObject
 {
-    public string aniName;
+    public string attackName;
     public int damage;
     
     public float windupTime;

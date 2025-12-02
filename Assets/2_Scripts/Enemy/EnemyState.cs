@@ -2,30 +2,38 @@ using UnityEngine;
 
 public class EnemyState : MonoBehaviour, IAttackAble
 {
-    private FighterView _fighterView;
+    public AttackData[] attackData;
+    protected FighterView fighterView;
+    protected EnemyAIBase enemyAI;
+
     private Animator _animator;
     private static readonly int Die = Animator.StringToHash("Die");
-    private EnemyAIBase _enemyAI;
     private EnemyWeapon _weapon;
-    public AttackData[] attackData;
+
     private LockOnTarget _lockOnTarget;
 
     void Start()
     {
-        _fighterView = GetComponent<FighterView>();
-        _enemyAI = GetComponent<EnemyAIBase>();
+        fighterView = GetComponent<FighterView>();
+        enemyAI = GetComponent<EnemyAIBase>();
         _animator = GetComponentInChildren<Animator>();
         _weapon = GetComponentInChildren<EnemyWeapon>();
         _lockOnTarget = GetComponentInChildren<LockOnTarget>();
-
-        _fighterView.OnDied += Dead;
+        attackData = enemyAI.attackData;
+        Initialized();
+            
+        fighterView.OnDied += Dead;
     }
 
     protected virtual void Dead()
     {
-        _enemyAI.Dead();
-        _lockOnTarget.gameObject.SetActive(false); 
+        enemyAI.Dead();
+        _lockOnTarget.gameObject.SetActive(false);
         PlayTargetAniClip(Die, 0f);
+    }
+
+    protected virtual void Initialized()
+    {
     }
 
     private void PlayTargetAniClip(int hash, float transition)
@@ -35,7 +43,7 @@ public class EnemyState : MonoBehaviour, IAttackAble
 
     public void AttackForCollEnable()
     {
-        _weapon.ActiveCollider(10);
+        _weapon.ActiveCollider(attackData[0].damage);
     }
 
     public void AttackForCollDisEnable()

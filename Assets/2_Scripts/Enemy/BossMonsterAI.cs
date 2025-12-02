@@ -27,7 +27,7 @@ public class BossMonsterAI : EnemyAIBase
     private void Update()
     {
         if (IsDead) return;
-        
+
         if (skillCool)
         {
             skillTimer += Time.deltaTime;
@@ -44,6 +44,10 @@ public class BossMonsterAI : EnemyAIBase
             _rootNode.Evaluate();
     }
 
+    public void SecondPhase()
+    {
+        secondPhase = true;
+    }
 
     protected override void ConstructBehaviorTree()
     {

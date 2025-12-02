@@ -12,7 +12,7 @@ public class FighterViewModel
     public event Action<int> OnTakeDamage;
     public event Action OnStaminaZero;
     public event Action OnDied;
-
+    public event Action OnSecondPhase;
     private bool _isDead;
 
     public FighterViewModel(FighterStats stats)
@@ -27,6 +27,10 @@ public class FighterViewModel
     {
         if (_isDead) return;
         CurrentHealth.Value -= damage;
+        if (CurrentHealth.Value <= _stats.MaxHealth / 2)
+        {
+            OnSecondPhase?.Invoke();
+        }
 
         if (CurrentHealth.Value <= 0)
         {

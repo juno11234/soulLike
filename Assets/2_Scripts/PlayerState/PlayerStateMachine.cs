@@ -262,7 +262,9 @@ public class PlayerStateMachine : MonoBehaviour, IAttackAble
 
     public void AttackForCollEnable()
     {
-        _weapon.ActiveCollider(35);
+        int strength = _fighterView.Stats.strength;
+        int dexterity = _fighterView.Stats.dexterity;
+        _weapon.ActiveCollider(strength, dexterity);
     }
 
     public void AttackForCollDisEnable()

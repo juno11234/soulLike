@@ -5,6 +5,7 @@ public class PlayerWeapon : MonoBehaviour
 {
     private LayerMask _enemyLayer;
     private Collider _collider;
+    private WeaponItem _stat;
     private HashSet<FighterView> _damaged = new HashSet<FighterView>();
     private int _damage;
 
@@ -15,11 +16,13 @@ public class PlayerWeapon : MonoBehaviour
         _enemyLayer = 1 << 8;
     }
 
-    public void ActiveCollider(int damage)
+    public void ActiveCollider(int strength, int dexterity)
     {
         _collider.enabled = true;
-        
-        _damage = damage;
+        int totalDamage = _stat.Damage + (strength * _stat.StrengthBonus() / 2) +
+                          (dexterity * _stat.DexterityBonus() / 2);
+
+        _damage = totalDamage;
     }
 
     public void DisableCollider()
@@ -42,7 +45,7 @@ public class PlayerWeapon : MonoBehaviour
                     Collider = other,
                     Damage = _damage,
                 };
-                
+
                 CombatSystem.Instance.AddInGameEvent(e);
                 _damaged.Add(monster);
             }
