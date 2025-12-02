@@ -15,6 +15,8 @@ public class FighterView : MonoBehaviour
     public bool Invincible { get; set; }
 
     public FighterStats Stats => stats;
+
+    // 이벤트 들
     public event Action<int> OnTakeDamage;
     public event Action OnSecondPhase;
     public event Action OnStaminaZero;
@@ -94,6 +96,17 @@ public class FighterView : MonoBehaviour
         staminaBar.value = newStamina / stats.MaxStamina;
     }
 
+    public void Respawn()
+    {
+        ViewModel.Respawn();
+        modelCollider.enabled = true;
+        hpBar.gameObject.SetActive(true);
+        if (staminaBar != null)
+        {
+            staminaBar.gameObject.SetActive(true);
+        }
+    }
+
     #region 이벤트 발송
 
     private void OnTakeDamageInvoke(int damage)
@@ -114,7 +127,6 @@ public class FighterView : MonoBehaviour
     private void OnDiedInvoke()
     {
         OnDied?.Invoke();
-        CombatSystem.Instance.RemoveFighter(modelCollider);
         modelCollider.enabled = false;
         hpBar.gameObject.SetActive(false);
         if (staminaBar != null)

@@ -28,6 +28,7 @@ public class PlayerStateMachine : MonoBehaviour, IAttackAble
 
     public CameraControl CameraControl => _cameraControl;
     public Animator Animator => _animator;
+    public FighterView FighterView => _fighterView;
     public float WalkSpeed => walkSpeed;
     public float SprintSpeed => sprintSpeed;
     public float RollSpeed => rollSpeed;
@@ -53,6 +54,8 @@ public class PlayerStateMachine : MonoBehaviour, IAttackAble
 
     //입력용
     public event Action<bool> OnLMBAction;
+    public event Action<bool> OnRInput;
+    public event Action<bool> OnEInput;
     private bool _spacePressed;
     private bool _lmbPressed;
     private bool _noStamina;
@@ -85,6 +88,7 @@ public class PlayerStateMachine : MonoBehaviour, IAttackAble
         _weapon = GetComponentInChildren<PlayerWeapon>();
         _inputManager.OnSpaceBarInput += SpaceBarInput;
         _inputManager.OnLMBInput += LmbInput;
+        _inputManager.OnRInput += RInput;
 
         _fighterView.OnDied += Die;
         _fighterView.OnTakeDamage += TakeDamage;
@@ -139,6 +143,16 @@ public class PlayerStateMachine : MonoBehaviour, IAttackAble
         OnLMBAction?.Invoke(isPressed);
     }
 
+    private void RInput(bool isPressed)
+    {
+        OnRInput?.Invoke(isPressed);
+    }
+
+    private void EInput(bool isPressed)
+    {
+        OnEInput?.Invoke(isPressed);
+    }
+
     public void PlayTargetAniClip(int hash, float transition)
     {
         _animator.CrossFade(hash, transition);
@@ -150,6 +164,7 @@ public class PlayerStateMachine : MonoBehaviour, IAttackAble
         Gizmos.color = _sphereHit ? Color.cyan : new Color(0, 1, 1, 0.3f);
         Gizmos.DrawWireSphere(origin + Vector3.down * groundCheckDistance, groundCheckRadius); // 끝점
     }
+
 
     #region 이동 관련
 

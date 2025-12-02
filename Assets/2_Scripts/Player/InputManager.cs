@@ -1,6 +1,7 @@
 using System;
 using RPGCharacterAnims.Actions;
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 public class InputManager : MonoBehaviour
 {
@@ -16,8 +17,7 @@ public class InputManager : MonoBehaviour
     public event InputButtonHandler OnShiftInput;
     public event InputButtonHandler OnMiddleMouseButtonInput;
     public event InputButtonHandler OnRInput;
-    public event InputQEHandler OnEKeyInput;
-    public event InputQEHandler OnQKeyInput;
+    public event InputQEHandler OnQorEInput;
     public Vector2 MoveInput { get; private set; }
     public Vector2 CameraInput { get; private set; }
 
@@ -25,34 +25,94 @@ public class InputManager : MonoBehaviour
     {
         _input = new PlayerInput();
         _player = _input.Player;
-
-        _player.Move.performed += ctx => MoveInput = ctx.ReadValue<Vector2>();
-        _player.Camera.performed += ctx => CameraInput = ctx.ReadValue<Vector2>();
-
-        _player.Roll.performed += ctx => OnSpaceBarInput?.Invoke(true);
-        _player.Roll.canceled += ctx => OnSpaceBarInput?.Invoke(false);
-
-        _player.Attack.performed += ctx => OnLMBInput?.Invoke(true);
-        _player.Attack.canceled += ctx => OnLMBInput?.Invoke(false);
-
-        _player.Shift.performed += ctx => OnShiftInput?.Invoke(true);
-        _player.Shift.canceled += ctx => OnShiftInput?.Invoke(false);
-
-        _player.LockOn.performed += ctx => OnMiddleMouseButtonInput?.Invoke(true);
-
-        _player.R.performed += ctx => OnRInput?.Invoke(true);
-        
-        _player.Q.performed += ctx => OnQKeyInput?.Invoke(true);
-        _player.E.performed += ctx => OnEKeyInput?.Invoke(false);
     }
+
+    #region 인풋 함수
+
+    private void MovePerformed(InputAction.CallbackContext context)
+        => MoveInput = context.ReadValue<Vector2>();
+
+    private void CameraPerformed(InputAction.CallbackContext context)
+        => CameraInput = context.ReadValue<Vector2>();
+
+    private void SpacePerformed(InputAction.CallbackContext context)
+        => OnSpaceBarInput?.Invoke(true);
+
+    private void SpaceCanceled(InputAction.CallbackContext context)
+        => OnSpaceBarInput?.Invoke(false);
+
+    private void LmbPerformed(InputAction.CallbackContext context)
+        => OnLMBInput?.Invoke(true);
+
+    private void LmbCanceled(InputAction.CallbackContext context)
+        => OnLMBInput?.Invoke(false);
+
+    private void ShiftPerformed(InputAction.CallbackContext context)
+        => OnShiftInput?.Invoke(true);
+
+    private void ShiftCanceled(InputAction.CallbackContext context)
+        => OnShiftInput?.Invoke(false);
+
+    private void LockOnPerformed(InputAction.CallbackContext context)
+        => OnMiddleMouseButtonInput?.Invoke(true);
+
+    private void RPerformed(InputAction.CallbackContext context)
+        => OnRInput?.Invoke(true);
+
+    private void QPerformed(InputAction.CallbackContext context)
+        => OnQorEInput?.Invoke(true);
+
+    private void EKeyPerformed(InputAction.CallbackContext context)
+        => OnQorEInput?.Invoke(false);
+
+    #endregion
+
 
     private void OnEnable()
     {
         _input.Enable();
+
+        _player.Move.performed += MovePerformed;
+        _player.Camera.performed += CameraPerformed;
+
+        _player.Roll.performed += SpacePerformed;
+        _player.Roll.canceled += SpaceCanceled;
+
+        _player.Attack.performed += LmbPerformed;
+        _player.Attack.canceled += LmbCanceled;
+
+        _player.Shift.performed += ShiftPerformed;
+        _player.Shift.canceled += ShiftCanceled;
+
+        _player.LockOn.performed += LockOnPerformed;
+
+        _player.R.performed += RPerformed;
+
+        _player.Q.performed += QPerformed;
+        _player.E.performed += EKeyPerformed;
     }
 
     private void OnDisable()
     {
         _input.Disable();
+
+        _player.Move.performed -= MovePerformed;
+        _player.Camera.performed -= CameraPerformed;
+
+        _player.Roll.performed -= SpacePerformed;
+        _player.Roll.canceled -= SpaceCanceled;
+
+        _player.Attack.performed -= LmbPerformed;
+        _player.Attack.canceled -= LmbCanceled;
+
+        _player.Shift.performed -= ShiftPerformed;
+        _player.Shift.canceled -= ShiftCanceled;
+
+        _player.LockOn.performed -= LockOnPerformed;
+
+        _player.R.performed -= RPerformed;
+
+        _player.Q.performed -= QPerformed;
+        _player.E.performed -= EKeyPerformed;
     }
 }

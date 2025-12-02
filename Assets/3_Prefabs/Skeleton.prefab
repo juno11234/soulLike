@@ -624,6 +624,7 @@ MonoBehaviour:
   hpBar: {fileID: 8769699277699000045}
   staminaBar: {fileID: 0}
   modelCollider: {fileID: 1540950359335070192}
+  widthScaleFactor: 1
 --- !u!114 &2233778794814137139
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -636,6 +637,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8f5ddda3101e9924d8356bab8ac4f319, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  canRespawn: 1
+  attackData: []
 --- !u!1 &1728169391728045127
 GameObject:
   m_ObjectHideFlags: 0
@@ -1671,8 +1674,8 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 0.08768345, y: 0.7454703, z: 0.19447224}
-  m_Center: {x: -0.0000000580946, y: 0.23478174, z: -0.00000043350326}
+  m_Size: {x: 0.33, y: 0.93, z: 0.37}
+  m_Center: {x: -0.0000000580946, y: 0.2, z: -0.00000043350326}
 --- !u!54 &3268732976128554681
 Rigidbody:
   m_ObjectHideFlags: 0

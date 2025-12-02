@@ -22,6 +22,13 @@ public class FighterViewModel
         CurrentStamina = new Observable<float>(_stats.MaxStamina);
     }
 
+    public void Respawn()
+    {
+        CurrentHealth.Value = _stats.MaxHealth;
+        OnTakeDamage?.Invoke(0);
+        _isDead = false;
+    }
+
     // View로부터 호출될 명령(메서드)
     public void TakeDamage(int damage)
     {
@@ -64,11 +71,16 @@ public class FighterViewModel
     public void TakeHeal(int heal)
     {
         if (_isDead) return;
-        CurrentHealth.Value += heal;
 
-        if (CurrentHealth.Value > _stats.MaxHealth)
+
+        if (CurrentHealth.Value + heal > _stats.MaxHealth)
         {
-            CurrentHealth.Value = _stats.MaxHealth;
+            int h = _stats.MaxHealth - CurrentHealth.Value;
+            CurrentHealth.Value += h;
+        }
+        else
+        {
+            CurrentHealth.Value += heal;
         }
     }
 }

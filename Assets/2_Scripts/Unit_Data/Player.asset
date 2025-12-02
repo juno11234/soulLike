@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: Player
   m_EditorClassIdentifier: 
   MaxHealth: 100
-  MaxStamina: 200
-  strength: 1
+  MaxStamina: 300
+  strength: 10
   dexterity: 1
   Defense: 5

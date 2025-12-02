@@ -6723,7 +6723,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &4755192252329600955
 Transform:
   m_ObjectHideFlags: 0
@@ -6844,6 +6844,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 263fb2c4ef9c49a4fb447b0fb1e74aed, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  canRespawn: 0
   attackData: []
   secondPhaseParticle: {fileID: 7258970337390975219}
   skillPrefabs:

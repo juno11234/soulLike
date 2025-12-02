@@ -54,4 +54,11 @@ public abstract class EnemyAIBase : MonoBehaviour
         IsDead = true;
         _agent.enabled = false;
     }
+
+    public void Respawn()
+    {
+        findPlayer = false;
+        IsDead = false;
+        _agent.enabled = true;
+    }
 }

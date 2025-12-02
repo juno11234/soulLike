@@ -12,11 +12,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bb6723677de32594aad810961d8c9c03, type: 3}
   m_Name: Sword
   m_EditorClassIdentifier: 
-  icon: {fileID: 0}
-  itemName: Sword
-  prefab: {fileID: 7809177843698889669, guid: d65570213e12e664a8cfc146359fdc9f, type: 3}
-  isUnarmed: 0
-  damage: 10
-  staminaConsume: 0
-  strength: 2
-  dexterity: 0
+  Type: 0
+  Icon: {fileID: 0}
+  ItemName: 
+  MaxAmount: 1
+  Prefab: {fileID: 7809177843698889669, guid: d65570213e12e664a8cfc146359fdc9f, type: 3}
+  IsUnarmed: 0
+  Damage: 30
+  StaminaConsume: 0
+  Strength: 2
+  Dexterity: 0

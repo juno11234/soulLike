@@ -27,7 +27,7 @@ public class CameraControl : MonoBehaviour
     [SerializeField] private LayerMask targetLayer;
 
     [Header("LockOn UI")] [SerializeField] private RectTransform lockOnIndicator;
-    
+
 
     [Header("debug")] [SerializeField] private LockOnTarget currentTarget;
     [SerializeField] private bool isLockedOn = false;
@@ -47,8 +47,7 @@ public class CameraControl : MonoBehaviour
     private void Start()
     {
         inputManager.OnMiddleMouseButtonInput += LockOn;
-        inputManager.OnQKeyInput += HandleTargetSwitching;
-        inputManager.OnEKeyInput += HandleTargetSwitching;
+        inputManager.OnQorEInput += HandleTargetSwitching;
         _defaultDistance = Vector3.Distance(cameraPivot.position,
             cameraTransform.position);
         lockOnIndicator.gameObject.SetActive(false);
@@ -66,19 +65,18 @@ public class CameraControl : MonoBehaviour
         CameraCollision();
     }
 
-    private void HandleTargetSwitching(bool isLeft)
+    private void HandleTargetSwitching(bool isQForLeft)
     {
         if (isLockedOn == false) return;
 
-      
 
         // Q 키 입력 확인 (왼쪽으로 전환)
-        if (isLeft)
+        if (isQForLeft)
         {
             FindAndSwitchTarget(true); // false for left
         }
         // E 키 입력 확인 (오른쪽으로 전환)
-        else if (isLeft == false)
+        else if (isQForLeft == false)
         {
             FindAndSwitchTarget(false); // true for right
         }
@@ -116,7 +114,7 @@ public class CameraControl : MonoBehaviour
             float horizontalDiff = potentialScreenPos.x - currentScreenPos.x;
 
             // 마우스 방향과 타겟의 상대적 위치가 일치하는지 확인
-            bool isInDirection = (isLeft==false && horizontalDiff > 0) || (isLeft && horizontalDiff < 0);
+            bool isInDirection = (isLeft == false && horizontalDiff > 0) || (isLeft && horizontalDiff < 0);
 
             if (isInDirection)
             {
