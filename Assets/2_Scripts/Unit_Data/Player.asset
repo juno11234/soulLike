@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e5a172ecf1d2a8744b0b9220c0b46bb2, type: 3}
   m_Name: Player
   m_EditorClassIdentifier: 
-  MaxHealth: 100
+  MaxHealth: 300
   MaxStamina: 300
   strength: 10
   dexterity: 1

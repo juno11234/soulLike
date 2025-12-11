@@ -74,7 +74,11 @@ public class FighterView : MonoBehaviour
 
     private void OnDisable()
     {
-        hpBar.gameObject.SetActive(false);
+        if (hpBar != null)
+        {
+            hpBar.gameObject.SetActive(false);
+        }
+
         if (staminaBar != null)
         {
             staminaBar.gameObject.SetActive(false);

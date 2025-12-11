@@ -23,6 +23,7 @@ public class PlayerStateMachine : MonoBehaviour, IAttackAble
     [SerializeField] private float staminaRegenRateAmount;
     [SerializeField] private float staminaRegenRateTime;
 
+    public CharacterController Controller => _controller;
 
     #region 상태에서 사용할 프로퍼티
 
@@ -37,7 +38,6 @@ public class PlayerStateMachine : MonoBehaviour, IAttackAble
     public float RollStamina => rollStamina;
     public float BackStepStamina => backStepStamina;
     public float AttackStamina => attackStamina;
-
     public bool SpaceBarPressed => _spacePressed;
     public bool NoStamina => _noStamina;
 
@@ -128,6 +128,7 @@ public class PlayerStateMachine : MonoBehaviour, IAttackAble
 
     public void ChangeState(IState newState)
     {
+        Debug.Log("ChangeState" + newState);
         _currentState?.Exit();
         _currentState = newState;
         _currentState?.Enter();
@@ -229,7 +230,7 @@ public class PlayerStateMachine : MonoBehaviour, IAttackAble
         (transform.position, groundCheckRadius, Vector3.down,
             out _, groundCheckDistance, _groundLayer);
 
-        return _sphereHit && _controller.isGrounded;
+        return _sphereHit || _controller.isGrounded;
     }
 
     public void ForwardMove(float speed)

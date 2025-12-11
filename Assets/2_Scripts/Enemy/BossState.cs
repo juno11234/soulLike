@@ -4,11 +4,13 @@ public class BossState : EnemyState, ISkillAble
 {
     [SerializeField] private GameObject secondPhaseParticle;
     [SerializeField] private GameObject[] skillPrefabs;
+    [SerializeField] private GameObject boneFire;
 
     protected override void Dead()
     {
         base.Dead();
         secondPhaseParticle.SetActive(false);
+        boneFire.SetActive(true);
     }
 
     protected override void Initialized()

@@ -14,6 +14,7 @@ public class EnemyState : MonoBehaviour, IAttackAble
     private EnemyWeapon _weapon;
     private Vector3 _originTransform;
     private Quaternion _originRotation;
+    private bool _isDead = false;
 
     private LockOnTarget _lockOnTarget;
 
@@ -32,21 +33,36 @@ public class EnemyState : MonoBehaviour, IAttackAble
         fighterView.OnDied += Dead;
     }
 
+    private void Update()
+    {
+        if (_isDead)
+        {
+            var stateInfo = _animator.GetCurrentAnimatorStateInfo(0);
+            if (stateInfo.shortNameHash == Die && stateInfo.normalizedTime >= 0.9f)
+            {
+                gameObject.SetActive(false);
+            }
+        }
+    }
+
     protected virtual void Dead()
     {
         enemyAI.Dead();
         _lockOnTarget.gameObject.SetActive(false);
         PlayTargetAniClip(Die, 0f);
+        _isDead = true;
     }
 
     public void Respawn()
     {
-        if (canRespawn == false) return;
+        if (canRespawn == false || _isDead == false) return;
+        gameObject.SetActive(true);
         transform.position = _originTransform;
         transform.rotation = _originRotation;
         PlayTargetAniClip(Respawn1, 0f);
         fighterView.Respawn();
         enemyAI.Respawn();
+        _isDead = false;
         _lockOnTarget.gameObject.SetActive(true);
     }
 
