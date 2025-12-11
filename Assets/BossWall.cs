@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class BossWall : MonoBehaviour
 {
+    private static readonly int Vertical = Animator.StringToHash("Vertical");
     private int _playerLayer;
     private PlayerStateMachine _player;
     [SerializeField] private Transform enterPos;
@@ -47,10 +48,10 @@ public class BossWall : MonoBehaviour
         box.enabled = false;
         Vector3 aPos = enterPos.position;
         Vector3 bPos = _player.transform.position;
-
+        
         aPos.y = 0;
         while (true)
-        {
+        {_player.Animator.SetFloat(Vertical, 1f);
             Vector3 dir = (aPos - bPos).normalized;
             dir.y = 0;
             // Move로 걸어가기
@@ -66,6 +67,7 @@ public class BossWall : MonoBehaviour
             yield return null; // 매 프레임 이동
         }
 
+        _player.Animator.SetFloat(Vertical, 0f);
         box.enabled = true;
     }
 }
