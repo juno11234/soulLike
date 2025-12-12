@@ -32,13 +32,16 @@ public static class BuildAuto
 
         // 저장할 디렉토리 확인 및 생성
         Directory.CreateDirectory(buildPath);
-        
+
+        #region  디버깅 로그들
+
         Debug.Log($"Current working directory: {Directory.GetCurrentDirectory()}");
-        
         Debug.Log($"Starting build for target: {BuildTarget.StandaloneWindows64}");
         Debug.Log($"Scenes to build: {string.Join(", ", scenes)}");
         Debug.Log($"Output location: {locationPathName}");
 
+        #endregion
+        
         //  빌드옵션설정
         BuildPlayerOptions buildPlayerOptions = new BuildPlayerOptions
         {
@@ -55,7 +58,6 @@ public static class BuildAuto
         // 결과 보고 및 종료
         if (summary.result == BuildResult.Succeeded)
         {
-            Debug.Log($"Build succeeded!");
             Debug.Log($"- Output: {summary.outputPath}");
             Debug.Log($"- Size: {summary.totalSize} bytes");
             Debug.Log($"- Duration: {summary.totalTime}");
@@ -63,7 +65,6 @@ public static class BuildAuto
         }
         else
         {
-            Debug.LogError("Build failed!");
             Debug.LogError($"- Reason: {summary.result}");
             Debug.LogError($"- Errors: {summary.totalErrors}");
             EditorApplication.Exit(1); // Failure

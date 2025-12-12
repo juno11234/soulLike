@@ -5,7 +5,7 @@ public class FighterStats : ScriptableObject
 {
     public int MaxHealth = 100;
     public float MaxStamina = 100f;
-    [Header("if Enemy strength=damage")] public int strength = 1;
+    public int strength = 1;
     public int dexterity = 1;
     public int Defense = 5;
 }

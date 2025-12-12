@@ -24,7 +24,6 @@ public class Observable<T>
     public void Subscribe(Action<T> listener)
     {
         OnValueChanged += listener;
-        // 구독 시 현재 값으로 즉시 한번 호출
         listener?.Invoke(_value);
     }
 
