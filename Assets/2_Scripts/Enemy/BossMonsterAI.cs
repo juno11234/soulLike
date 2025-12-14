@@ -58,23 +58,6 @@ public class BossMonsterAI : EnemyAIBase
         BtNode checkSkillAble = new Leaf_CheckSkillAble(this);
         BtNode checkSkillRange = new Leaf_CheckAttackRange(transform, player, skillRange);
 
-        #endregion
-
-        Sequence_Memory backMoveAndWait = new Sequence_Memory(new List<BtNode>()
-        {
-            nodeDict[N.BackMove], nodeDict[N.Wait]
-        });
-        Sequence_Memory backWalkCheck = new Sequence_Memory(new List<BtNode>()
-        {
-            nodeDict[N.CheckAttackRange], nodeDict[N.Cleaner], backMoveAndWait
-        });
-        Sequence_Memory innerStrafeSequence = new Sequence_Memory(new List<BtNode>()
-        {
-            nodeDict[N.CheckAttackRange], nodeDict[N.Cleaner], nodeDict[N.Strafe]
-        });
-
-        #region 공격 관련
-
         List<BtNode> attackNodes = new List<BtNode>();
         foreach (var data in attackData)
         {
@@ -89,23 +72,33 @@ public class BossMonsterAI : EnemyAIBase
                 true, _rootMotionHandler, 3f));
         }
 
+        #endregion
+
+        Sequence_Memory backMoveAndWait = new Sequence_Memory(new List<BtNode>()
+        {
+            nodeDict[N.BackMove], nodeDict[N.Wait]
+        });
+        
+        #region 공격 관련
+
         Sequence_Memory fullComboSequence = new Sequence_Memory(new List<BtNode>()
         {
-            nodeDict[N.CheckAttackRange], nodeDict[N.Cleaner],
             attackNodes[0], attackNodes[1], attackNodes[2]
         });
 
         Sequence_Memory halfComboSequence = new Sequence_Memory(new List<BtNode>()
         {
-            nodeDict[N.CheckAttackRange], nodeDict[N.Cleaner],
             attackNodes[0], attackNodes[1]
         });
-
+        
         Selector_Random comboOrStrafeAction = new Selector_Random(new List<BtNode>()
         {
-            fullComboSequence, halfComboSequence, innerStrafeSequence, backWalkCheck
+            fullComboSequence, halfComboSequence, nodeDict[N.Strafe], backMoveAndWait
         });
-
+        Sequence_Memory a = new Sequence_Memory(new List<BtNode>()
+        {
+            nodeDict[N.CheckAttackRange], nodeDict[N.Cleaner], comboOrStrafeAction
+        });
         Selector_Random skillRangeAction = new Selector_Random(new List<BtNode>()
         {
             skillNodes[0], skillNodes[1]
@@ -117,7 +110,7 @@ public class BossMonsterAI : EnemyAIBase
 
         Selector skillOrCombo = new Selector(new List<BtNode>()
         {
-            skillUseSequence, comboOrStrafeAction
+            skillUseSequence, a
         });
 
         #endregion
@@ -127,12 +120,10 @@ public class BossMonsterAI : EnemyAIBase
             nodeDict[N.Chase], nodeDict[N.Wait]
         });
 
-
         Selector walkCheck = new Selector(new List<BtNode>()
         {
             nodeDict[N.CheckAttackRange], outOfRangeAction
         });
-
 
         Selector_Random randomOutAction = new Selector_Random(new List<BtNode>()
         {

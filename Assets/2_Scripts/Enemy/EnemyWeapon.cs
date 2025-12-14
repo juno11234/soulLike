@@ -8,18 +8,19 @@ public class EnemyWeapon : MonoBehaviour
     private HashSet<FighterView> _damaged = new HashSet<FighterView>();
 
     private int _damage;
+
     private void Start()
     {
         _collider = GetComponent<Collider>();
         _collider.enabled = false;
-        _playerLayer = 1<<7;
+        _playerLayer = 1 << LayerMask.NameToLayer("Player");
     }
 
     public void ActiveCollider(int damage)
     {
         _collider.enabled = true;
-        
-        _damage=damage;
+
+        _damage = damage;
     }
 
     public void DisableCollider()

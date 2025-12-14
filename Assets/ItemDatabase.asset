@@ -1,0 +1,24 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 0}
+  m_Name: ItemDatabase
+  m_EditorClassIdentifier: Assembly-CSharp::ItemDatabase
+  tsvFile: {fileID: 4900000, guid: af643042e627e8b47b845d51e2c7bc10, type: 3}
+  items:
+  - ID: 101
+    Name: Sword
+    AttackPower: 10
+    Description: "\uAE30\uBCF8 \uAC80"
+  - ID: 102
+    Name: Bow
+    AttackPower: 8
+    Description: "\uB098\uBB34 \uD65C"

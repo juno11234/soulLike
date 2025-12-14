@@ -4,11 +4,6 @@ using UnityEngine;
 public class Selector : BtNode
 {
     // 노드 중 하나라도 성공 (우선순위 판단) 실패해야 다음노드
-    
-    public Selector() : base()
-    {
-    }
-
     public Selector(List<BtNode> children) : base(children)
     {
     }
@@ -123,17 +118,16 @@ public class Sequence_Memory : BtNode
             switch (childState)
             {
                 case NodeState.Failure:
-                    // 자식 중 하나라도 실패하면, 이 시퀀스 전체가 실패입니다.
                     _lastRunningChildIndex = 0; // 상태 초기화
                     State = NodeState.Failure;
                     return State;
 
                 case NodeState.Success:
-                    // 자식이 성공하면, 루프를 계속 진행하여 다음 자식을 평가합니다.
+                    // 성공하면 다음 자식
                     continue;
 
                 case NodeState.Running:
-                    // 자식이 아직 실행 중이라면, 어디까지 실행했는지 기억하고 이 시퀀스 전체도 Running 상태가 됩니다.
+                    // 실행 중이라면, 어디까지 실행했는지 기억
                     _lastRunningChildIndex = i;
                     State = NodeState.Running;
                     return State;

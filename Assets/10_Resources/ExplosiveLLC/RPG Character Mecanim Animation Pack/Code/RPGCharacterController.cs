@@ -12,6 +12,7 @@ namespace RPGCharacterAnims
     /// state related to a character. It is the core component of this package–no other controller
     /// will run without it.
     /// </summary>
+    [RequireComponent(typeof(RPGCharacterAnimatorEvents))]
     public class RPGCharacterController : MonoBehaviour
     {
 		#region Events
@@ -400,7 +401,6 @@ namespace RPGCharacterAnims
                 Debug.Break();
             }
 
-            animator.gameObject.AddComponent<RPGCharacterAnimatorEvents>();
             animator.updateMode = AnimatorUpdateMode.Normal;
             animator.cullingMode = AnimatorCullingMode.CullUpdateTransforms;
             animator.SetInteger(AnimationParameters.Weapon, 0);

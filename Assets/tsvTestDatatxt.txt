@@ -1,0 +1,3 @@
+ID	Name	AttackPower	Description
+101	Sword	10	기본 검
+102	Bow	8	나무 활
