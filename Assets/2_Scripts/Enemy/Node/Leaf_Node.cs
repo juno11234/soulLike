@@ -43,6 +43,8 @@ public class Leaf_CheckAttackRange : BtNode
 
 public class Leaf_Cleaner : BtNode
 {
+    private static readonly int Vertical = Animator.StringToHash("Vertical");
+    private static readonly int Horizontal = Animator.StringToHash("Horizontal");
     private readonly Animator _animator;
     private readonly NavMeshAgent _agent;
 
@@ -54,8 +56,8 @@ public class Leaf_Cleaner : BtNode
 
     public override NodeState Evaluate()
     {
-        _animator.SetFloat("Vertical", 0f);
-        _animator.SetFloat("Horizontal", 0f);
+        _animator.SetFloat(Vertical, 0f);
+        _animator.SetFloat(Horizontal, 0f);
         _agent.isStopped = true;
         _agent.ResetPath();
 
@@ -83,6 +85,7 @@ public class Leaf_CheckSkillAble : BtNode
         {
             return NodeState.Failure;
         }
+
     }
 }
 
@@ -173,6 +176,7 @@ public class Leaf_Chase : BtNode
         {
             _isStarted = true;
             _agent.isStopped = false; // 에이전트 이동 시작
+            Debug.Log("f");
         }
 
         _timer += Time.deltaTime;
