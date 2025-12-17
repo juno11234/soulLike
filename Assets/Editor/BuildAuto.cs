@@ -39,6 +39,7 @@ public static class BuildAuto
         Debug.Log($"빌드 환경: {BuildTarget.StandaloneWindows64}");
         Debug.Log($"빌드된 씬: {string.Join(", ", scenes)}");
         Debug.Log($"빌드저장 주소: {locationPathName}");
+        Debug.Log($"OnlyEnglish ?: {locationPathName}");
 
         #endregion
         
