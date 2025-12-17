@@ -14,11 +14,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Type: 0
   Icon: {fileID: 0}
-  ItemName: 
+  ItemName: "\uAE30\uBCF8\uAC80"
   MaxAmount: 1
   Prefab: {fileID: 7809177843698889669, guid: d65570213e12e664a8cfc146359fdc9f, type: 3}
-  IsUnarmed: 0
   Damage: 30
-  StaminaConsume: 0
+  StaminaConsume: 30
   Strength: 2
   Dexterity: 0

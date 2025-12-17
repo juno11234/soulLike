@@ -12,7 +12,6 @@ public enum WeaponRank
 public class WeaponItem : Item
 {
     public GameObject Prefab;
-    public bool IsUnarmed;
 
     public int Damage;
     public float StaminaConsume;
