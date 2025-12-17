@@ -20,7 +20,7 @@ public static class BuildAuto
 
         if (scenes.Length == 0)
         {
-            Debug.LogError("No scenes are enabled in Build Settings. Aborting build.");
+            Debug.LogError("씬이 없어.");
             EditorApplication.Exit(1);
             return;
         }
@@ -35,10 +35,10 @@ public static class BuildAuto
 
         #region  디버깅 로그들
 
-        Debug.Log($"Current working directory: {Directory.GetCurrentDirectory()}");
-        Debug.Log($"Starting build for target: {BuildTarget.StandaloneWindows64}");
-        Debug.Log($"Scenes to build: {string.Join(", ", scenes)}");
-        Debug.Log($"Output location: {locationPathName}");
+        Debug.Log($"현재 작업중인 주소: {Directory.GetCurrentDirectory()}");
+        Debug.Log($"빌드 환경: {BuildTarget.StandaloneWindows64}");
+        Debug.Log($"빌드된 씬: {string.Join(", ", scenes)}");
+        Debug.Log($"빌드저장 주소: {locationPathName}");
 
         #endregion
         
@@ -58,15 +58,15 @@ public static class BuildAuto
         // 결과 보고 및 종료
         if (summary.result == BuildResult.Succeeded)
         {
-            Debug.Log($"- Output: {summary.outputPath}");
-            Debug.Log($"- Size: {summary.totalSize} bytes");
-            Debug.Log($"- Duration: {summary.totalTime}");
+            Debug.Log($"- 결과: {summary.outputPath}");
+            Debug.Log($"- 용량: {summary.totalSize} bytes");
+            Debug.Log($"- 시간: {summary.totalTime}");
             EditorApplication.Exit(0); // Success
         }
         else
         {
-            Debug.LogError($"- Reason: {summary.result}");
-            Debug.LogError($"- Errors: {summary.totalErrors}");
+            Debug.LogError($"- 문제원인: {summary.result}");
+            Debug.LogError($"- 에러: {summary.totalErrors}");
             EditorApplication.Exit(1); // Failure
         }
     }
