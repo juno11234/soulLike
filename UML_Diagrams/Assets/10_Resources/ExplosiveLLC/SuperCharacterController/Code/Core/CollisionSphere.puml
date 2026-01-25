@@ -1,0 +1,8 @@
+@startuml
+class CollisionSphere {
+    + offset : float
+    + isFeet : bool
+    + isHead : bool
+    + CollisionSphere(offset:float, isFeet:bool, isHead:bool)
+}
+@enduml

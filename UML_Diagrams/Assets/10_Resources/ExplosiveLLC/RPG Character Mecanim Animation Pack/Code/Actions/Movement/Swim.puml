@@ -1,0 +1,11 @@
+@startuml
+class Swim {
+    + Swim(movement:RPGCharacterMovementController)
+    + <<override>> CanStartAction(controller:RPGCharacterController) : bool
+    # <<override>> _StartAction(controller:RPGCharacterController, context:EmptyContext) : void
+    + <<override>> IsActive() : bool
+}
+class "MovementActionHandler`1"<T> {
+}
+"MovementActionHandler`1" "<EmptyContext>" <|-- Swim
+@enduml

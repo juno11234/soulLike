@@ -1,0 +1,11 @@
+@startuml
+abstract class "InstantActionHandler`1"<TContext> {
+    + <<override>> StartAction(controller:RPGCharacterController, context:object) : void
+    + <<override>> IsActive() : bool
+    + <<override>> CanEndAction(controller:RPGCharacterController) : bool
+    # <<override>> _EndAction(controller:RPGCharacterController) : void
+}
+class "BaseActionHandler`1"<T> {
+}
+"BaseActionHandler`1" "<TContext>" <|-- "InstantActionHandler`1"
+@enduml

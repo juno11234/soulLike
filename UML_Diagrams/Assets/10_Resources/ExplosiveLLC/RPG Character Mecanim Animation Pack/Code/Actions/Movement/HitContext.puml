@@ -1,0 +1,11 @@
+@startuml
+class HitContext {
+    + number : int
+    + force : float
+    + variableForce : float
+    + relative : bool
+    + HitContext()
+    + HitContext(number:int, direction:Vector3, force:float, variableForce:float, relative:bool)
+}
+HitContext --> "direction" Vector3
+@enduml

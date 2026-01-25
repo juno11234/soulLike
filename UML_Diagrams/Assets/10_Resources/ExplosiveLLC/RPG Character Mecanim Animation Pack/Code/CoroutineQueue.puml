@@ -1,0 +1,17 @@
+@startuml
+class CoroutineQueue {
+    - <<readonly>> maxActive : uint
+    - numActive : uint
+    + CoroutineQueue(maxActive:uint, coroutineStarter:Func<IEnumerator, Coroutine>)
+    + Run(coroutine:IEnumerator) : void
+    + RunCallback(callback:System.Action) : void
+    - CoroutineCallback(callback:System.Action) : IEnumerator
+    - CoroutineRunner(coroutine:IEnumerator) : IEnumerator
+}
+class "Func`2"<T1,T2> {
+}
+class "Queue`1"<T> {
+}
+CoroutineQueue --> "coroutineStarter<IEnumerator,Coroutine>" "Func`2"
+CoroutineQueue --> "queue<IEnumerator>" "Queue`1"
+@enduml

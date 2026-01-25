@@ -1,0 +1,80 @@
+@startuml
+class PlayerStateMachine {
+    - <<readonly>> _vertical : int
+    - <<readonly>> _horizontal : int
+    - walkSpeed : float = 10f
+    - sprintSpeed : float = 15f
+    - rotationSpeed : float = 10f
+    - rollSpeed : float = 10f
+    - backstepSpeed : float = 2f
+    - groundCheckDistance : float = 2f
+    - groundCheckRadius : float = 1.3f
+    - rollStamina : float
+    - backStepStamina : float
+    - attackStamina : float
+    - staminaRegenRateAmount : float
+    - staminaRegenRateTime : float
+    + WalkSpeed : float <<get>>
+    + SprintSpeed : float <<get>>
+    + RollSpeed : float <<get>>
+    + BackstepSpeed : float <<get>>
+    + MoveAmount : float <<get>>
+    + RollStamina : float <<get>>
+    + BackStepStamina : float <<get>>
+    + AttackStamina : float <<get>>
+    + SpaceBarPressed : bool <<get>>
+    + NoStamina : bool <<get>>
+    +  <<event>> OnLMBAction : Action<bool> 
+    +  <<event>> OnRInput : Action<bool> 
+    +  <<event>> OnEInput : Action<bool> 
+    - _spacePressed : bool
+    - _lmbPressed : bool
+    - _noStamina : bool
+    - _isDead : bool
+    - _currentSpeed : float
+    - _moveAmount : float
+    - _staminaTimer : float = 0f
+    - _gravity : float
+    - _sphereHit : bool
+    - Awake() : void
+    - Start() : void
+    - Update() : void
+    + ChangeState(newState:IState) : void
+    - SpaceBarInput(isPressed:bool) : void
+    - LmbInput(isPressed:bool) : void
+    - RInput(isPressed:bool) : void
+    - EInput(isPressed:bool) : void
+    + PlayTargetAniClip(hash:int, transition:float) : void
+    - OnDrawGizmos() : void
+    + Movement(speed:float) : void
+    + HandleMove_Ani(vericalVal:float, horizVal:float, isSprinting:bool) : void
+    + IsGrounded() : bool
+    + ForwardMove(speed:float) : void
+    + Backstep(speed:float) : void
+    - StaminaZero() : void
+    - HandleStaminaRegeneration() : void
+    + StaminaChange(stamina:float) : void
+    + AttackForCollEnable() : void
+    + AttackForCollDisEnable() : void
+    + ActiveInvisible(active:bool) : void
+    - TakeDamage(damage:int) : void
+    - Die() : void
+}
+MonoBehaviour <|-- PlayerStateMachine
+IAttackAble <|-- PlayerStateMachine
+PlayerStateMachine --> "Controller" CharacterController
+PlayerStateMachine --> "CameraControl" CameraControl
+PlayerStateMachine --> "Animator" Animator
+PlayerStateMachine --> "FighterView" FighterView
+PlayerStateMachine --> "_inputManager" InputManager
+PlayerStateMachine --> "_controller" CharacterController
+PlayerStateMachine --> "_mainCam" Camera
+PlayerStateMachine --> "_animator" Animator
+PlayerStateMachine --> "_fighterView" FighterView
+PlayerStateMachine --> "_cameraControl" CameraControl
+PlayerStateMachine --> "_weapon" PlayerWeapon
+PlayerStateMachine --> "_currentState" IState
+PlayerStateMachine --> "_velocity" Vector3
+PlayerStateMachine --> "_groundLayer" LayerMask
+PlayerStateMachine --> "_iAttackAbleImplementation" IAttackAble
+@enduml

@@ -1,0 +1,17 @@
+@startuml
+class WeaponExtensions <<static>> {
+    + {static} IsRightHandedWeapon(weapon:Weapon) : bool
+    + {static} IsLeftHandedWeapon(weapon:Weapon) : bool
+    + {static} Is2HandedWeapon(weapon:Weapon) : bool
+    + {static} IsAimedWeapon(weapon:Weapon) : bool
+    + {static} HasEquippedWeapon(weapon:Weapon) : bool
+    + {static} HasNoWeapon(weapon:Weapon) : bool
+    + {static} Is1HandedWeapon(weapon:Weapon) : bool
+    + {static} IsCastableWeapon(weapon:Weapon) : bool
+    + {static} IsIKWeapon(weapon:Weapon) : bool
+    + {static} ToAnimatorWeapon(weapon:Weapon) : AnimatorWeapon
+    + {static} Is1HandedAnimWeapon(weapon:AnimatorWeapon) : bool
+    + {static} Is2HandedAnimWeapon(weapon:AnimatorWeapon) : bool
+    + {static} HasNoAnimWeapon(weapon:AnimatorWeapon) : bool
+}
+@enduml

@@ -1,0 +1,109 @@
+@startuml
+class Leaf_CheckAttackRange {
+    - <<readonly>> _range : float
+    + Leaf_CheckAttackRange(self:Transform, target:Transform, range:float)
+    + <<override>> Evaluate() : NodeState
+}
+class Leaf_Cleaner {
+    - {static} <<readonly>> Vertical : int
+    - {static} <<readonly>> Horizontal : int
+    + Leaf_Cleaner(animator:Animator, agent:NavMeshAgent)
+    + <<override>> Evaluate() : NodeState
+}
+class Leaf_CheckSkillAble {
+    + Leaf_CheckSkillAble(boss:BossMonsterAI)
+    + <<override>> Evaluate() : NodeState
+}
+class Leaf_Strafe {
+    - {static} <<readonly>> Horizontal : int
+    - _strafeDuration : float
+    - _timer : float
+    - _strafeDirection : int
+    - _isStarted : bool
+    + Leaf_Strafe(self:Transform, target:Transform, agent:NavMeshAgent, animator:Animator, strafeDuration:float)
+    + <<override>> Evaluate() : NodeState
+}
+class Leaf_Chase {
+    - {static} <<readonly>> Vertical : int
+    - _isStarted : bool
+    - _timer : float
+    + Leaf_Chase(self:Transform, target:Transform, animator:Animator, agent:NavMeshAgent)
+    + <<override>> Evaluate() : NodeState
+}
+class Leaf_Wait {
+    - _isStarted : bool
+    - _timer : float
+    + Leaf_Wait(animator:Animator, agent:NavMeshAgent)
+    + <<override>> Evaluate() : NodeState
+}
+class Leaf_BackMove {
+    - {static} <<readonly>> Vertical : int
+    - _timer : float
+    - _isStarted : bool
+    + Leaf_BackMove(animator:Animator, agent:NavMeshAgent, self:Transform, target:Transform)
+    + <<override>> Evaluate() : NodeState
+}
+class Leaf_PerformAttack {
+    - _useRoot : bool
+    - _timer : float
+    - _isAttacking : bool
+    - _isDamaged : bool
+    - _moveSpeed : float
+    + Leaf_PerformAttack(self:Transform, target:Transform, animator:Animator, data:AttackData, useRoot:bool, rootHandler:RootMotionHandler, moveSpeed:float)
+    + <<override>> Evaluate() : NodeState
+    - RotateTowardsTarget() : void
+}
+class Leaf_Patrol {
+    - {static} <<readonly>> Vertical : int
+    - _index : int
+    - _isStarted : bool
+    + Leaf_Patrol(patrolPoints:Transform[], agent:NavMeshAgent, animator:Animator)
+    + <<override>> Evaluate() : NodeState
+}
+class Leaf_WatchPlayer {
+    - _viewAngle : float
+    - _viewDistance : float
+    - _playerLayer : int
+    + Leaf_WatchPlayer(target:Transform, self:Transform, viewAngle:float, viewDistance:float, enemy:EnemyAIBase)
+    + <<override>> Evaluate() : NodeState
+}
+BtNode <|-- Leaf_CheckAttackRange
+Leaf_CheckAttackRange --> "_self" Transform
+Leaf_CheckAttackRange --> "_target" Transform
+BtNode <|-- Leaf_Cleaner
+Leaf_Cleaner --> "_animator" Animator
+Leaf_Cleaner --> "_agent" NavMeshAgent
+BtNode <|-- Leaf_CheckSkillAble
+Leaf_CheckSkillAble --> "_boss" BossMonsterAI
+BtNode <|-- Leaf_Strafe
+Leaf_Strafe --> "_self" Transform
+Leaf_Strafe --> "_target" Transform
+Leaf_Strafe --> "_agent" NavMeshAgent
+Leaf_Strafe --> "_animator" Animator
+BtNode <|-- Leaf_Chase
+Leaf_Chase --> "_self" Transform
+Leaf_Chase --> "_target" Transform
+Leaf_Chase --> "_animator" Animator
+Leaf_Chase --> "_agent" NavMeshAgent
+BtNode <|-- Leaf_Wait
+Leaf_Wait --> "_animator" Animator
+Leaf_Wait --> "_agent" NavMeshAgent
+BtNode <|-- Leaf_BackMove
+Leaf_BackMove --> "_self" Transform
+Leaf_BackMove --> "_target" Transform
+Leaf_BackMove --> "_animator" Animator
+Leaf_BackMove --> "_agent" NavMeshAgent
+BtNode <|-- Leaf_PerformAttack
+Leaf_PerformAttack --> "_self" Transform
+Leaf_PerformAttack --> "_target" Transform
+Leaf_PerformAttack --> "_animator" Animator
+Leaf_PerformAttack --> "_attackData" AttackData
+Leaf_PerformAttack --> "_rootHandler" RootMotionHandler
+BtNode <|-- Leaf_Patrol
+Leaf_Patrol --> "_animator" Animator
+Leaf_Patrol --> "_agent" NavMeshAgent
+BtNode <|-- Leaf_WatchPlayer
+Leaf_WatchPlayer --> "_self" Transform
+Leaf_WatchPlayer --> "_target" Transform
+Leaf_WatchPlayer --> "_enemy" EnemyAIBase
+@enduml

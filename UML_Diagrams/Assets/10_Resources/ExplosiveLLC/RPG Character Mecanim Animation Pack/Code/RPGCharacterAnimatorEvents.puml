@@ -1,0 +1,27 @@
+@startuml
+class AnimatorMoveEvent {
+}
+class RPGCharacterAnimatorEvents {
+    - Awake() : void
+    + Hit() : void
+    + Shoot() : void
+    + FootR() : void
+    + FootL() : void
+    + Land() : void
+    + WeaponSwitch() : void
+    - OnAnimatorMove() : void
+}
+class "UnityEvent`2"<T1,T2> {
+}
+"UnityEvent`2" "<Vector3,Quaternion>" <|-- AnimatorMoveEvent
+MonoBehaviour <|-- RPGCharacterAnimatorEvents
+RPGCharacterAnimatorEvents o-> "OnHit" UnityEvent
+RPGCharacterAnimatorEvents o-> "OnShoot" UnityEvent
+RPGCharacterAnimatorEvents o-> "OnFootR" UnityEvent
+RPGCharacterAnimatorEvents o-> "OnFootL" UnityEvent
+RPGCharacterAnimatorEvents o-> "OnLand" UnityEvent
+RPGCharacterAnimatorEvents o-> "OnWeaponSwitch" UnityEvent
+RPGCharacterAnimatorEvents o-> "OnMove" AnimatorMoveEvent
+RPGCharacterAnimatorEvents --> "rpgCharacterController" RPGCharacterController
+RPGCharacterAnimatorEvents --> "animator" Animator
+@enduml

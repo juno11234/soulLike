@@ -1,0 +1,18 @@
+@startuml
+enum WeaponRank {
+    S,
+    A,
+    B,
+}
+class WeaponItem {
+    + Damage : int
+    + StaminaConsume : float
+    - OnValidate() : void
+    + StrengthBonus() : int
+    + DexterityBonus() : int
+}
+Item <|-- WeaponItem
+WeaponItem --> "Prefab" GameObject
+WeaponItem --> "Strength" WeaponRank
+WeaponItem --> "Dexterity" WeaponRank
+@enduml

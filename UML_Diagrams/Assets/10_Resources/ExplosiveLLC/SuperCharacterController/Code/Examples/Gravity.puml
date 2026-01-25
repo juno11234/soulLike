@@ -1,0 +1,7 @@
+@startuml
+class Gravity {
+    - Update() : void
+}
+MonoBehaviour <|-- Gravity
+Gravity o-> "planet" Transform
+@enduml

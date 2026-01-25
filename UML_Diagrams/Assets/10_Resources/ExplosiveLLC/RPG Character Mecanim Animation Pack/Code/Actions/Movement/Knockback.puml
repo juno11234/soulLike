@@ -1,0 +1,11 @@
+@startuml
+class Knockback {
+    + Knockback(movement:RPGCharacterMovementController)
+    + <<override>> CanStartAction(controller:RPGCharacterController) : bool
+    # <<override>> _StartAction(controller:RPGCharacterController, context:HitContext) : void
+    + <<override>> IsActive() : bool
+}
+class "MovementActionHandler`1"<T> {
+}
+"MovementActionHandler`1" "<HitContext>" <|-- Knockback
+@enduml

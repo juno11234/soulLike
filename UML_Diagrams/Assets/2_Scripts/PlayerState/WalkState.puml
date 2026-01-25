@@ -1,0 +1,12 @@
+@startuml
+class WalkState {
+    - _timer : float = 0f
+    + WalkState(player:PlayerStateMachine)
+    + Enter() : void
+    + UpdateLogic() : void
+    + Exit() : void
+    - EnterAttackState(isPressed:bool) : void
+}
+IState <|-- WalkState
+WalkState --> "_player" PlayerStateMachine
+@enduml

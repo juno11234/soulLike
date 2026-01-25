@@ -1,0 +1,9 @@
+@startuml
+class WeaponSlotManager {
+    - Awake() : void
+    + LoadWeaponOnSlot(weaponItem:WeaponItem, isLeft:bool) : void
+}
+MonoBehaviour <|-- WeaponSlotManager
+WeaponSlotManager --> "_leftHandSlot" WeaponHolderSlot
+WeaponSlotManager --> "_rightHandSlot" WeaponHolderSlot
+@enduml

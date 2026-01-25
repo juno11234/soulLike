@@ -1,0 +1,10 @@
+@startuml
+class RootMotionHandler {
+    - Awake() : void
+    - OnAnimatorMove() : void
+}
+MonoBehaviour <|-- RootMotionHandler
+RootMotionHandler --> "DeltaPos" Vector3
+RootMotionHandler --> "DeltaRot" Quaternion
+RootMotionHandler --> "_animator" Animator
+@enduml

@@ -1,0 +1,20 @@
+@startuml
+class AttackState {
+    - <<readonly>> _attack1 : int
+    - <<readonly>> _attack2 : int
+    - <<readonly>> _attack3 : int
+    - _animationPlayed : bool = false
+    - _2AnimationPlayed : bool = false
+    - _secondAttackReady : bool = false
+    - _thirdAttackReady : bool = false
+    + AttackState(player:PlayerStateMachine)
+    + Enter() : void
+    - LookAtTarget() : void
+    + UpdateLogic() : void
+    + Exit() : void
+    - SecondAttackReady(isPressed:bool) : void
+    - ThirdAttackReady(isPressed:bool) : void
+}
+IState <|-- AttackState
+AttackState --> "_player" PlayerStateMachine
+@enduml

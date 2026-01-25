@@ -1,0 +1,9 @@
+@startuml
+class PlayerMachineDebug {
+    - timeScale : float = 1.0f
+    - Awake() : void
+    - OnGUI() : void
+}
+MonoBehaviour <|-- PlayerMachineDebug
+PlayerMachineDebug --> "playerMachine" PlayerMachine
+@enduml

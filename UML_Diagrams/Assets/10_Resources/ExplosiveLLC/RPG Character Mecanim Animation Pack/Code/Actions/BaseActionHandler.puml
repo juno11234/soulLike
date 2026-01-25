@@ -1,0 +1,19 @@
+@startuml
+abstract class "BaseActionHandler`1"<TContext> {
+    + active : bool
+    +  <<event>> OnStart : Action 
+    +  <<event>> OnEnd : Action 
+    + {abstract} CanStartAction(controller:RPGCharacterController) : bool
+    + <<virtual>> StartAction(controller:RPGCharacterController, context:object) : void
+    + <<virtual>> AddStartListener(callback:Action) : void
+    + <<virtual>> RemoveStartListener(callback:Action) : void
+    + <<virtual>> IsActive() : bool
+    # {abstract} _StartAction(controller:RPGCharacterController, context:TContext) : void
+    + {abstract} CanEndAction(controller:RPGCharacterController) : bool
+    + <<virtual>> EndAction(controller:RPGCharacterController) : void
+    + <<virtual>> AddEndListener(callback:Action) : void
+    + <<virtual>> RemoveEndListener(callback:Action) : void
+    # {abstract} _EndAction(controller:RPGCharacterController) : void
+}
+IActionHandler <|-- "BaseActionHandler`1"
+@enduml

@@ -1,0 +1,18 @@
+@startuml
+enum NodeState {
+    Success,
+    Running,
+    Failure,
+}
+abstract class BtNode {
+    + BtNode()
+    + BtNode(children:List<BtNode>)
+    + Attach(children:List<BtNode>) : void
+    + {abstract} Evaluate() : NodeState
+}
+class "List`1"<T> {
+}
+BtNode --> "State" NodeState
+BtNode --> "parent" BtNode
+BtNode o-> "Children<BtNode>" "List`1"
+@enduml

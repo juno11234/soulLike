@@ -1,0 +1,13 @@
+@startuml
+interface IActionHandler {
+    CanStartAction(controller:RPGCharacterController) : bool
+    StartAction(controller:RPGCharacterController, context:object) : void
+    AddStartListener(callback:Action) : void
+    RemoveStartListener(callback:Action) : void
+    IsActive() : bool
+    CanEndAction(controller:RPGCharacterController) : bool
+    EndAction(controller:RPGCharacterController) : void
+    AddEndListener(callback:Action) : void
+    RemoveEndListener(callback:Action) : void
+}
+@enduml

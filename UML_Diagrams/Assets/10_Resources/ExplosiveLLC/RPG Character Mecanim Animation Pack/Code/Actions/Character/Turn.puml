@@ -1,0 +1,9 @@
+@startuml
+class Turn {
+    + <<override>> CanStartAction(controller:RPGCharacterController) : bool
+    # <<override>> _StartAction(controller:RPGCharacterController, turnType:TurnType) : void
+}
+class "InstantActionHandler`1"<T> {
+}
+"InstantActionHandler`1" "<TurnType>" <|-- Turn
+@enduml

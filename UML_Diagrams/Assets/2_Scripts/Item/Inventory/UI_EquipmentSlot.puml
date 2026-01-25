@@ -1,0 +1,27 @@
+@startuml
+class UI_EquipmentSlot {
+    - Awake() : void
+    - Start() : void
+    - OnDestroy() : void
+    - OnEquipmentChanged(newItem:WeaponItem, oldItem:WeaponItem) : void
+    + UpdateSlotUI() : void
+    + OnDrop(eventData:PointerEventData) : void
+    + OnBeginDrag(eventData:PointerEventData) : void
+    + OnDrag(eventData:PointerEventData) : void
+    + OnEndDrag(eventData:PointerEventData) : void
+}
+MonoBehaviour <|-- UI_EquipmentSlot
+IDropHandler <|-- UI_EquipmentSlot
+IBeginDragHandler <|-- UI_EquipmentSlot
+IDragHandler <|-- UI_EquipmentSlot
+IEndDragHandler <|-- UI_EquipmentSlot
+UI_EquipmentSlot --> "icon" Image
+UI_EquipmentSlot --> "playerEquipment" PlayerEquipment
+UI_EquipmentSlot --> "playerInventory" PlayerInventory
+UI_EquipmentSlot --> "uiInventory" UI_Inventory
+UI_EquipmentSlot --> "equippedWeapon" WeaponItem
+UI_EquipmentSlot --> "rectTransform" RectTransform
+UI_EquipmentSlot --> "parentCanvas" Canvas
+UI_EquipmentSlot --> "originalParent" Transform
+UI_EquipmentSlot --> "originalPosition" Vector2
+@enduml

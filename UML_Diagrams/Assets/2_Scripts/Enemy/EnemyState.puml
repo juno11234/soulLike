@@ -1,0 +1,25 @@
+@startuml
+class EnemyState {
+    - canRespawn : bool = true
+    - {static} <<readonly>> Die : int
+    - {static} <<readonly>> Respawn1 : int
+    - _isDead : bool = false
+    - Start() : void
+    - Update() : void
+    # <<virtual>> Dead() : void
+    + Respawn() : void
+    # <<virtual>> Initialized() : void
+    - PlayTargetAniClip(hash:int, transition:float) : void
+    + AttackForCollEnable() : void
+    + AttackForCollDisEnable() : void
+}
+MonoBehaviour <|-- EnemyState
+IAttackAble <|-- EnemyState
+EnemyState --> "fighterView" FighterView
+EnemyState --> "enemyAI" EnemyAIBase
+EnemyState --> "_animator" Animator
+EnemyState --> "_weapon" EnemyWeapon
+EnemyState --> "_originTransform" Vector3
+EnemyState --> "_originRotation" Quaternion
+EnemyState --> "_lockOnTarget" LockOnTarget
+@enduml

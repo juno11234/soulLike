@@ -1,0 +1,11 @@
+@startuml
+class Relax {
+    + <<override>> CanStartAction(controller:RPGCharacterController) : bool
+    + <<override>> CanEndAction(controller:RPGCharacterController) : bool
+    # <<override>> _StartAction(controller:RPGCharacterController, instant:bool?) : void
+    # <<override>> _EndAction(controller:RPGCharacterController) : void
+}
+class "BaseActionHandler`1"<T> {
+}
+"BaseActionHandler`1" "<bool?>" <|-- Relax
+@enduml

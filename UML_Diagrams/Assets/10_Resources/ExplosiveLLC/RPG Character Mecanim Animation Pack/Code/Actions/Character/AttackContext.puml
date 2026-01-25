@@ -1,0 +1,8 @@
+@startuml
+class AttackContext {
+    + type : string
+    + number : int
+    + AttackContext(type:string, side:Side, number:int)
+}
+AttackContext --> "Side" Side
+@enduml

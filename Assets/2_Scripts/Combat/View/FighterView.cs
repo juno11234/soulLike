@@ -51,7 +51,7 @@ public class FighterView : MonoBehaviour
 
 
         // 2. ViewModel의 데이터 변경을 View에 반영하도록 구독(Subscribe)합니다.
-        ViewModel.CurrentHealth.Subscribe(UpdateHpBar);
+        ViewModel.HealthRatio.Subscribe(UpdateHpBar);
         ViewModel.OnTakeDamage += OnTakeDamageInvoke;
         ViewModel.OnSecondPhase += OnSecondPhaseInvoke;
         ViewModel.OnDied += OnDiedInvoke;
@@ -90,9 +90,9 @@ public class FighterView : MonoBehaviour
         CombatSystem.Instance.RegisterFighter(this);
     }
 
-    private void UpdateHpBar(int newHealth)
+    private void UpdateHpBar(float newHealthRatio)
     {
-        hpBar.value = (float)newHealth / stats.MaxHealth;
+        hpBar.value = newHealthRatio;
     }
 
     private void UpdateStaminaBar(float newStamina)

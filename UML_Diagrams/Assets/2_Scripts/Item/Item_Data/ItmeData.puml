@@ -1,0 +1,20 @@
+@startuml
+abstract class DatabaseBase {
+    + {abstract} LoadData() : void
+}
+class ItemData {
+    + ID : int
+    + Name : string
+    + AttackPower : float
+    + Description : string
+}
+class ItemDatabase {
+    + <<override>> LoadData() : void
+}
+class "List`1"<T> {
+}
+ScriptableObject <|-- DatabaseBase
+DatabaseBase --> "tsvFile" TextAsset
+DatabaseBase <|-- ItemDatabase
+ItemDatabase o-> "items<ItemData>" "List`1"
+@enduml

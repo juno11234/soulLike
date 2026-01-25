@@ -1,0 +1,8 @@
+@startuml
+class HPFlowController {
+    - Start() : void
+    + SetValue(value:float) : void
+}
+MonoBehaviour <|-- HPFlowController
+HPFlowController --> "_material" Material
+@enduml

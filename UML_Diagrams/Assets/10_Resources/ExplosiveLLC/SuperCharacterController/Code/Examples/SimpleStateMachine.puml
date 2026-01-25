@@ -1,0 +1,36 @@
+@startuml
+class SimpleStateMachine {
+    + DebugGui : bool
+    + DebugGuiTitle : string = "Simple Machine"
+    - OnGUI() : void
+    # timeEnteredState : float
+    - ChangingState() : void
+    - ConfigureCurrentState() : void
+    - ConfigureDelegate(methodRoot:string, Default:T) : T
+    - Update() : void
+    - FixedUpdate() : void
+    - LateUpdate() : void
+    # <<virtual>> EarlyGlobalSuperUpdate() : void
+    # <<virtual>> LateGlobalSuperUpdate() : void
+    - {static} DoNothing() : void
+}
+class State {
+}
+class "Dictionary`2"<T1,T2> {
+}
+MonoBehaviour <|-- SimpleStateMachine
+SimpleStateMachine --> "DebugGuiPosition" Vector2
+SimpleStateMachine --> "queueCommand" Enum
+SimpleStateMachine o-> "state" State
+SimpleStateMachine --> "currentState" Enum
+SimpleStateMachine --> "lastState" Enum
+SimpleStateMachine o-> "_cache<Enum,Dictionary<string, Delegate>>" "Dictionary`2"
+SimpleStateMachine +-- State
+State o-> "DoUpdate" Action
+State o-> "DoFixedUpdate" Action
+State o-> "DoLateUpdate" Action
+State o-> "DoManualUpdate" Action
+State o-> "enterState" Action
+State o-> "exitState" Action
+State --> "currentState" Enum
+@enduml

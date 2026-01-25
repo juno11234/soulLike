@@ -1,0 +1,39 @@
+@startuml
+class GUIControls {
+    - charge : float
+    - idleStatic : float
+    - useHips : bool
+    - useDual : bool
+    - useInstant : bool
+    - isTalking : bool
+    - isAiming : bool
+    - hipShooting : bool
+    - useNavigation : bool
+    - swimTimeout : float
+    - Start() : void
+    - OnGUI() : void
+    - Charging() : void
+    - Idle() : void
+    - Navigation() : void
+    - Attacks() : void
+    - Damage() : void
+    - Sprinting() : void
+    - Crouching() : void
+    - Blocking() : void
+    - RollDodgeTurn() : void
+    - Casting() : void
+    - Jumping() : void
+    - Emotes() : void
+    - Climbing() : void
+    - Swimming() : void
+    - Misc() : void
+    - DebugRPGCharacter() : void
+    - ChangeMap() : void
+    - WeaponSwitching() : void
+}
+MonoBehaviour <|-- GUIControls
+GUIControls --> "rpgCharacterController" RPGCharacterController
+GUIControls --> "rpgCharacterWeaponController" RPGCharacterWeaponController
+GUIControls --> "jumpInput" Vector3
+GUIControls --> "nav" GameObject
+@enduml

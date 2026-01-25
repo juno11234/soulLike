@@ -1,0 +1,16 @@
+@startuml
+class BossWall {
+    - {static} <<readonly>> Vertical : int
+    - _playerLayer : int
+    - Start() : void
+    - OnTriggerEnter(other:Collider) : void
+    - OnTriggerExit(other:Collider) : void
+    - EnterBossRoom(isPressed:bool) : void
+    - EnterBoss() : IEnumerator
+}
+MonoBehaviour <|-- BossWall
+BossWall --> "_player" PlayerStateMachine
+BossWall --> "enterPos" Transform
+BossWall --> "box" Collider
+BossWall --> "boss" GameObject
+@enduml

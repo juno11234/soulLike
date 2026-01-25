@@ -1,0 +1,9 @@
+@startuml
+class EmoteCombat {
+    + <<override>> CanStartAction(controller:RPGCharacterController) : bool
+    # <<override>> _StartAction(controller:RPGCharacterController, emoteType:EmoteType) : void
+}
+class "InstantActionHandler`1"<T> {
+}
+"InstantActionHandler`1" "<EmoteType>" <|-- EmoteCombat
+@enduml

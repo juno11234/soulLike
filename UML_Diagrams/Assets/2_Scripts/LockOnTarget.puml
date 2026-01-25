@@ -1,0 +1,6 @@
+@startuml
+class LockOnTarget {
+}
+MonoBehaviour <|-- LockOnTarget
+LockOnTarget --> "aimPoint" Transform
+@enduml

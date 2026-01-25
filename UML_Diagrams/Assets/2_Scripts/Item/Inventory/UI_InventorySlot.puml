@@ -1,0 +1,27 @@
+@startuml
+class UI_InventorySlot {
+    - Awake() : void
+    + Init(slot:InventorySlot, inventoryUI:UI_Inventory) : void
+    + UpdateSlotUI() : void
+    + OnBeginDrag(eventData:PointerEventData) : void
+    + OnDrag(eventData:PointerEventData) : void
+    + OnEndDrag(eventData:PointerEventData) : void
+    + OnDrop(eventData:PointerEventData) : void
+    + OnPointerEnter(eventData:PointerEventData) : void
+    + OnPointerExit(eventData:PointerEventData) : void
+}
+MonoBehaviour <|-- UI_InventorySlot
+IBeginDragHandler <|-- UI_InventorySlot
+IDragHandler <|-- UI_InventorySlot
+IEndDragHandler <|-- UI_InventorySlot
+IDropHandler <|-- UI_InventorySlot
+UI_InventorySlot --> "icon" Image
+UI_InventorySlot --> "quantityText" TextMeshProUGUI
+UI_InventorySlot --> "highlight" GameObject
+UI_InventorySlot --> "inventorySlot" InventorySlot
+UI_InventorySlot --> "rectTransform" RectTransform
+UI_InventorySlot --> "parentCanvas" Canvas
+UI_InventorySlot --> "parentInventoryUI" UI_Inventory
+UI_InventorySlot --> "originalPosition" Vector2
+UI_InventorySlot --> "originalParent" Transform
+@enduml

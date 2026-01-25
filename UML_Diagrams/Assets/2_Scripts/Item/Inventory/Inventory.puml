@@ -1,0 +1,15 @@
+@startuml
+class Inventory {
+    +  <<event>> onInventoryChangedCallback : OnInventoryChanged 
+    - inventorySize : int = 20
+    + Inventory(size:int)
+    + TriggerInventoryChanged() : void
+    + AddItem(item:Item, quantity:int) : bool
+    + RemoveItem(item:Item, quantity:int) : bool
+    + GetSlot(index:int) : InventorySlot
+    + GetTotalQuantity(item:Item) : int
+}
+class "List`1"<T> {
+}
+Inventory o-> "Slots<InventorySlot>" "List`1"
+@enduml

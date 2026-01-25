@@ -1,0 +1,12 @@
+@startuml
+class AttackTiming {
+    + startNormalizedTime : float = 0f
+    - _passStartTime : bool
+    + endNormalizedTime : float = 0f
+    - _passEndTime : bool
+    <<override>> + OnStateEnter(animator:Animator, stateInfo:AnimatorStateInfo, layerIndex:int) : void
+    <<override>> + OnStateUpdate(animator:Animator, stateInfo:AnimatorStateInfo, layerIndex:int) : void
+}
+StateMachineBehaviour <|-- AttackTiming
+AttackTiming --> "_self" IAttackAble
+@enduml

@@ -1,0 +1,68 @@
+@startuml
+class SuperCharacterController <<partial>> {
+    - fixedTimeStep : bool = false
+    - fixedUpdatesPerSecond : int = 0
+    - clampToMovingGround : bool = true
+    - debugSpheres : bool = true
+    - debugGrounding : bool = true
+    - debugPushbackMesssages : bool = true
+    + radius : float = 0.5f
+    + deltaTime : float <<get>>
+    + height : float <<get>>
+    + heightScale : float <<get>> <<set>>
+    + radiusScale : float <<get>> <<set>>
+    + manualUpdateOnly : bool <<get>> <<set>>
+    +  <<event>> AfterSingleUpdate : UpdateDelegate 
+    - clamping : bool = true
+    - slopeLimiting : bool = true
+    - <<const>> Tolerance : float = 0.1f
+    - <<const>> TinyTolerance : float = 0.02f
+    - <<const>> TemporaryLayer : string = "TempCast"
+    - <<const>> MaxPushbackIterations : int = 2
+    - TemporaryLayerIndex : int
+    - fixedDeltaTime : float
+    - Awake() : void
+    - Update() : void
+    - LateUpdate() : void
+    + ManualUpdate(deltaTime:float) : void
+    - SingleUpdate() : void
+    - ProbeGround(iter:int) : void
+    - SlopeLimit() : bool
+    - ClampToGround() : void
+    + EnableClamping() : void
+    + DisableClamping() : void
+    + EnableSlopeLimit() : void
+    + DisableSlopeLimit() : void
+    + IsClamping() : bool
+    - RecursivePushback(depth:int, maxDepth:int) : void
+    - PushIgnoredColliders() : void
+    - PopIgnoredColliders() : void
+    - OnDrawGizmos() : void
+    + SpherePosition(sphere:CollisionSphere) : Vector3
+    + PointBelowHead(point:Vector3) : bool
+    + PointAboveFeet(point:Vector3) : bool
+    + IgnoreCollider(col:Collider) : void
+    + RemoveIgnoredCollider(col:Collider) : void
+    + ClearIgnoredColliders() : void
+}
+class "List`1"<T> {
+}
+MonoBehaviour <|-- SuperCharacterController
+SuperCharacterController o-> "debugMove" Vector3
+SuperCharacterController o-> "triggerInteraction" QueryTriggerInteraction
+SuperCharacterController --> "Walkable" LayerMask
+SuperCharacterController --> "ownCollider" Collider
+SuperCharacterController --> "currentGround" SuperGround
+SuperCharacterController --> "feet" CollisionSphere
+SuperCharacterController --> "head" CollisionSphere
+SuperCharacterController --> "up" Vector3
+SuperCharacterController --> "down" Vector3
+SuperCharacterController --> "collisionData<SuperCollision>" "List`1"
+SuperCharacterController --> "currentlyClampedTo" Transform
+SuperCharacterController --> "initialPosition" Vector3
+SuperCharacterController --> "groundOffset" Vector3
+SuperCharacterController --> "lastGroundPosition" Vector3
+SuperCharacterController --> "ignoredColliders<Collider>" "List`1"
+SuperCharacterController --> "ignoredColliderStack<IgnoredCollider>" "List`1"
+SuperCharacterController --> "defaultCollisionType" SuperCollisionType
+@enduml

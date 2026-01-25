@@ -1,0 +1,12 @@
+@startuml
+class FadeManager {
+    - fadeDuration : float = 1.5f
+    - waitTime : float = 0.5f
+    - Awake() : void
+    + StartFade(callback:Action, image:Image) : void
+    - FadeSequence(callBack:Action, image:Image) : IEnumerator
+    - Fade(isout:bool, image:Image) : IEnumerator
+}
+MonoBehaviour <|-- FadeManager
+FadeManager --> "Instance" FadeManager
+@enduml

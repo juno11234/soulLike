@@ -1,0 +1,14 @@
+@startuml
+class BossSkill {
+    - durationTime : float
+    - Start() : void
+    - OnTriggerEnter(other:Collider) : void
+    - DestroyCoroutine() : IEnumerator
+}
+class "HashSet`1"<T> {
+}
+MonoBehaviour <|-- BossSkill
+BossSkill --> "attackData" AttackData
+BossSkill o-> "_damaged<FighterView>" "HashSet`1"
+BossSkill --> "_playerLayer" LayerMask
+@enduml

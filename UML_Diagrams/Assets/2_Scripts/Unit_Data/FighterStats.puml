@@ -1,0 +1,10 @@
+@startuml
+class FighterStats {
+    + MaxHealth : int = 100
+    + MaxStamina : float = 100f
+    + strength : int = 1
+    + dexterity : int = 1
+    + Defense : int = 5
+}
+ScriptableObject <|-- FighterStats
+@enduml

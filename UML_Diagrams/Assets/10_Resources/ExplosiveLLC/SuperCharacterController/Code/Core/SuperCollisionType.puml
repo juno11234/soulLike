@@ -1,0 +1,7 @@
+@startuml
+class SuperCollisionType {
+    + StandAngle : float = 80.0f
+    + SlopeLimit : float = 80.0f
+}
+MonoBehaviour <|-- SuperCollisionType
+@enduml

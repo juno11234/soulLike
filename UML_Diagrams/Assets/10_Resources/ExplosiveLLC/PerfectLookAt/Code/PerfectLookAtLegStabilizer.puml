@@ -1,0 +1,21 @@
+@startuml
+class PerfectLookAtLegStabilizer {
+    + m_iKWeight : float = 1.0f
+    - m_IKChainLength : float = 0.0f
+    + m_BonesCount : uint = 3
+    - FindProjectionVector(startingPoint:Vector3, middlePoint:Vector3, endingPoint:Vector3) : Vector3
+    - FixSwivelAngle(positions:Vector3[]) : void
+    + GetMiddleBonePos() : Vector3
+    + GetFirstBonePos() : Vector3
+    + Initialize() : void
+    + CacheBones() : void
+    + FixLeg(iterations:byte, minErrorToStartSolving:float) : void
+}
+PerfectLookAtLegStabilizer --> "m_FootBone" Transform
+PerfectLookAtLegStabilizer --> "m_footRotBeforeLookAt" Quaternion
+PerfectLookAtLegStabilizer --> "m_footPosBeforeLookAt" Vector3
+PerfectLookAtLegStabilizer --> "m_middleBonePosBeforeLookAt" Vector3
+PerfectLookAtLegStabilizer --> "m_firstBonePosBeforeLookAt" Vector3
+PerfectLookAtLegStabilizer o-> "m_originalSwivelDir" Vector3
+PerfectLookAtLegStabilizer o-> "m_afterSolvingSwivelDir" Vector3
+@enduml

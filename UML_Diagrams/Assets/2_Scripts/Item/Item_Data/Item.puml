@@ -1,0 +1,15 @@
+@startuml
+enum ItemType {
+    Weapon,
+    Potion,
+    Material,
+    Etc,
+}
+class Item {
+    + ItemName : string
+    + MaxAmount : int
+}
+ScriptableObject <|-- Item
+Item --> "Type" ItemType
+Item --> "Icon" Sprite
+@enduml

@@ -1,0 +1,15 @@
+@startuml
+class BoneFire {
+    - _playerLayer : int
+    - _isPlayed : bool
+    - Start() : void
+    - BoneFireLit(isPressed:bool) : void
+    - Heal() : void
+    - OnTriggerEnter(other:Collider) : void
+    - OnTriggerExit(other:Collider) : void
+}
+MonoBehaviour <|-- BoneFire
+BoneFire --> "fireEffect" GameObject
+BoneFire --> "fadeImage" Image
+BoneFire --> "_player" PlayerStateMachine
+@enduml

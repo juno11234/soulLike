@@ -1,0 +1,33 @@
+@startuml
+class FighterView {
+    - widthScaleFactor : float = 1f
+    + Invincible : bool <<get>> <<set>>
+    +  <<event>> OnTakeDamage : Action<int> 
+    +  <<event>> OnSecondPhase : Action 
+    +  <<event>> OnStaminaZero : Action 
+    +  <<event>> OnDied : Action 
+    - Awake() : void
+    - OnEnable() : void
+    - OnDisable() : void
+    - Start() : void
+    - UpdateHpBar(newHealth:int) : void
+    - UpdateStaminaBar(newStamina:float) : void
+    + Respawn() : void
+    - OnTakeDamageInvoke(damage:int) : void
+    - OnSecondPhaseInvoke() : void
+    - OnStaminaZeroInvoke() : void
+    - OnDiedInvoke() : void
+    + TakeDamage(combatEvent:CombatEvent) : void
+    + StaminaChange(stamina:float) : void
+    + TakeHeal(healEvent:HealthEvent) : void
+}
+MonoBehaviour <|-- FighterView
+FighterView --> "stats" FighterStats
+FighterView --> "hpBar" Slider
+FighterView --> "staminaBar" Slider
+FighterView --> "modelCollider" Collider
+FighterView --> "ViewModel" FighterViewModel
+FighterView --> "Stats" FighterStats
+FighterView --> "mainModelCollider" Collider
+FighterView --> "GameObject" GameObject
+@enduml

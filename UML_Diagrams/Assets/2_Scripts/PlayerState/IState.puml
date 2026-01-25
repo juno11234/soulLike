@@ -1,0 +1,7 @@
+@startuml
+interface IState {
+    + Enter() : void
+    + UpdateLogic() : void
+    + Exit() : void
+}
+@enduml

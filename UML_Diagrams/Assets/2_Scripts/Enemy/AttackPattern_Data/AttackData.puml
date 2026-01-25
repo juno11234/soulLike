@@ -1,0 +1,12 @@
+@startuml
+class AttackData {
+    + attackName : string
+    + damage : int
+    + windupTime : float
+    + activeTime : float
+    + recoveryTime : float
+    + probability : float
+    + animTrigger : string
+}
+ScriptableObject <|-- AttackData
+@enduml

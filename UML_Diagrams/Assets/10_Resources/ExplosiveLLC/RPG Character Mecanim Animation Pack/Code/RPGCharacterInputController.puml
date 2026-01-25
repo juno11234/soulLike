@@ -1,0 +1,50 @@
+@startuml
+class RPGCharacterInputController {
+    - inputHorizontal : float = 0
+    - inputVertical : float = 0
+    - inputJump : bool
+    - inputLightHit : bool
+    - inputDeath : bool
+    - inputAttackL : bool
+    - inputAttackR : bool
+    - inputCastL : bool
+    - inputCastR : bool
+    - inputSwitchUpDown : float
+    - inputSwitchLeftRight : float
+    - inputAimBlock : float
+    - inputAiming : bool
+    - inputFace : bool
+    - inputFacingHorizontal : float
+    - inputFacingVertical : float
+    - inputRoll : bool
+    - inputShield : bool
+    - inputRelax : bool
+    - isJumpHeld : bool
+    - bowPull : float
+    - blockToggle : bool
+    - inputPauseTimeout : float = 0
+    - inputPaused : bool = false
+    - Awake() : void
+    - Update() : void
+    + PauseInput(timeout:float) : void
+    - Inputs() : void
+    + HasMoveInput() : bool
+    + HasAimInput() : bool
+    + HasBlockInput() : bool
+    + HasFacingInput() : bool
+    + Blocking() : void
+    + Moving() : void
+    - Jumping() : void
+    + Rolling() : void
+    - Aiming() : void
+    - Strafing() : void
+    - Facing() : void
+    - Attacking() : void
+    - Damage() : void
+    - SwitchWeapons() : void
+}
+MonoBehaviour <|-- RPGCharacterInputController
+RPGCharacterInputController --> "rpgCharacterController" RPGCharacterController
+RPGCharacterInputController --> "moveInput" Vector3
+RPGCharacterInputController --> "currentAim" Vector3
+@enduml

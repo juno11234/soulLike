@@ -1,0 +1,9 @@
+@startuml
+class SuperCollider <<static>> {
+    + {static} ClosestPointOnSurface(collider:Collider, to:Vector3, radius:float, closestPointOnSurface:Vector3) : bool
+    + {static} ClosestPointOnSurface(collider:SphereCollider, to:Vector3) : Vector3
+    + {static} ClosestPointOnSurface(collider:BoxCollider, to:Vector3) : Vector3
+    + {static} ClosestPointOnSurface(collider:CapsuleCollider, to:Vector3) : Vector3
+    + {static} ClosestPointOnSurface(collider:TerrainCollider, to:Vector3, radius:float, debug:bool) : Vector3
+}
+@enduml

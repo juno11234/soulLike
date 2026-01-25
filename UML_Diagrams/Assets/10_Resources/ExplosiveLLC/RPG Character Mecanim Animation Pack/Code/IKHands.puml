@@ -1,0 +1,22 @@
+@startuml
+class IKHands {
+    + canBeUsed : bool
+    + isUsed : bool
+    + leftHandPositionWeight : float
+    + leftHandRotationWeight : float
+    - Awake() : void
+    - OnAnimatorIK(layerIndex:int) : void
+    + BlendIK(blendOn:bool, delay:float, timeToBlend:float, weapon:Weapon) : void
+    - _BlendIK(blendOn:bool, delay:float, timeToBlend:float, weapon:Weapon) : IEnumerator
+    + SetIKPause(pauseTime:float) : void
+    - _SetIKPause(pauseTime:float) : IEnumerator
+    - GetCurrentWeaponAttachPoint(weapon:Weapon) : void
+}
+MonoBehaviour <|-- IKHands
+IKHands --> "animator" Animator
+IKHands --> "rpgCharacterWeaponController" RPGCharacterWeaponController
+IKHands --> "leftHandObj" Transform
+IKHands --> "attachLeft" Transform
+IKHands --> "blendToTransform" Transform
+IKHands --> "co" Coroutine
+@enduml

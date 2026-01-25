@@ -1,0 +1,10 @@
+@startuml
+interface IAttackAble {
+    + AttackForCollEnable() : void
+    + AttackForCollDisEnable() : void
+}
+interface ISkillAble {
+    + UseSkillFirstTiming(skillIndex:int) : void
+    + UseSkillSecondTiming(skillIndex:int) : void
+}
+@enduml

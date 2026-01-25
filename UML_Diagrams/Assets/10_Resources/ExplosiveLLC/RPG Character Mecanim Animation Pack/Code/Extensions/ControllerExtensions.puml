@@ -1,0 +1,5 @@
+@startuml
+class ControllerExtensions <<static>> {
+    + {static} DebugController(controller:RPGCharacterController) : void
+}
+@enduml

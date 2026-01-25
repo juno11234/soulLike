@@ -1,0 +1,10 @@
+@startuml
+class SuperMath <<static>> {
+    + {static} ClampAngleOnPlane(origin:Vector3, direction:Vector3, angle:float, planeNormal:Vector3) : Vector3
+    + {static} BoundedInterpolation(bounds:float[], values:float[], t:float) : float
+    + {static} PointAbovePlane(planeNormal:Vector3, planePoint:Vector3, point:Vector3) : bool
+    + {static} Timer(startTime:float, duration:float) : bool
+    + {static} ClampAngle(angle:float) : float
+    + {static} CalculateJumpSpeed(jumpHeight:float, gravity:float) : float
+}
+@enduml

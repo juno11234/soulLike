@@ -1,0 +1,11 @@
+@startuml
+class BackStepState {
+    - <<readonly>> _backStep : int
+    + BackStepState(player:PlayerStateMachine)
+    + Enter() : void
+    + UpdateLogic() : void
+    + Exit() : void
+}
+IState <|-- BackStepState
+BackStepState --> "_player" PlayerStateMachine
+@enduml

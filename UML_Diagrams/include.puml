@@ -1,0 +1,2858 @@
+@startuml
+class BoneFire {
+    - _playerLayer : int
+    - _isPlayed : bool
+    - Start() : void
+    - BoneFireLit(isPressed:bool) : void
+    - Heal() : void
+    - OnTriggerEnter(other:Collider) : void
+    - OnTriggerExit(other:Collider) : void
+}
+MonoBehaviour <|-- BoneFire
+BoneFire --> "fireEffect" GameObject
+BoneFire --> "fadeImage" Image
+BoneFire --> "_player" PlayerStateMachine
+class BossWall {
+    - {static} <<readonly>> Vertical : int
+    - _playerLayer : int
+    - Start() : void
+    - OnTriggerEnter(other:Collider) : void
+    - OnTriggerExit(other:Collider) : void
+    - EnterBossRoom(isPressed:bool) : void
+    - EnterBoss() : IEnumerator
+}
+MonoBehaviour <|-- BossWall
+BossWall --> "_player" PlayerStateMachine
+BossWall --> "enterPos" Transform
+BossWall --> "box" Collider
+BossWall --> "boss" GameObject
+class "@PlayerControls" <<partial>> {
+    + @PlayerControls()
+    + Dispose() : void
+    + Contains(action:InputAction) : bool
+    + GetEnumerator() : IEnumerator<InputAction>
+    - GetEnumerator() : IEnumerator
+    + Enable() : void
+    + Disable() : void
+    + FindAction(actionNameOrId:string, throwIfNotFound:bool) : InputAction
+    + FindBinding(bindingMask:InputBinding, action:InputAction) : int
+}
+class "ReadOnlyArray`1"<T> {
+}
+class "IEnumerable`1"<T> {
+}
+class "List`1"<T> {
+}
+struct PlayerMovementActions {
+    + PlayerMovementActions(wrapper:@PlayerControls)
+    + Get() : InputActionMap
+    + Enable() : void
+    + Disable() : void
+    + enabled : bool <<get>>
+    + AddCallbacks(instance:IPlayerMovementActions) : void
+    - UnregisterCallbacks(instance:IPlayerMovementActions) : void
+    + RemoveCallbacks(instance:IPlayerMovementActions) : void
+    + SetCallbacks(instance:IPlayerMovementActions) : void
+}
+struct PlayerActionActions {
+    + PlayerActionActions(wrapper:@PlayerControls)
+    + Get() : InputActionMap
+    + Enable() : void
+    + Disable() : void
+    + enabled : bool <<get>>
+    + AddCallbacks(instance:IPlayerActionActions) : void
+    - UnregisterCallbacks(instance:IPlayerActionActions) : void
+    + RemoveCallbacks(instance:IPlayerActionActions) : void
+    + SetCallbacks(instance:IPlayerActionActions) : void
+}
+interface IPlayerMovementActions {
+    OnMovement(context:InputAction.CallbackContext) : void
+    OnCamera(context:InputAction.CallbackContext) : void
+}
+interface IPlayerActionActions {
+    OnRoll(context:InputAction.CallbackContext) : void
+}
+IInputActionCollection2 <|-- "@PlayerControls"
+IDisposable <|-- "@PlayerControls"
+"@PlayerControls" --> "asset" InputActionAsset
+"@PlayerControls" --> "bindingMask" InputBinding
+"@PlayerControls" --> "devices<InputDevice>" "ReadOnlyArray`1"
+"@PlayerControls" --> "controlSchemes<InputControlScheme>" "ReadOnlyArray`1"
+"@PlayerControls" --> "bindings<InputBinding>" "IEnumerable`1"
+"@PlayerControls" --> "m_PlayerMovement" InputActionMap
+"@PlayerControls" o-> "m_PlayerMovementActionsCallbackInterfaces<IPlayerMovementActions>" "List`1"
+"@PlayerControls" --> "m_PlayerMovement_Movement" InputAction
+"@PlayerControls" --> "m_PlayerMovement_Camera" InputAction
+"@PlayerControls" --> "@PlayerMovement" PlayerMovementActions
+"@PlayerControls" --> "m_PlayerAction" InputActionMap
+"@PlayerControls" o-> "m_PlayerActionActionsCallbackInterfaces<IPlayerActionActions>" "List`1"
+"@PlayerControls" --> "m_PlayerAction_Roll" InputAction
+"@PlayerControls" --> "@PlayerAction" PlayerActionActions
+"@PlayerControls" +-- PlayerMovementActions
+PlayerMovementActions --> "m_Wrapper" "@PlayerControls"
+PlayerMovementActions --> "@Movement" InputAction
+PlayerMovementActions --> "@Camera" InputAction
+"@PlayerControls" +-- PlayerActionActions
+PlayerActionActions --> "m_Wrapper" "@PlayerControls"
+PlayerActionActions --> "@Roll" InputAction
+"@PlayerControls" +-- IPlayerMovementActions
+"@PlayerControls" +-- IPlayerActionActions
+class "@PlayerInput" <<partial>> {
+    + @PlayerInput()
+    + Dispose() : void
+    + Contains(action:InputAction) : bool
+    + GetEnumerator() : IEnumerator<InputAction>
+    - GetEnumerator() : IEnumerator
+    + Enable() : void
+    + Disable() : void
+    + FindAction(actionNameOrId:string, throwIfNotFound:bool) : InputAction
+    + FindBinding(bindingMask:InputBinding, action:InputAction) : int
+}
+class "ReadOnlyArray`1"<T> {
+}
+class "IEnumerable`1"<T> {
+}
+class "List`1"<T> {
+}
+struct PlayerActions {
+    + PlayerActions(wrapper:@PlayerInput)
+    + Get() : InputActionMap
+    + Enable() : void
+    + Disable() : void
+    + enabled : bool <<get>>
+    + AddCallbacks(instance:IPlayerActions) : void
+    - UnregisterCallbacks(instance:IPlayerActions) : void
+    + RemoveCallbacks(instance:IPlayerActions) : void
+    + SetCallbacks(instance:IPlayerActions) : void
+}
+interface IPlayerActions {
+    OnMove(context:InputAction.CallbackContext) : void
+    OnRoll(context:InputAction.CallbackContext) : void
+    OnCamera(context:InputAction.CallbackContext) : void
+    OnAttack(context:InputAction.CallbackContext) : void
+    OnShift(context:InputAction.CallbackContext) : void
+    OnLockOn(context:InputAction.CallbackContext) : void
+    OnQ(context:InputAction.CallbackContext) : void
+    OnE(context:InputAction.CallbackContext) : void
+    OnR(context:InputAction.CallbackContext) : void
+}
+IInputActionCollection2 <|-- "@PlayerInput"
+IDisposable <|-- "@PlayerInput"
+"@PlayerInput" --> "asset" InputActionAsset
+"@PlayerInput" --> "bindingMask" InputBinding
+"@PlayerInput" --> "devices<InputDevice>" "ReadOnlyArray`1"
+"@PlayerInput" --> "controlSchemes<InputControlScheme>" "ReadOnlyArray`1"
+"@PlayerInput" --> "bindings<InputBinding>" "IEnumerable`1"
+"@PlayerInput" --> "m_Player" InputActionMap
+"@PlayerInput" o-> "m_PlayerActionsCallbackInterfaces<IPlayerActions>" "List`1"
+"@PlayerInput" --> "m_Player_Move" InputAction
+"@PlayerInput" --> "m_Player_Roll" InputAction
+"@PlayerInput" --> "m_Player_Camera" InputAction
+"@PlayerInput" --> "m_Player_Attack" InputAction
+"@PlayerInput" --> "m_Player_Shift" InputAction
+"@PlayerInput" --> "m_Player_LockOn" InputAction
+"@PlayerInput" --> "m_Player_Q" InputAction
+"@PlayerInput" --> "m_Player_E" InputAction
+"@PlayerInput" --> "m_Player_R" InputAction
+"@PlayerInput" --> "@Player" PlayerActions
+"@PlayerInput" +-- PlayerActions
+PlayerActions --> "m_Wrapper" "@PlayerInput"
+PlayerActions --> "@Move" InputAction
+PlayerActions --> "@Roll" InputAction
+PlayerActions --> "@Camera" InputAction
+PlayerActions --> "@Attack" InputAction
+PlayerActions --> "@Shift" InputAction
+PlayerActions --> "@LockOn" InputAction
+PlayerActions --> "@Q" InputAction
+PlayerActions --> "@E" InputAction
+PlayerActions --> "@R" InputAction
+"@PlayerInput" +-- IPlayerActions
+class AttackTiming {
+    + startNormalizedTime : float = 0f
+    - _passStartTime : bool
+    + endNormalizedTime : float = 0f
+    - _passEndTime : bool
+    <<override>> + OnStateEnter(animator:Animator, stateInfo:AnimatorStateInfo, layerIndex:int) : void
+    <<override>> + OnStateUpdate(animator:Animator, stateInfo:AnimatorStateInfo, layerIndex:int) : void
+}
+StateMachineBehaviour <|-- AttackTiming
+AttackTiming --> "_self" IAttackAble
+class FadeManager {
+    - fadeDuration : float = 1.5f
+    - waitTime : float = 0.5f
+    - Awake() : void
+    + StartFade(callback:Action, image:Image) : void
+    - FadeSequence(callBack:Action, image:Image) : IEnumerator
+    - Fade(isout:bool, image:Image) : IEnumerator
+}
+MonoBehaviour <|-- FadeManager
+FadeManager --> "Instance" FadeManager
+class LockOnTarget {
+}
+MonoBehaviour <|-- LockOnTarget
+LockOnTarget --> "aimPoint" Transform
+class RootMotionHandler {
+    - Awake() : void
+    - OnAnimatorMove() : void
+}
+MonoBehaviour <|-- RootMotionHandler
+RootMotionHandler --> "DeltaPos" Vector3
+RootMotionHandler --> "DeltaRot" Quaternion
+RootMotionHandler --> "_animator" Animator
+class SkillTiming {
+    - firstIndex : int
+    - secondIndex : int
+    + startNormalizedTime : float = 0f
+    - _passStartTime : bool
+    + endNormalizedTime : float = 0f
+    - _passEndTime : bool
+    <<override>> + OnStateEnter(animator:Animator, stateInfo:AnimatorStateInfo, layerIndex:int) : void
+    <<override>> + OnStateUpdate(animator:Animator, stateInfo:AnimatorStateInfo, layerIndex:int) : void
+}
+StateMachineBehaviour <|-- SkillTiming
+SkillTiming --> "_self" ISkillAble
+class Test {
+    - Start() : void
+    - Update() : void
+    - OnTriggerEnter(other:Collider) : void
+}
+MonoBehaviour <|-- Test
+Test --> "_collider" Collider
+class TSVImporter {
+    + {static} Parse(textData:string) : List<T>
+    - {static} ConvertType(value:string, type:Type) : object
+}
+MonoBehaviour <|-- TSVImporter
+class BuildAuto <<static>> {
+    + {static} Build() : void
+}
+class DatabaseEditor {
+    + <<override>> OnInspectorGUI() : void
+}
+Editor <|-- DatabaseEditor
+class CombatSystem {
+    - <<const>> Max_Event_Count : int = 10
+    - Awake() : void
+    - Update() : void
+    + RegisterFighter(monster:FighterView) : void
+    + GetFighter(coll:Collider) : FighterView
+    + RemoveFighter(coll:Collider) : void
+    + AddInGameEvent(e:InGameEvent) : void
+}
+class Callback {
+}
+class "Dictionary`2"<T1,T2> {
+}
+class "Queue`1"<T> {
+}
+class "Action`1"<T> {
+}
+MonoBehaviour <|-- CombatSystem
+CombatSystem --> "Instance" CombatSystem
+CombatSystem o-> "fightersDict<Collider,FighterView>" "Dictionary`2"
+CombatSystem o-> "eventQueue<InGameEvent>" "Queue`1"
+CombatSystem o-> "Events" Callback
+CombatSystem +-- Callback
+Callback --> "OnCombatEvent<CombatEvent>" "Action`1"
+Callback --> "OnHealEvent<HealthEvent>" "Action`1"
+class FollowHPBar {
+    - Start() : void
+    - LateUpdate() : void
+}
+MonoBehaviour <|-- FollowHPBar
+FollowHPBar --> "mainCamera" Camera
+interface IAttackAble {
+    + AttackForCollEnable() : void
+    + AttackForCollDisEnable() : void
+}
+interface ISkillAble {
+    + UseSkillFirstTiming(skillIndex:int) : void
+    + UseSkillSecondTiming(skillIndex:int) : void
+}
+abstract class InGameEvent {
+}
+class CombatEvent {
+    + Damage : int <<get>> <<set>>
+}
+class HealthEvent {
+    + HealAmount : int <<get>> <<set>>
+}
+enum EventType {
+    Unknown,
+    Combat,
+    Heal,
+}
+InGameEvent --> "Sender" FighterView
+InGameEvent --> "Receiver" FighterView
+InGameEvent --> "Type" EventType
+InGameEvent <|-- CombatEvent
+CombatEvent --> "HitPosition" Vector3
+CombatEvent --> "Collider" Collider
+CombatEvent --> "Type" EventType
+InGameEvent <|-- HealthEvent
+HealthEvent --> "Type" EventType
+InGameEvent +-- EventType
+class "Observable`1"<T> {
+    - _value : T
+    +  <<event>> OnValueChanged : Action<T> 
+    + Value : T <<get>> <<set>>
+    + Observable(initialValue:T)
+    + Subscribe(listener:Action<T>) : void
+    + Unsubscribe(listener:Action<T>) : void
+}
+class BossMonsterAI {
+    + skillRange : float = 5f
+    + secondPhase : bool = false
+    + skillCool : bool = false
+    + skillTimer : float = 0f
+    - Awake() : void
+    - Start() : void
+    - Update() : void
+    + SecondPhase() : void
+    # <<override>> ConstructBehaviorTree() : void
+}
+EnemyAIBase <|-- BossMonsterAI
+class BossState {
+    # <<override>> Dead() : void
+    # <<override>> Initialized() : void
+    - SecondParticleOn() : void
+    + UseSkillFirstTiming(skillIndex:int) : void
+    + UseSkillSecondTiming(skillIndex:int) : void
+}
+EnemyState <|-- BossState
+ISkillAble <|-- BossState
+BossState --> "secondPhaseParticle" GameObject
+BossState --> "boneFire" GameObject
+BossState --> "bossWall" GameObject
+enum CommonNodes {
+    Strafe,
+    Chase,
+    CheckAttackRange,
+    Wait,
+    Cleaner,
+    BackMove,
+    WatchPlayer,
+    Patrol,
+}
+abstract class EnemyAIBase {
+    + attackRange : float = 3f
+    + viewAngle : float
+    + viewDistance : float
+    + findPlayer : bool
+    # IsDead : bool
+    # <<virtual>> ConstructBehaviorTree() : void
+    + Dead() : void
+    + Respawn() : void
+}
+class "Dictionary`2"<T1,T2> {
+}
+MonoBehaviour <|-- EnemyAIBase
+EnemyAIBase --> "player" Transform
+EnemyAIBase o-> "nodeDict<N,BtNode>" "Dictionary`2"
+EnemyAIBase --> "_agent" NavMeshAgent
+EnemyAIBase --> "_rootNode" BtNode
+EnemyAIBase --> "_animator" Animator
+EnemyAIBase --> "_rootMotionHandler" RootMotionHandler
+class EnemyState {
+    - canRespawn : bool = true
+    - {static} <<readonly>> Die : int
+    - {static} <<readonly>> Respawn1 : int
+    - _isDead : bool = false
+    - Start() : void
+    - Update() : void
+    # <<virtual>> Dead() : void
+    + Respawn() : void
+    # <<virtual>> Initialized() : void
+    - PlayTargetAniClip(hash:int, transition:float) : void
+    + AttackForCollEnable() : void
+    + AttackForCollDisEnable() : void
+}
+MonoBehaviour <|-- EnemyState
+IAttackAble <|-- EnemyState
+EnemyState --> "fighterView" FighterView
+EnemyState --> "enemyAI" EnemyAIBase
+EnemyState --> "_animator" Animator
+EnemyState --> "_weapon" EnemyWeapon
+EnemyState --> "_originTransform" Vector3
+EnemyState --> "_originRotation" Quaternion
+EnemyState --> "_lockOnTarget" LockOnTarget
+class EnemyWeapon {
+    - _damage : int
+    - Start() : void
+    + ActiveCollider(damage:int) : void
+    + DisableCollider() : void
+    - OnTriggerEnter(other:Collider) : void
+}
+class "HashSet`1"<T> {
+}
+MonoBehaviour <|-- EnemyWeapon
+EnemyWeapon --> "_playerLayer" LayerMask
+EnemyWeapon --> "_collider" Collider
+EnemyWeapon o-> "_damaged<FighterView>" "HashSet`1"
+class SkeletonAI {
+    - Awake() : void
+    - Start() : void
+    - Update() : void
+    # <<override>> ConstructBehaviorTree() : void
+}
+EnemyAIBase <|-- SkeletonAI
+class CameraControl {
+    + IsLockedOn : bool <<get>>
+    - smoothSpeed : float = 10f
+    - lockOnHeightOffset : float = 1f
+    - cameraSensitivity : float = 0.3f
+    - cameraMinPitch : float
+    - cameraMaxPitch : float = 30f
+    - searchRadius : float = 10f
+    - isLockedOn : bool = false
+    + collideOffset : float = 0.2f
+    + cameraRadius : float = 0.3f
+    + moveSpeed : float = 15f
+    - _defaultDistance : float
+    - _yaw : float
+    - _pitch : float
+    - Start() : void
+    - Update() : void
+    - LateUpdate() : void
+    - HandleTargetSwitching(isQForLeft:bool) : void
+    - FindAndSwitchTarget(isLeft:bool) : void
+    - FollowPlayer() : void
+    - HandleCamera() : void
+    - CameraCollision() : void
+    - LockOn(isPressed:bool) : void
+    - UnlockOn() : void
+    - LockOnCamControl() : void
+}
+MonoBehaviour <|-- CameraControl
+CameraControl --> "CurrentTarget" LockOnTarget
+CameraControl --> "inputManager" InputManager
+CameraControl --> "player" Transform
+CameraControl --> "offset" Vector3
+CameraControl --> "cameraPivot" Transform
+CameraControl --> "cameraTransform" Transform
+CameraControl --> "targetLayer" LayerMask
+CameraControl --> "lockOnIndicator" RectTransform
+CameraControl --> "currentTarget" LockOnTarget
+CameraControl --> "collisionLayer" LayerMask
+CameraControl --> "_cameraVelocity" Vector3
+class InputManager {
+    +  <<event>> OnSpaceBarInput : InputButtonHandler 
+    +  <<event>> OnLMBInput : InputButtonHandler 
+    +  <<event>> OnShiftInput : InputButtonHandler 
+    +  <<event>> OnMiddleMouseButtonInput : InputButtonHandler 
+    +  <<event>> OnRInput : InputButtonHandler 
+    +  <<event>> OnQorEInput : InputQEHandler 
+    - Awake() : void
+    - MovePerformed(context:InputAction.CallbackContext) : void
+    - CameraPerformed(context:InputAction.CallbackContext) : void
+    - SpacePerformed(context:InputAction.CallbackContext) : void
+    - SpaceCanceled(context:InputAction.CallbackContext) : void
+    - LmbPerformed(context:InputAction.CallbackContext) : void
+    - LmbCanceled(context:InputAction.CallbackContext) : void
+    - ShiftPerformed(context:InputAction.CallbackContext) : void
+    - ShiftCanceled(context:InputAction.CallbackContext) : void
+    - LockOnPerformed(context:InputAction.CallbackContext) : void
+    - RPerformed(context:InputAction.CallbackContext) : void
+    - QPerformed(context:InputAction.CallbackContext) : void
+    - EKeyPerformed(context:InputAction.CallbackContext) : void
+    - OnEnable() : void
+    - OnDisable() : void
+}
+MonoBehaviour <|-- InputManager
+InputManager --> "_input" PlayerInput
+InputManager --> "MoveInput" Vector2
+InputManager --> "CameraInput" Vector2
+class PlayerEquipment {
+    +  <<event>> onEquipmentChanged : OnEquipmentChanged 
+    + Equip(newItem:WeaponItem) : void
+    + Unequip() : WeaponItem
+}
+MonoBehaviour <|-- PlayerEquipment
+PlayerEquipment --> "equippedWeapon" WeaponItem
+class PlayerInventory {
+    + inventorySize : int = 20
+    - Awake() : void
+    + AddItemToInventory(item:Item, quantity:int) : bool
+    + RemoveItemFromInventory(item:Item, quantity:int) : bool
+    + GetInventorySlot(index:int) : InventorySlot
+}
+MonoBehaviour <|-- PlayerInventory
+PlayerInventory --> "inventory" Inventory
+class PlayerWeapon {
+    - _damage : int
+    - Start() : void
+    + ActiveCollider(strength:int, dexterity:int) : void
+    + DisableCollider() : void
+    - OnTriggerEnter(other:Collider) : void
+}
+class "HashSet`1"<T> {
+}
+MonoBehaviour <|-- PlayerWeapon
+PlayerWeapon --> "_enemyLayer" LayerMask
+PlayerWeapon --> "_collider" Collider
+PlayerWeapon --> "stat" WeaponItem
+PlayerWeapon o-> "_damaged<FighterView>" "HashSet`1"
+class WeaponHolderSlot {
+    + isLeftHandSlot : bool
+    + isRightHandSlot : bool
+    + UnloadWeapon() : void
+    + UnloadWeaponAndDestroy() : void
+    + LoadWeaponModel(weaponItem:WeaponItem) : void
+}
+MonoBehaviour <|-- WeaponHolderSlot
+WeaponHolderSlot --> "parentOverride" Transform
+WeaponHolderSlot --> "currentWeaponModel" GameObject
+class WeaponSlotManager {
+    - Awake() : void
+    + LoadWeaponOnSlot(weaponItem:WeaponItem, isLeft:bool) : void
+}
+MonoBehaviour <|-- WeaponSlotManager
+WeaponSlotManager --> "_leftHandSlot" WeaponHolderSlot
+WeaponSlotManager --> "_rightHandSlot" WeaponHolderSlot
+class AttackState {
+    - <<readonly>> _attack1 : int
+    - <<readonly>> _attack2 : int
+    - <<readonly>> _attack3 : int
+    - _animationPlayed : bool = false
+    - _2AnimationPlayed : bool = false
+    - _secondAttackReady : bool = false
+    - _thirdAttackReady : bool = false
+    + AttackState(player:PlayerStateMachine)
+    + Enter() : void
+    - LookAtTarget() : void
+    + UpdateLogic() : void
+    + Exit() : void
+    - SecondAttackReady(isPressed:bool) : void
+    - ThirdAttackReady(isPressed:bool) : void
+}
+IState <|-- AttackState
+AttackState --> "_player" PlayerStateMachine
+class BackStepState {
+    - <<readonly>> _backStep : int
+    + BackStepState(player:PlayerStateMachine)
+    + Enter() : void
+    + UpdateLogic() : void
+    + Exit() : void
+}
+IState <|-- BackStepState
+BackStepState --> "_player" PlayerStateMachine
+class DieState {
+    - <<readonly>> _die : int
+    + DieState(player:PlayerStateMachine)
+    + Enter() : void
+    + UpdateLogic() : void
+    + Exit() : void
+}
+IState <|-- DieState
+DieState --> "_player" PlayerStateMachine
+class FallState {
+    - <<readonly>> _land : int
+    - <<readonly>> _fall : int
+    + FallState(player:PlayerStateMachine)
+    + Enter() : void
+    + UpdateLogic() : void
+    + Exit() : void
+}
+IState <|-- FallState
+FallState --> "_player" PlayerStateMachine
+class HitState {
+    - <<readonly>> _hit : int
+    + HitState(player:PlayerStateMachine)
+    + Enter() : void
+    + UpdateLogic() : void
+    + Exit() : void
+}
+IState <|-- HitState
+HitState --> "_player" PlayerStateMachine
+interface IState {
+    + Enter() : void
+    + UpdateLogic() : void
+    + Exit() : void
+}
+class PlayerStateMachine {
+    - <<readonly>> _vertical : int
+    - <<readonly>> _horizontal : int
+    - walkSpeed : float = 10f
+    - sprintSpeed : float = 15f
+    - rotationSpeed : float = 10f
+    - rollSpeed : float = 10f
+    - backstepSpeed : float = 2f
+    - groundCheckDistance : float = 2f
+    - groundCheckRadius : float = 1.3f
+    - rollStamina : float
+    - backStepStamina : float
+    - attackStamina : float
+    - staminaRegenRateAmount : float
+    - staminaRegenRateTime : float
+    + WalkSpeed : float <<get>>
+    + SprintSpeed : float <<get>>
+    + RollSpeed : float <<get>>
+    + BackstepSpeed : float <<get>>
+    + MoveAmount : float <<get>>
+    + RollStamina : float <<get>>
+    + BackStepStamina : float <<get>>
+    + AttackStamina : float <<get>>
+    + SpaceBarPressed : bool <<get>>
+    + NoStamina : bool <<get>>
+    +  <<event>> OnLMBAction : Action<bool> 
+    +  <<event>> OnRInput : Action<bool> 
+    +  <<event>> OnEInput : Action<bool> 
+    - _spacePressed : bool
+    - _lmbPressed : bool
+    - _noStamina : bool
+    - _isDead : bool
+    - _currentSpeed : float
+    - _moveAmount : float
+    - _staminaTimer : float = 0f
+    - _gravity : float
+    - _sphereHit : bool
+    - Awake() : void
+    - Start() : void
+    - Update() : void
+    + ChangeState(newState:IState) : void
+    - SpaceBarInput(isPressed:bool) : void
+    - LmbInput(isPressed:bool) : void
+    - RInput(isPressed:bool) : void
+    - EInput(isPressed:bool) : void
+    + PlayTargetAniClip(hash:int, transition:float) : void
+    - OnDrawGizmos() : void
+    + Movement(speed:float) : void
+    + HandleMove_Ani(vericalVal:float, horizVal:float, isSprinting:bool) : void
+    + IsGrounded() : bool
+    + ForwardMove(speed:float) : void
+    + Backstep(speed:float) : void
+    - StaminaZero() : void
+    - HandleStaminaRegeneration() : void
+    + StaminaChange(stamina:float) : void
+    + AttackForCollEnable() : void
+    + AttackForCollDisEnable() : void
+    + ActiveInvisible(active:bool) : void
+    - TakeDamage(damage:int) : void
+    - Die() : void
+}
+MonoBehaviour <|-- PlayerStateMachine
+IAttackAble <|-- PlayerStateMachine
+PlayerStateMachine --> "Controller" CharacterController
+PlayerStateMachine --> "CameraControl" CameraControl
+PlayerStateMachine --> "Animator" Animator
+PlayerStateMachine --> "FighterView" FighterView
+PlayerStateMachine --> "_inputManager" InputManager
+PlayerStateMachine --> "_controller" CharacterController
+PlayerStateMachine --> "_mainCam" Camera
+PlayerStateMachine --> "_animator" Animator
+PlayerStateMachine --> "_fighterView" FighterView
+PlayerStateMachine --> "_cameraControl" CameraControl
+PlayerStateMachine --> "_weapon" PlayerWeapon
+PlayerStateMachine --> "_currentState" IState
+PlayerStateMachine --> "_velocity" Vector3
+PlayerStateMachine --> "_groundLayer" LayerMask
+PlayerStateMachine --> "_iAttackAbleImplementation" IAttackAble
+class RollState {
+    - <<readonly>> _roll : int
+    + RollState(player:PlayerStateMachine)
+    + Enter() : void
+    + UpdateLogic() : void
+    + Exit() : void
+}
+IState <|-- RollState
+RollState --> "_player" PlayerStateMachine
+class SprintState {
+    + SprintState(player:PlayerStateMachine)
+    + Enter() : void
+    + UpdateLogic() : void
+    + Exit() : void
+}
+IState <|-- SprintState
+SprintState --> "_player" PlayerStateMachine
+class WalkState {
+    - _timer : float = 0f
+    + WalkState(player:PlayerStateMachine)
+    + Enter() : void
+    + UpdateLogic() : void
+    + Exit() : void
+    - EnterAttackState(isPressed:bool) : void
+}
+IState <|-- WalkState
+WalkState --> "_player" PlayerStateMachine
+class FighterStats {
+    + MaxHealth : int = 100
+    + MaxStamina : float = 100f
+    + strength : int = 1
+    + dexterity : int = 1
+    + Defense : int = 5
+}
+ScriptableObject <|-- FighterStats
+class DayDurationController {
+    + Duration : float
+    - Awake() : void
+}
+MonoBehaviour <|-- DayDurationController
+DayDurationController --> "Sky" GameObject
+DayDurationController --> "Glow" GameObject
+class HPFlowController {
+    - Start() : void
+    + SetValue(value:float) : void
+}
+MonoBehaviour <|-- HPFlowController
+HPFlowController --> "_material" Material
+class CombatCalculator <<static>> {
+    + {static} CalculateDamage(attackPower:int, defender:FighterStats) : int
+}
+class FighterViewModel {
+    +  <<event>> OnTakeDamage : Action<int> 
+    +  <<event>> OnStaminaZero : Action 
+    +  <<event>> OnDied : Action 
+    +  <<event>> OnSecondPhase : Action 
+    - _isDead : bool
+    + FighterViewModel(stats:FighterStats)
+    + Respawn() : void
+    + TakeDamage(damage:int) : void
+    + StaminaChange(value:float) : void
+    + TakeHeal(heal:int) : void
+}
+class "Observable`1"<T> {
+}
+FighterViewModel --> "_stats" FighterStats
+FighterViewModel --> "CurrentHealth<int>" "Observable`1"
+FighterViewModel --> "CurrentStamina<float>" "Observable`1"
+class FighterView {
+    - widthScaleFactor : float = 1f
+    + Invincible : bool <<get>> <<set>>
+    +  <<event>> OnTakeDamage : Action<int> 
+    +  <<event>> OnSecondPhase : Action 
+    +  <<event>> OnStaminaZero : Action 
+    +  <<event>> OnDied : Action 
+    - Awake() : void
+    - OnEnable() : void
+    - OnDisable() : void
+    - Start() : void
+    - UpdateHpBar(newHealth:int) : void
+    - UpdateStaminaBar(newStamina:float) : void
+    + Respawn() : void
+    - OnTakeDamageInvoke(damage:int) : void
+    - OnSecondPhaseInvoke() : void
+    - OnStaminaZeroInvoke() : void
+    - OnDiedInvoke() : void
+    + TakeDamage(combatEvent:CombatEvent) : void
+    + StaminaChange(stamina:float) : void
+    + TakeHeal(healEvent:HealthEvent) : void
+}
+MonoBehaviour <|-- FighterView
+FighterView --> "stats" FighterStats
+FighterView --> "hpBar" Slider
+FighterView --> "staminaBar" Slider
+FighterView --> "modelCollider" Collider
+FighterView --> "ViewModel" FighterViewModel
+FighterView --> "Stats" FighterStats
+FighterView --> "mainModelCollider" Collider
+FighterView --> "GameObject" GameObject
+class AttackData {
+    + attackName : string
+    + damage : int
+    + windupTime : float
+    + activeTime : float
+    + recoveryTime : float
+    + probability : float
+    + animTrigger : string
+}
+ScriptableObject <|-- AttackData
+class BossSkill {
+    - durationTime : float
+    - Start() : void
+    - OnTriggerEnter(other:Collider) : void
+    - DestroyCoroutine() : IEnumerator
+}
+class "HashSet`1"<T> {
+}
+MonoBehaviour <|-- BossSkill
+BossSkill --> "attackData" AttackData
+BossSkill o-> "_damaged<FighterView>" "HashSet`1"
+BossSkill --> "_playerLayer" LayerMask
+enum NodeState {
+    Success,
+    Running,
+    Failure,
+}
+abstract class BtNode {
+    + BtNode()
+    + BtNode(children:List<BtNode>)
+    + Attach(children:List<BtNode>) : void
+    + {abstract} Evaluate() : NodeState
+}
+class "List`1"<T> {
+}
+BtNode --> "State" NodeState
+BtNode --> "parent" BtNode
+BtNode o-> "Children<BtNode>" "List`1"
+class Leaf_CheckAttackRange {
+    - <<readonly>> _range : float
+    + Leaf_CheckAttackRange(self:Transform, target:Transform, range:float)
+    + <<override>> Evaluate() : NodeState
+}
+class Leaf_Cleaner {
+    - {static} <<readonly>> Vertical : int
+    - {static} <<readonly>> Horizontal : int
+    + Leaf_Cleaner(animator:Animator, agent:NavMeshAgent)
+    + <<override>> Evaluate() : NodeState
+}
+class Leaf_CheckSkillAble {
+    + Leaf_CheckSkillAble(boss:BossMonsterAI)
+    + <<override>> Evaluate() : NodeState
+}
+class Leaf_Strafe {
+    - {static} <<readonly>> Horizontal : int
+    - _strafeDuration : float
+    - _timer : float
+    - _strafeDirection : int
+    - _isStarted : bool
+    + Leaf_Strafe(self:Transform, target:Transform, agent:NavMeshAgent, animator:Animator, strafeDuration:float)
+    + <<override>> Evaluate() : NodeState
+}
+class Leaf_Chase {
+    - {static} <<readonly>> Vertical : int
+    - _isStarted : bool
+    - _timer : float
+    + Leaf_Chase(self:Transform, target:Transform, animator:Animator, agent:NavMeshAgent)
+    + <<override>> Evaluate() : NodeState
+}
+class Leaf_Wait {
+    - _isStarted : bool
+    - _timer : float
+    + Leaf_Wait(animator:Animator, agent:NavMeshAgent)
+    + <<override>> Evaluate() : NodeState
+}
+class Leaf_BackMove {
+    - {static} <<readonly>> Vertical : int
+    - _timer : float
+    - _isStarted : bool
+    + Leaf_BackMove(animator:Animator, agent:NavMeshAgent, self:Transform, target:Transform)
+    + <<override>> Evaluate() : NodeState
+}
+class Leaf_PerformAttack {
+    - _useRoot : bool
+    - _timer : float
+    - _isAttacking : bool
+    - _isDamaged : bool
+    - _moveSpeed : float
+    + Leaf_PerformAttack(self:Transform, target:Transform, animator:Animator, data:AttackData, useRoot:bool, rootHandler:RootMotionHandler, moveSpeed:float)
+    + <<override>> Evaluate() : NodeState
+    - RotateTowardsTarget() : void
+}
+class Leaf_Patrol {
+    - {static} <<readonly>> Vertical : int
+    - _index : int
+    - _isStarted : bool
+    + Leaf_Patrol(patrolPoints:Transform[], agent:NavMeshAgent, animator:Animator)
+    + <<override>> Evaluate() : NodeState
+}
+class Leaf_WatchPlayer {
+    - _viewAngle : float
+    - _viewDistance : float
+    - _playerLayer : int
+    + Leaf_WatchPlayer(target:Transform, self:Transform, viewAngle:float, viewDistance:float, enemy:EnemyAIBase)
+    + <<override>> Evaluate() : NodeState
+}
+BtNode <|-- Leaf_CheckAttackRange
+Leaf_CheckAttackRange --> "_self" Transform
+Leaf_CheckAttackRange --> "_target" Transform
+BtNode <|-- Leaf_Cleaner
+Leaf_Cleaner --> "_animator" Animator
+Leaf_Cleaner --> "_agent" NavMeshAgent
+BtNode <|-- Leaf_CheckSkillAble
+Leaf_CheckSkillAble --> "_boss" BossMonsterAI
+BtNode <|-- Leaf_Strafe
+Leaf_Strafe --> "_self" Transform
+Leaf_Strafe --> "_target" Transform
+Leaf_Strafe --> "_agent" NavMeshAgent
+Leaf_Strafe --> "_animator" Animator
+BtNode <|-- Leaf_Chase
+Leaf_Chase --> "_self" Transform
+Leaf_Chase --> "_target" Transform
+Leaf_Chase --> "_animator" Animator
+Leaf_Chase --> "_agent" NavMeshAgent
+BtNode <|-- Leaf_Wait
+Leaf_Wait --> "_animator" Animator
+Leaf_Wait --> "_agent" NavMeshAgent
+BtNode <|-- Leaf_BackMove
+Leaf_BackMove --> "_self" Transform
+Leaf_BackMove --> "_target" Transform
+Leaf_BackMove --> "_animator" Animator
+Leaf_BackMove --> "_agent" NavMeshAgent
+BtNode <|-- Leaf_PerformAttack
+Leaf_PerformAttack --> "_self" Transform
+Leaf_PerformAttack --> "_target" Transform
+Leaf_PerformAttack --> "_animator" Animator
+Leaf_PerformAttack --> "_attackData" AttackData
+Leaf_PerformAttack --> "_rootHandler" RootMotionHandler
+BtNode <|-- Leaf_Patrol
+Leaf_Patrol --> "_animator" Animator
+Leaf_Patrol --> "_agent" NavMeshAgent
+BtNode <|-- Leaf_WatchPlayer
+Leaf_WatchPlayer --> "_self" Transform
+Leaf_WatchPlayer --> "_target" Transform
+Leaf_WatchPlayer --> "_enemy" EnemyAIBase
+class Selector {
+    + Selector(children:List<BtNode>)
+    + <<override>> Evaluate() : NodeState
+}
+class Selector_Random {
+    + Selector_Random(children:List<BtNode>)
+    + <<override>> Evaluate() : NodeState
+}
+class Sequence {
+    + Sequence()
+    + Sequence(children:List<BtNode>)
+    + <<override>> Evaluate() : NodeState
+}
+class Sequence_Memory {
+    - _lastRunningChildIndex : int = 0
+    + Sequence_Memory(children:List<BtNode>)
+    + <<override>> Evaluate() : NodeState
+}
+BtNode <|-- Selector
+BtNode <|-- Selector_Random
+Selector_Random --> "_chosenNode" BtNode
+BtNode <|-- Sequence
+BtNode <|-- Sequence_Memory
+class Inventory {
+    +  <<event>> onInventoryChangedCallback : OnInventoryChanged 
+    - inventorySize : int = 20
+    + Inventory(size:int)
+    + TriggerInventoryChanged() : void
+    + AddItem(item:Item, quantity:int) : bool
+    + RemoveItem(item:Item, quantity:int) : bool
+    + GetSlot(index:int) : InventorySlot
+    + GetTotalQuantity(item:Item) : int
+}
+class "List`1"<T> {
+}
+Inventory o-> "Slots<InventorySlot>" "List`1"
+class InventorySlot {
+    + Quantity : int
+    + InventorySlot(item:Item, quantity:int)
+    + AddQuantity(amount:int) : void
+    + RemoveQuantity(amount:int) : void
+}
+InventorySlot --> "Item" Item
+class UI_EquipmentSlot {
+    - Awake() : void
+    - Start() : void
+    - OnDestroy() : void
+    - OnEquipmentChanged(newItem:WeaponItem, oldItem:WeaponItem) : void
+    + UpdateSlotUI() : void
+    + OnDrop(eventData:PointerEventData) : void
+    + OnBeginDrag(eventData:PointerEventData) : void
+    + OnDrag(eventData:PointerEventData) : void
+    + OnEndDrag(eventData:PointerEventData) : void
+}
+MonoBehaviour <|-- UI_EquipmentSlot
+IDropHandler <|-- UI_EquipmentSlot
+IBeginDragHandler <|-- UI_EquipmentSlot
+IDragHandler <|-- UI_EquipmentSlot
+IEndDragHandler <|-- UI_EquipmentSlot
+UI_EquipmentSlot --> "icon" Image
+UI_EquipmentSlot --> "playerEquipment" PlayerEquipment
+UI_EquipmentSlot --> "playerInventory" PlayerInventory
+UI_EquipmentSlot --> "uiInventory" UI_Inventory
+UI_EquipmentSlot --> "equippedWeapon" WeaponItem
+UI_EquipmentSlot --> "rectTransform" RectTransform
+UI_EquipmentSlot --> "parentCanvas" Canvas
+UI_EquipmentSlot --> "originalParent" Transform
+UI_EquipmentSlot --> "originalPosition" Vector2
+class UI_Inventory {
+    - Start() : void
+    - OnDestroy() : void
+    - InitInventoryUI() : void
+    - SetupFilterButtons() : void
+    + SetFilter(filterType:ItemType) : void
+    - UpdateInventoryUI() : void
+    + HandleDrop(fromGO:GameObject, toGO:GameObject) : void
+    - HandleInventoryToInventory(fromSlotUI:UI_InventorySlot, toSlotUI:UI_InventorySlot) : void
+    - HandleInventoryToEquipment(fromSlotUI:UI_InventorySlot, toSlotUI:UI_EquipmentSlot) : void
+    - HandleEquipmentToInventory(fromSlotUI:UI_EquipmentSlot, toSlotUI:UI_InventorySlot) : void
+}
+class "List`1"<T> {
+}
+MonoBehaviour <|-- UI_Inventory
+UI_Inventory --> "playerInventory" PlayerInventory
+UI_Inventory --> "inventorySlotPrefab" GameObject
+UI_Inventory --> "inventorySlotParent" Transform
+UI_Inventory --> "equipmentSlotParent" Transform
+UI_Inventory o-> "inventorySlots<UI_InventorySlot>" "List`1"
+UI_Inventory o-> "equipmentSlots<UI_InventorySlot>" "List`1"
+UI_Inventory --> "allFilterButton" Button
+UI_Inventory --> "weaponFilterButton" Button
+UI_Inventory --> "potionFilterButton" Button
+UI_Inventory --> "materialFilterButton" Button
+UI_Inventory --> "etcFilterButton" Button
+UI_Inventory o-> "currentFilter" ItemType
+class UI_InventorySlot {
+    - Awake() : void
+    + Init(slot:InventorySlot, inventoryUI:UI_Inventory) : void
+    + UpdateSlotUI() : void
+    + OnBeginDrag(eventData:PointerEventData) : void
+    + OnDrag(eventData:PointerEventData) : void
+    + OnEndDrag(eventData:PointerEventData) : void
+    + OnDrop(eventData:PointerEventData) : void
+    + OnPointerEnter(eventData:PointerEventData) : void
+    + OnPointerExit(eventData:PointerEventData) : void
+}
+MonoBehaviour <|-- UI_InventorySlot
+IBeginDragHandler <|-- UI_InventorySlot
+IDragHandler <|-- UI_InventorySlot
+IEndDragHandler <|-- UI_InventorySlot
+IDropHandler <|-- UI_InventorySlot
+UI_InventorySlot --> "icon" Image
+UI_InventorySlot --> "quantityText" TextMeshProUGUI
+UI_InventorySlot --> "highlight" GameObject
+UI_InventorySlot --> "inventorySlot" InventorySlot
+UI_InventorySlot --> "rectTransform" RectTransform
+UI_InventorySlot --> "parentCanvas" Canvas
+UI_InventorySlot --> "parentInventoryUI" UI_Inventory
+UI_InventorySlot --> "originalPosition" Vector2
+UI_InventorySlot --> "originalParent" Transform
+enum ItemType {
+    Weapon,
+    Potion,
+    Material,
+    Etc,
+}
+class Item {
+    + ItemName : string
+    + MaxAmount : int
+}
+ScriptableObject <|-- Item
+Item --> "Type" ItemType
+Item --> "Icon" Sprite
+abstract class DatabaseBase {
+    + {abstract} LoadData() : void
+}
+class ItemData {
+    + ID : int
+    + Name : string
+    + AttackPower : float
+    + Description : string
+}
+class ItemDatabase {
+    + <<override>> LoadData() : void
+}
+class "List`1"<T> {
+}
+ScriptableObject <|-- DatabaseBase
+DatabaseBase --> "tsvFile" TextAsset
+DatabaseBase <|-- ItemDatabase
+ItemDatabase o-> "items<ItemData>" "List`1"
+enum WeaponRank {
+    S,
+    A,
+    B,
+}
+class WeaponItem {
+    + Damage : int
+    + StaminaConsume : float
+    - OnValidate() : void
+    + StrengthBonus() : int
+    + DexterityBonus() : int
+}
+Item <|-- WeaponItem
+WeaponItem --> "Prefab" GameObject
+WeaponItem --> "Strength" WeaponRank
+WeaponItem --> "Dexterity" WeaponRank
+class FABRIKSolver <<static>> {
+    + {static} SolveFabrik(positions:Vector3[], boneLengths:float[], ikTarget:Vector3, ikChainLength:float, iterationNumbers:byte, errorDistToStopSolving:float) : void
+}
+class PerfectLookAt {
+    - m_Weight : float = 1.0f
+    + m_LookAtBlendSpeed : float = 5.0f
+    - m_BlendSpeed : float = 0.0f
+    + m_LegStabilizerMinDistanceToStartSolving : float = 0.005f
+    + LegStabilizerMaxIterations : byte = 20
+    + m_DrawDebugLookAtLines : bool = false
+    - m_IsValid : bool = true
+    + GetLookAtWeight() : float
+    + SetLookAtWeight(weight:float) : void
+    + EnablePerfectLookat(time:float, cancelCurrentTransition:bool) : void
+    + DisablePerfectLookat(time:float, cancelCurrentTransition:bool) : void
+    + IsInTransition() : bool
+    + GetTimeToFinishTransition() : float
+    + {static} GetWorldLookAtRotation(targetVector:Vector3, fwdVectorInWorldSpace:Vector3) : Quaternion
+    - PerfectLookAtSlerp(a:Quaternion, b:Quaternion, weight:float) : Quaternion
+    + {static} QuaternionFromAngleAxis(rotationAxis:Vector3, angleRad:float) : Quaternion
+    - CheckForForceDefaultRotation() : void
+    - CheckValidity() : bool
+    - GetAngleFromQuaternionDeg(inputQuat:Quaternion) : float
+    - GetAngleFromQuaternionDeg(inputQuat:Quaternion) : float
+    - GetAngleFromQuaternionRad(inputQuat:Quaternion) : float
+    - GetAngleFromQuaternionRad(inputQuat:Quaternion) : float
+    - GetForwardVector(inputTr:Transform, inputAxis:FwdDirection) : Vector3
+    - BlendTowardTargetVector(inputTr:Transform, inputAxis:FwdDirection) : Vector3
+    - CheckIfCharacterScaleChanged() : void
+    - Start() : void
+    - Update() : void
+    - LateUpdate() : void
+}
+MonoBehaviour <|-- PerfectLookAt
+PerfectLookAt --> "m_gameObjectScale" Vector3
+PerfectLookAt --> "m_TargetObject" GameObject
+PerfectLookAt o-> "m_UpVector" Vector3
+enum FwdDirection {
+    X_AXIS= 0,
+    Y_AXIS= 1,
+    Z_AXIS= 2,
+    MINUS_X_AXIS= 3,
+    MINUS_Y_AXIS= 4,
+    MINUS_Z_AXIS= 5,
+}
+class PerfectLookAtData {
+    + m_RotationLimit : float = 90.0f
+    + m_RotateAroundUpVectorWeight : float = 0.0f
+    + m_ResetToDefaultRotation : bool = false
+    + SetDefaultRotation(rot:Quaternion) : void
+    + GetDefaultRotation() : Quaternion
+    + CheckJointRotation() : void
+}
+class PerfecLookAtLinkedBones {
+    + m_ResetToDefaultRotation : bool = false
+    + SetDefaultRotation(rot:Quaternion) : void
+    + GetDefaultRotation() : Quaternion
+    + SetLastFrameRotation(rotation:Quaternion) : void
+    + GetLastFrameRotation() : Quaternion
+}
+PerfectLookAtData --> "m_DefaultRotation" Quaternion
+PerfectLookAtData --> "m_Bone" Transform
+PerfectLookAtData --> "m_ForwardAxis" FwdDirection
+PerfectLookAtData --> "m_ParentBoneForwardAxis" FwdDirection
+PerfecLookAtLinkedBones --> "m_DefaultRotation" Quaternion
+PerfecLookAtLinkedBones --> "m_LastFrameRotation" Quaternion
+PerfecLookAtLinkedBones --> "m_Bone" Transform
+class PerfectLookAtLegStabilizer {
+    + m_iKWeight : float = 1.0f
+    - m_IKChainLength : float = 0.0f
+    + m_BonesCount : uint = 3
+    - FindProjectionVector(startingPoint:Vector3, middlePoint:Vector3, endingPoint:Vector3) : Vector3
+    - FixSwivelAngle(positions:Vector3[]) : void
+    + GetMiddleBonePos() : Vector3
+    + GetFirstBonePos() : Vector3
+    + Initialize() : void
+    + CacheBones() : void
+    + FixLeg(iterations:byte, minErrorToStartSolving:float) : void
+}
+PerfectLookAtLegStabilizer --> "m_FootBone" Transform
+PerfectLookAtLegStabilizer --> "m_footRotBeforeLookAt" Quaternion
+PerfectLookAtLegStabilizer --> "m_footPosBeforeLookAt" Vector3
+PerfectLookAtLegStabilizer --> "m_middleBonePosBeforeLookAt" Vector3
+PerfectLookAtLegStabilizer --> "m_firstBonePosBeforeLookAt" Vector3
+PerfectLookAtLegStabilizer o-> "m_originalSwivelDir" Vector3
+PerfectLookAtLegStabilizer o-> "m_afterSolvingSwivelDir" Vector3
+class AnimationData {
+    + {static} ConvertToAnimatorWeapon(leftWeapon:Weapon, rightWeapon:Weapon) : AnimatorWeapon
+    + {static} AttackDuration(attackSide:Side, weapon:Weapon, attackNumber:int) : float
+    + {static} SheathDuration(attackSide:Side, weapon:Weapon) : float
+    + {static} RandomAttackNumber(sideType:Side, weapon:Weapon) : int
+    + {static} RandomBow() : EmoteType
+    + {static} HitDirection(hitType:HitType) : Vector3
+    + {static} HitDirection(hitType:KnockbackType) : Vector3
+    + {static} HitDirection(hitType:BlockedHitType) : Vector3
+    + {static} HitDirection(hitType:KnockdownType) : Vector3
+}
+class AnimationVariations {
+}
+class CoroutineQueue {
+    - <<readonly>> maxActive : uint
+    - numActive : uint
+    + CoroutineQueue(maxActive:uint, coroutineStarter:Func<IEnumerator, Coroutine>)
+    + Run(coroutine:IEnumerator) : void
+    + RunCallback(callback:System.Action) : void
+    - CoroutineCallback(callback:System.Action) : IEnumerator
+    - CoroutineRunner(coroutine:IEnumerator) : IEnumerator
+}
+class "Func`2"<T1,T2> {
+}
+class "Queue`1"<T> {
+}
+CoroutineQueue --> "coroutineStarter<IEnumerator,Coroutine>" "Func`2"
+CoroutineQueue --> "queue<IEnumerator>" "Queue`1"
+class IKHands {
+    + canBeUsed : bool
+    + isUsed : bool
+    + leftHandPositionWeight : float
+    + leftHandRotationWeight : float
+    - Awake() : void
+    - OnAnimatorIK(layerIndex:int) : void
+    + BlendIK(blendOn:bool, delay:float, timeToBlend:float, weapon:Weapon) : void
+    - _BlendIK(blendOn:bool, delay:float, timeToBlend:float, weapon:Weapon) : IEnumerator
+    + SetIKPause(pauseTime:float) : void
+    - _SetIKPause(pauseTime:float) : IEnumerator
+    - GetCurrentWeaponAttachPoint(weapon:Weapon) : void
+}
+MonoBehaviour <|-- IKHands
+IKHands --> "animator" Animator
+IKHands --> "rpgCharacterWeaponController" RPGCharacterWeaponController
+IKHands --> "leftHandObj" Transform
+IKHands --> "attachLeft" Transform
+IKHands --> "blendToTransform" Transform
+IKHands --> "co" Coroutine
+class AnimatorMoveEvent {
+}
+class RPGCharacterAnimatorEvents {
+    - Awake() : void
+    + Hit() : void
+    + Shoot() : void
+    + FootR() : void
+    + FootL() : void
+    + Land() : void
+    + WeaponSwitch() : void
+    - OnAnimatorMove() : void
+}
+class "UnityEvent`2"<T1,T2> {
+}
+"UnityEvent`2" "<Vector3,Quaternion>" <|-- AnimatorMoveEvent
+MonoBehaviour <|-- RPGCharacterAnimatorEvents
+RPGCharacterAnimatorEvents o-> "OnHit" UnityEvent
+RPGCharacterAnimatorEvents o-> "OnShoot" UnityEvent
+RPGCharacterAnimatorEvents o-> "OnFootR" UnityEvent
+RPGCharacterAnimatorEvents o-> "OnFootL" UnityEvent
+RPGCharacterAnimatorEvents o-> "OnLand" UnityEvent
+RPGCharacterAnimatorEvents o-> "OnWeaponSwitch" UnityEvent
+RPGCharacterAnimatorEvents o-> "OnMove" AnimatorMoveEvent
+RPGCharacterAnimatorEvents --> "rpgCharacterController" RPGCharacterController
+RPGCharacterAnimatorEvents --> "animator" Animator
+class RPGCharacterController {
+    +  <<event>> OnLockActions : System.Action 
+    +  <<event>> OnUnlockActions : System.Action 
+    +  <<event>> OnLockMovement : System.Action 
+    +  <<event>> OnUnlockMovement : System.Action 
+    + animationSpeed : float = 1
+    + headLook : bool = false
+    + isHeadlook : bool <<get>>
+    - _isHeadlook : bool = false
+    + idleAlert : bool = true
+    + canAction : bool <<get>>
+    - _canAction : bool
+    + canFace : bool <<get>>
+    - _canFace : bool = true
+    + canMove : bool <<get>>
+    - _canMove : bool
+    + canStrafe : bool <<get>>
+    - _canStrafe : bool = true
+    + acquiringGround : bool <<get>>
+    + isAiming : bool <<get>>
+    + isAttacking : bool <<get>>
+    - _isAttacking : bool
+    + isBlocking : bool <<get>>
+    + isCasting : bool <<get>>
+    + isClimbing : bool <<get>>
+    + isCrouching : bool <<get>>
+    + isCrawling : bool <<get>>
+    + isDead : bool <<get>>
+    + isFacing : bool <<get>>
+    + isFalling : bool <<get>>
+    + isHipShooting : bool <<get>>
+    + isIdle : bool <<get>>
+    + isInjured : bool <<get>>
+    + isMoving : bool <<get>>
+    + isNavigating : bool <<get>>
+    + isNearCliff : bool = false
+    + isNearLadder : bool = false
+    + isRelaxed : bool <<get>>
+    + isRolling : bool <<get>>
+    + isKnockback : bool <<get>>
+    + isKnockdown : bool <<get>>
+    + isSitting : bool = false
+    + isSpecial : bool = false
+    + isSprinting : bool <<get>>
+    + isStrafing : bool <<get>>
+    + isSwimming : bool <<get>>
+    + isTalking : bool = false
+    + maintainingGround : bool <<get>>
+    + bowPull : float <<get>>
+    - _bowPull : float
+    + hasRightWeapon : bool <<get>>
+    + hasLeftWeapon : bool <<get>>
+    + hasDualWeapons : bool <<get>>
+    + hasTwoHandedWeapon : bool <<get>>
+    + hasShield : bool <<get>>
+    + hasAimedWeapon : bool <<get>>
+    + hasNoWeapon : bool <<get>>
+    + hasCastableWeapon : bool <<get>>
+    - Awake() : void
+    + SetHandler(action:string, handler:IActionHandler) : void
+    + GetHandler(action:string) : IActionHandler
+    + HandlerExists(action:string) : bool
+    + TryGetHandlerActive(action:string) : bool
+    + IsActive(action:string) : bool
+    + CanStartAction(action:string) : bool
+    + TryStartAction(action:string, context:object) : bool
+    + TryEndAction(action:string) : bool
+    + CanEndAction(action:string) : bool
+    + StartAction(action:string, context:object) : void
+    + EndAction(action:string) : void
+    - LateUpdate() : void
+    + SetMoveInput(_moveInput:Vector3) : void
+    + SetFaceInput(_faceInput:Vector3) : void
+    + SetAimInput(_aimInput:Vector3) : void
+    + SetJumpInput(_jumpInput:Vector3) : void
+    + SetBowPull(_bowPull:float) : void
+    + ToggleHeadlook() : void
+    + Shoot(action:int) : void
+    + Reload() : void
+    + Aim(aiming:bool, target:Vector3, bowPull:float) : void
+    + StopAim() : void
+    + StartSprint() : void
+    + EndSprint() : void
+    + Turn(turnType:TurnType) : void
+    + DiveRoll(rollType:DiveRollType) : void
+    + Roll(rollNumber:RollType) : void
+    + Knockback(direction:KnockbackType) : void
+    + Knockdown(direction:KnockdownType) : void
+    + Dodge(dodgeType:DodgeType) : void
+    + ClimbLadder(climbType:ClimbType) : void
+    + Crawl() : void
+    + EndCrawl() : void
+    + GetAngry() : void
+    + Attack(attackNumber:int, attackSide:Side, leftWeapon:Weapon, rightWeapon:Weapon, duration:float) : void
+    + RunningAttack(side:Side, leftWeapon:bool, rightWeapon:bool, dualWeapon:bool, twoHandedWeapon:bool) : void
+    + AirAttack() : void
+    + AttackKick(kickSide:int) : void
+    + StartSpecial(special:int) : void
+    + EndSpecial() : void
+    + StartCast(castType:CastType, attackSide:Side) : void
+    + StartCast(attackCastType:AttackCastType, attackSide:Side) : void
+    + EndCast() : void
+    + StartBlock() : void
+    + EndBlock() : void
+    + StartFace() : void
+    + EndFace() : void
+    + StartStrafe() : void
+    + EndStrafe() : void
+    + GetHit(hitNumber:int) : void
+    + Death() : void
+    + Revive() : void
+    + Sit() : void
+    + Laydown() : void
+    + Stand() : void
+    + Pickup() : void
+    + Activate() : void
+    + Drink() : void
+    + Bow() : void
+    + No() : void
+    + Yes() : void
+    + Boost() : void
+    + StartInjured() : void
+    + EndInjured() : void
+    + StartCrouch() : void
+    + EndCrouch() : void
+    + StartConversation() : void
+    + EndConversation() : void
+    - _PlayConversationClip() : IEnumerator
+    + RandomIdle() : void
+    + GetAnimatorTarget() : GameObject
+    - CurrentAnimationLength(animationlayer:int) : float
+    - LockHeadlook() : void
+    - UnlockHeadlook() : void
+    + Lock(lockMovement:bool, lockAction:bool, timed:bool, delayTime:float, lockTime:float) : void
+    - _Lock(lockMovement:bool, lockAction:bool, timed:bool, delayTime:float, lockTime:float) : IEnumerator
+    + Unlock(movement:bool, actions:bool) : void
+    + SetIKOff() : void
+    + SetIKOn(weapon:Weapon) : void
+    + SetIKPause(pauseTime:float) : void
+}
+class "Dictionary`2"<T1,T2> {
+}
+MonoBehaviour <|-- RPGCharacterController
+RPGCharacterController --> "animator" Animator
+RPGCharacterController --> "mainCamera" Camera
+RPGCharacterController --> "ikHands" IKHands
+RPGCharacterController --> "ladder" Collider
+RPGCharacterController --> "cliff" Collider
+RPGCharacterController --> "target" Transform
+RPGCharacterController --> "headLookController" PerfectLookAt
+RPGCharacterController --> "moveInput" Vector3
+RPGCharacterController --> "_moveInput" Vector3
+RPGCharacterController --> "aimInput" Vector3
+RPGCharacterController --> "_aimInput" Vector3
+RPGCharacterController --> "faceInput" Vector3
+RPGCharacterController --> "_faceInput" Vector3
+RPGCharacterController --> "jumpInput" Vector3
+RPGCharacterController --> "_jumpInput" Vector3
+RPGCharacterController --> "cameraRelativeInput" Vector3
+RPGCharacterController --> "_cameraRelativeInput" Vector3
+RPGCharacterController o-> "rightWeapon" Weapon
+RPGCharacterController o-> "leftWeapon" Weapon
+RPGCharacterController o-> "actionHandlers<string,IActionHandler>" "Dictionary`2"
+class RPGCharacterInputController {
+    - inputHorizontal : float = 0
+    - inputVertical : float = 0
+    - inputJump : bool
+    - inputLightHit : bool
+    - inputDeath : bool
+    - inputAttackL : bool
+    - inputAttackR : bool
+    - inputCastL : bool
+    - inputCastR : bool
+    - inputSwitchUpDown : float
+    - inputSwitchLeftRight : float
+    - inputAimBlock : float
+    - inputAiming : bool
+    - inputFace : bool
+    - inputFacingHorizontal : float
+    - inputFacingVertical : float
+    - inputRoll : bool
+    - inputShield : bool
+    - inputRelax : bool
+    - isJumpHeld : bool
+    - bowPull : float
+    - blockToggle : bool
+    - inputPauseTimeout : float = 0
+    - inputPaused : bool = false
+    - Awake() : void
+    - Update() : void
+    + PauseInput(timeout:float) : void
+    - Inputs() : void
+    + HasMoveInput() : bool
+    + HasAimInput() : bool
+    + HasBlockInput() : bool
+    + HasFacingInput() : bool
+    + Blocking() : void
+    + Moving() : void
+    - Jumping() : void
+    + Rolling() : void
+    - Aiming() : void
+    - Strafing() : void
+    - Facing() : void
+    - Attacking() : void
+    - Damage() : void
+    - SwitchWeapons() : void
+}
+MonoBehaviour <|-- RPGCharacterInputController
+RPGCharacterInputController --> "rpgCharacterController" RPGCharacterController
+RPGCharacterInputController --> "moveInput" Vector3
+RPGCharacterInputController --> "currentAim" Vector3
+class RPGCharacterInputSystemController {
+    - Start() : void
+    + PauseInput(timeout:float) : void
+}
+MonoBehaviour <|-- RPGCharacterInputSystemController
+class RPGCharacterMovementController {
+    + acquiringGround : bool <<get>>
+    + maintainingGround : bool <<get>>
+    + knockbackMultiplier : float = 1f
+    + movementAnimationMultiplier : float = 1f
+    - ladderStartBottom : bool
+    + walkSpeed : float = .5f
+    + walkAccel : float = 15f
+    + runSpeed : float = 1f
+    + runAccel : float = 30f
+    + sprintSpeed : float = 2f
+    + sprintAccel : float = 15
+    + crouchSpeed : float = 0.25f
+    + crouchAccel : float = 15
+    + crawlSpeed : float = 0.15f
+    + crawlAccel : float = 15
+    + injuredSpeed : float = .675f
+    + injuredAccel : float = 20f
+    + groundFriction : float = 120f
+    + rotationSpeed : float = 100f
+    - isSprinting : bool
+    + canJump : bool
+    + holdingJump : bool
+    + canDoubleJump : bool = false
+    - doublejumped : bool = false
+    + jumpSpeed : float = 12f
+    + jumpGravity : float = 24f
+    + allowDoubleJump : bool = true
+    + doubleJumpSpeed : float = 8f
+    + inAirSpeed : float = 8f
+    + inAirAccel : float = 16f
+    + fallGravity : float = 32f
+    + fallingControl : bool = false
+    + swimSpeed : float = 4f
+    + swimAccel : float = 4f
+    + strokeSpeed : float = 6f
+    + waterFriction : float = 5f
+    + debugMessages : bool
+    - Awake() : void
+    - Start() : void
+    - Update() : void
+    # <<override>> EarlyGlobalSuperUpdate() : void
+    # <<override>> LateGlobalSuperUpdate() : void
+    - Idle_EnterState() : void
+    - Idle_SuperUpdate() : void
+    - Idle_ExitState() : void
+    - Move_EnterState() : void
+    - Move_SuperUpdate() : void
+    - Move_ExitState() : void
+    - Jump_EnterState() : void
+    - Jump_SuperUpdate() : void
+    - DoubleJump_EnterState() : void
+    - DoubleJump_SuperUpdate() : void
+    - Fall_EnterState() : void
+    - Fall_SuperUpdate() : void
+    - Fall_ExitState() : void
+    - Crawl_EnterState() : void
+    - Crawl_SuperUpdate() : void
+    - Crawl_ExitState() : void
+    - Swim_EnterState() : void
+    - Swim_SuperUpdate() : void
+    - Swim_ExitState() : void
+    - ClimbLadder_EnterState() : void
+    - ClimbLadder_SuperUpdate() : void
+    - ClimbLadder_ExitState() : void
+    - DiveRoll_EnterState() : void
+    - DiveRoll_SuperUpdate() : void
+    - Roll_EnterState() : void
+    - Knockback_EnterState() : void
+    - Knockdown_EnterState() : void
+    + ClimbLadder(ladderStartBottom:bool) : void
+    - RotateTowardsMovementDir() : void
+    - RotateTowardsTarget(targetPosition:Vector3) : void
+    - RotateTowardsDirection(direction:Vector3) : void
+    + KnockbackForce(knockDirection:Vector3, knockBackAmount:float, variableAmount:float) : void
+    - _KnockbackForce(knockDirection:Vector3, knockBackAmount:float, variableAmount:float) : IEnumerator
+    - OnTriggerEnter(collide:Collider) : void
+    - OnTriggerExit(collide:Collider) : void
+    + LockMovement() : void
+    + UnlockMovement() : void
+    + AnimatorMove(deltaPosition:Vector3, rootRotation:Quaternion) : void
+    + IdleOnceAfterMoveUnlock() : void
+    + InstantSwitchOnceAfterMoveUnlock() : void
+}
+SuperStateMachine <|-- RPGCharacterMovementController
+RPGCharacterMovementController --> "superCharacterController" SuperCharacterController
+RPGCharacterMovementController --> "rpgCharacterController" RPGCharacterController
+RPGCharacterMovementController --> "rb" Rigidbody
+RPGCharacterMovementController --> "animator" Animator
+RPGCharacterMovementController --> "capCollider" CapsuleCollider
+RPGCharacterMovementController --> "lookDirection" Vector3
+RPGCharacterMovementController --> "currentVelocity" Vector3
+class RPGCharacterNavigationController {
+    + debugNavigation : bool
+    + isNavigating : bool
+    - moveSpeed : float = 1f
+    - rotationSpeed : float = 1f
+    - maxNavPathLength : float = 40f
+    - Awake() : void
+    - Start() : void
+    - Update() : void
+    - GetPathLength(path:NavMeshPath) : float
+    + CanMoveTo(destination:Vector3) : bool
+    + MeshNavToPoint(destination:Vector3) : void
+    + StopNavigating() : void
+    + StopAnimation() : void
+    - RotateTowardsMovementDir() : void
+}
+MonoBehaviour <|-- RPGCharacterNavigationController
+RPGCharacterNavigationController --> "navMeshAgent" NavMeshAgent
+RPGCharacterNavigationController --> "rpgCharacterController" RPGCharacterController
+RPGCharacterNavigationController --> "rpgCharacterMovementController" RPGCharacterMovementController
+RPGCharacterNavigationController --> "animator" Animator
+class RPGCharacterWeaponController {
+    + singleAnimSwitch : bool = true
+    + singleAnimSwitchDual : bool = true
+    + debugWalkthrough : bool = true
+    + debugIncomingWeaponContext : bool = true
+    + debugSwitchWeaponContext : bool = true
+    + debugDoWeaponSwitch : bool = true
+    + debugWeaponVisibility : bool = true
+    + debugSetAnimator : bool = true
+    - isWeaponSwitching : bool = false
+    - dualSwitch : bool
+    - Awake() : void
+    - Start() : void
+    + AddCallback(callback:System.Action) : void
+    + UnsheathWeapon(weapon:Weapon, dual:bool) : void
+    - _UnSheathWeapon(weapon:Weapon) : IEnumerator
+    + _DualUnSheath(weapon:Weapon) : IEnumerator
+    + SheathWeapon(fromWeapon:Weapon, toWeapon:Weapon, dual:bool) : void
+    + _SheathWeapon(weaponToSheath:Weapon, weaponToUnsheath:Weapon) : IEnumerator
+    + _DualSheath(weaponToSheath:Weapon, weaponToUnsheath:Weapon) : IEnumerator
+    + SheathAndUnSheath(weaponFrom:Weapon, weaponTo:Weapon, side:Side) : void
+    - _SheathAndUnSheath(weaponFrom:Weapon, weaponTo:Weapon, side:Side) : IEnumerator
+    + DualSheathAndUnSheath(weaponFrom:Weapon, weaponTo:Weapon, side:Side) : void
+    - _DualSheathAndUnSheath(weaponFrom:Weapon, weaponTo:Weapon, side:Side) : IEnumerator
+    + InstantWeaponSwitch(weapon:Weapon) : void
+    + _InstantWeaponSwitch(weapon:Weapon) : IEnumerator
+    - DoWeaponSwitch(weaponSwitch:int, weapon:Weapon, animatorWeapon:AnimatorWeapon, side:Side, sheath:bool) : void
+    - SetWeaponWithDebug(animatorWeapon:AnimatorWeapon, weaponSwitch:int, leftWeapon:Weapon, rightWeapon:Weapon, weaponSide:Side) : void
+    + WeaponSwitch() : void
+    + SafeSetVisibility(weaponObject:GameObject, visibility:bool) : void
+    + HideAllWeapons() : void
+    + _HideAllWeapons(timed:bool, resetToUnarmed:bool) : IEnumerator
+    + _WeaponVisibility(weaponNumber:Weapon, visible:bool, dual:bool) : IEnumerator
+    + SyncWeaponVisibility() : void
+    - _SyncWeaponVisibility() : IEnumerator
+}
+MonoBehaviour <|-- RPGCharacterWeaponController
+RPGCharacterWeaponController --> "rpgCharacterController" RPGCharacterController
+RPGCharacterWeaponController --> "animator" Animator
+RPGCharacterWeaponController --> "coroQueue" CoroutineQueue
+RPGCharacterWeaponController --> "twoHandAxe" GameObject
+RPGCharacterWeaponController --> "twoHandSword" GameObject
+RPGCharacterWeaponController --> "twoHandSpear" GameObject
+RPGCharacterWeaponController --> "twoHandBow" GameObject
+RPGCharacterWeaponController --> "twoHandCrossbow" GameObject
+RPGCharacterWeaponController --> "staff" GameObject
+RPGCharacterWeaponController --> "swordL" GameObject
+RPGCharacterWeaponController --> "swordR" GameObject
+RPGCharacterWeaponController --> "maceL" GameObject
+RPGCharacterWeaponController --> "maceR" GameObject
+RPGCharacterWeaponController --> "daggerL" GameObject
+RPGCharacterWeaponController --> "daggerR" GameObject
+RPGCharacterWeaponController --> "itemL" GameObject
+RPGCharacterWeaponController --> "itemR" GameObject
+RPGCharacterWeaponController --> "shield" GameObject
+RPGCharacterWeaponController --> "pistolL" GameObject
+RPGCharacterWeaponController --> "pistolR" GameObject
+RPGCharacterWeaponController --> "rifle" GameObject
+RPGCharacterWeaponController --> "spear" GameObject
+class DebugDraw <<static>> {
+    + {static} DrawMarker(position:Vector3, size:float, color:Color, duration:float, depthTest:bool) : void
+    + {static} DrawPlane(position:Vector3, normal:Vector3, size:float, color:Color, duration:float, depthTest:bool) : void
+    + {static} DrawVector(position:Vector3, direction:Vector3, raySize:float, markerSize:float, color:Color, duration:float, depthTest:bool) : void
+    + {static} DrawTriangle(a:Vector3, b:Vector3, c:Vector3, color:Color) : void
+    + {static} DrawTriangle(a:Vector3, b:Vector3, c:Vector3, color:Color, t:Transform) : void
+    + {static} DrawMesh(mesh:Mesh, color:Color, t:Transform) : void
+    + {static} RandomColor() : Color
+}
+class Math3d {
+    + {static} Init() : void
+    + {static} AddVectorLength(vector:Vector3, size:float) : Vector3
+    + {static} SetVectorLength(vector:Vector3, size:float) : Vector3
+    + {static} SubtractRotation(B:Quaternion, A:Quaternion) : Quaternion
+    + {static} PlanePlaneIntersection(linePoint:Vector3, lineVec:Vector3, plane1Normal:Vector3, plane1Position:Vector3, plane2Normal:Vector3, plane2Position:Vector3) : bool
+    + {static} LinePlaneIntersection(intersection:Vector3, linePoint:Vector3, lineVec:Vector3, planeNormal:Vector3, planePoint:Vector3) : bool
+    + {static} LineLineIntersection(intersection:Vector3, linePoint1:Vector3, lineVec1:Vector3, linePoint2:Vector3, lineVec2:Vector3) : bool
+    + {static} ClosestPointsOnTwoLines(closestPointLine1:Vector3, closestPointLine2:Vector3, linePoint1:Vector3, lineVec1:Vector3, linePoint2:Vector3, lineVec2:Vector3) : bool
+    + {static} ProjectPointOnLine(linePoint:Vector3, lineVec:Vector3, point:Vector3) : Vector3
+    + {static} ProjectPointOnLineSegment(linePoint1:Vector3, linePoint2:Vector3, point:Vector3) : Vector3
+    + {static} ProjectPointOnPlane(planeNormal:Vector3, planePoint:Vector3, point:Vector3) : Vector3
+    + {static} ProjectVectorOnPlane(planeNormal:Vector3, vector:Vector3) : Vector3
+    + {static} SignedDistancePlanePoint(planeNormal:Vector3, planePoint:Vector3, point:Vector3) : float
+    + {static} SignedDotProduct(vectorA:Vector3, vectorB:Vector3, normal:Vector3) : float
+    + {static} SignedVectorAngle(referenceVector:Vector3, otherVector:Vector3, normal:Vector3) : float
+    + {static} AngleVectorPlane(vector:Vector3, normal:Vector3) : float
+    + {static} DotProductAngle(vec1:Vector3, vec2:Vector3) : float
+    + {static} PlaneFrom3Points(planeNormal:Vector3, planePoint:Vector3, pointA:Vector3, pointB:Vector3, pointC:Vector3) : void
+    + {static} GetForwardVector(q:Quaternion) : Vector3
+    + {static} GetUpVector(q:Quaternion) : Vector3
+    + {static} GetRightVector(q:Quaternion) : Vector3
+    + {static} QuaternionFromMatrix(m:Matrix4x4) : Quaternion
+    + {static} PositionFromMatrix(m:Matrix4x4) : Vector3
+    + {static} LookRotationExtended(gameObjectInOut:GameObject, alignWithVector:Vector3, alignWithNormal:Vector3, customForward:Vector3, customUp:Vector3) : void
+    + {static} TransformWithParent(childRotation:Quaternion, childPosition:Vector3, parentRotation:Quaternion, parentPosition:Vector3, startParentRotation:Quaternion, startParentPosition:Vector3, startChildRotation:Quaternion, startChildPosition:Vector3) : void
+    + {static} PreciseAlign(gameObjectInOut:GameObject, alignWithVector:Vector3, alignWithNormal:Vector3, alignWithPosition:Vector3, triangleForward:Vector3, triangleNormal:Vector3, trianglePosition:Vector3) : void
+    - VectorsToTransform(gameObjectInOut:GameObject, positionVector:Vector3, directionVector:Vector3, normalVector:Vector3) : void
+    + {static} PointOnWhichSideOfLineSegment(linePoint1:Vector3, linePoint2:Vector3, point:Vector3) : int
+    + {static} MouseDistanceToLine(linePoint1:Vector3, linePoint2:Vector3) : float
+    + {static} MouseDistanceToCircle(point:Vector3, radius:float) : float
+    + {static} IsLineInRectangle(linePoint1:Vector3, linePoint2:Vector3, rectA:Vector3, rectB:Vector3, rectC:Vector3, rectD:Vector3) : bool
+    + {static} IsPointInRectangle(point:Vector3, rectA:Vector3, rectC:Vector3, rectB:Vector3, rectD:Vector3) : bool
+    + {static} AreLineSegmentsCrossing(pointA1:Vector3, pointA2:Vector3, pointB1:Vector3, pointB2:Vector3) : bool
+}
+MonoBehaviour <|-- Math3d
+Math3d o-> "tempChild" Transform
+Math3d o-> "tempParent" Transform
+class MoveObjectTestCode {
+    - m_switch : bool = true
+    - Start() : void
+    - OnGUI() : void
+    - Update() : void
+}
+MonoBehaviour <|-- MoveObjectTestCode
+MoveObjectTestCode --> "m_PerfectLookAt" PerfectLookAt
+MoveObjectTestCode --> "m_Style" GUIStyle
+MoveObjectTestCode --> "m_Anim" Animator
+interface IActionHandler {
+    CanStartAction(controller:RPGCharacterController) : bool
+    StartAction(controller:RPGCharacterController, context:object) : void
+    AddStartListener(callback:Action) : void
+    RemoveStartListener(callback:Action) : void
+    IsActive() : bool
+    CanEndAction(controller:RPGCharacterController) : bool
+    EndAction(controller:RPGCharacterController) : void
+    AddEndListener(callback:Action) : void
+    RemoveEndListener(callback:Action) : void
+}
+abstract class "BaseActionHandler`1"<TContext> {
+    + active : bool
+    +  <<event>> OnStart : Action 
+    +  <<event>> OnEnd : Action 
+    + {abstract} CanStartAction(controller:RPGCharacterController) : bool
+    + <<virtual>> StartAction(controller:RPGCharacterController, context:object) : void
+    + <<virtual>> AddStartListener(callback:Action) : void
+    + <<virtual>> RemoveStartListener(callback:Action) : void
+    + <<virtual>> IsActive() : bool
+    # {abstract} _StartAction(controller:RPGCharacterController, context:TContext) : void
+    + {abstract} CanEndAction(controller:RPGCharacterController) : bool
+    + <<virtual>> EndAction(controller:RPGCharacterController) : void
+    + <<virtual>> AddEndListener(callback:Action) : void
+    + <<virtual>> RemoveEndListener(callback:Action) : void
+    # {abstract} _EndAction(controller:RPGCharacterController) : void
+}
+IActionHandler <|-- "BaseActionHandler`1"
+class EmptyContext {
+}
+abstract class "InstantActionHandler`1"<TContext> {
+    + <<override>> StartAction(controller:RPGCharacterController, context:object) : void
+    + <<override>> IsActive() : bool
+    + <<override>> CanEndAction(controller:RPGCharacterController) : bool
+    # <<override>> _EndAction(controller:RPGCharacterController) : void
+}
+class "BaseActionHandler`1"<T> {
+}
+"BaseActionHandler`1" "<TContext>" <|-- "InstantActionHandler`1"
+class Null {
+    + <<override>> CanStartAction(controller:RPGCharacterController) : bool
+    # <<override>> _StartAction(controller:RPGCharacterController, context:EmptyContext) : void
+}
+class "InstantActionHandler`1"<T> {
+}
+"InstantActionHandler`1" "<EmptyContext>" <|-- Null
+class SimpleActionHandler {
+    + SimpleActionHandler(onStart:Action, onEnd:Action)
+    + <<override>> CanStartAction(controller:RPGCharacterController) : bool
+    + <<override>> CanEndAction(controller:RPGCharacterController) : bool
+    # <<override>> _StartAction(controller:RPGCharacterController, context:EmptyContext) : void
+    # <<override>> _EndAction(controller:RPGCharacterController) : void
+}
+class "BaseActionHandler`1"<T> {
+}
+"BaseActionHandler`1" "<EmptyContext>" <|-- SimpleActionHandler
+class AnimatorExtensions <<static>> {
+    + {static} SetAnimatorTrigger(animator:Animator, trigger:AnimatorTrigger) : void
+    + {static} SetActionTrigger(animator:Animator, trigger:AnimatorTrigger, actionNumber:int) : void
+    + {static} TriggerEmote(animator:Animator, emote:EmoteType) : void
+    + {static} SetSide(animator:Animator, side:Side) : void
+    + {static} TriggerTalking(animator:Animator, talkType:TalkType) : void
+    + {static} TriggerDodge(animator:Animator, dodgeType:DodgeType) : void
+    + {static} TriggerClimb(animator:Animator, climbType:ClimbType) : void
+    + {static} TriggerCrawl(animator:Animator, crawlType:CrawlType) : void
+    + {static} TriggerTurn(animator:Animator, turnType:TurnType) : void
+    + {static} TriggerDiveRoll(animator:Animator, rollType:DiveRollType) : void
+    + {static} TriggerRoll(animator:Animator, rollType:RollType) : void
+    + {static} TriggerKnockback(animator:Animator, knockbackType:KnockbackType) : void
+    + {static} TriggerKnockdown(animator:Animator, knockdownType:KnockdownType) : void
+    + {static} TriggerCast(animator:Animator, castType:CastType) : void
+    + {static} TriggerAttackCast(animator:Animator, castType:AttackCastType) : void
+    + {static} TriggerGettingHit(animator:Animator, hitType:HitType) : void
+    + {static} TriggerGettingHit(animator:Animator, hitType:int) : void
+    + {static} TriggerBlockGettingHit(animator:Animator, hitType:BlockedHitType) : void
+    + {static} LegacySetAnimationTrigger(animator:Animator, trigger:string) : void
+    + {static} DebugAnimatorParameters(animator:Animator) : void
+    + {static} SetWeapons(animator:Animator, animatorWeapon:AnimatorWeapon, weaponSwitch:int, leftWeapon:Weapon, rightWeapon:Weapon, weaponSide:Side) : void
+}
+class CollectionExtensions <<static>> {
+    + {static} TakeRandom(collection:ICollection<T>) : T
+    + {static} TakeRandom(array:T[]) : T
+}
+class ControllerExtensions <<static>> {
+    + {static} DebugController(controller:RPGCharacterController) : void
+}
+class WeaponExtensions <<static>> {
+    + {static} IsRightHandedWeapon(weapon:Weapon) : bool
+    + {static} IsLeftHandedWeapon(weapon:Weapon) : bool
+    + {static} Is2HandedWeapon(weapon:Weapon) : bool
+    + {static} IsAimedWeapon(weapon:Weapon) : bool
+    + {static} HasEquippedWeapon(weapon:Weapon) : bool
+    + {static} HasNoWeapon(weapon:Weapon) : bool
+    + {static} Is1HandedWeapon(weapon:Weapon) : bool
+    + {static} IsCastableWeapon(weapon:Weapon) : bool
+    + {static} IsIKWeapon(weapon:Weapon) : bool
+    + {static} ToAnimatorWeapon(weapon:Weapon) : AnimatorWeapon
+    + {static} Is1HandedAnimWeapon(weapon:AnimatorWeapon) : bool
+    + {static} Is2HandedAnimWeapon(weapon:AnimatorWeapon) : bool
+    + {static} HasNoAnimWeapon(weapon:AnimatorWeapon) : bool
+}
+class AnimationParameters {
+    + {static} <<readonly>> TriggerNumber : int
+    + {static} <<readonly>> Trigger : int
+    + {static} <<readonly>> Moving : int
+    + {static} <<readonly>> Aiming : int
+    + {static} <<readonly>> Stunned : int
+    + {static} <<readonly>> Swimming : int
+    + {static} <<readonly>> Blocking : int
+    + {static} <<readonly>> Injured : int
+    + {static} <<readonly>> Weapon : int
+    + {static} <<readonly>> WeaponSwitch : int
+    + {static} <<readonly>> Side : int
+    + {static} <<readonly>> LeftWeapon : int
+    + {static} <<readonly>> RightWeapon : int
+    + {static} <<readonly>> Jumping : int
+    + {static} <<readonly>> Action : int
+    + {static} <<readonly>> SheathLocation : int
+    + {static} <<readonly>> Talking : int
+    + {static} <<readonly>> VelocityX : int
+    + {static} <<readonly>> VelocityZ : int
+    + {static} <<readonly>> AimHorizontal : int
+    + {static} <<readonly>> AimVertical : int
+    + {static} <<readonly>> BowPull : int
+    + {static} <<readonly>> Charge : int
+    + {static} <<readonly>> AnimationSpeed : int
+    + {static} <<readonly>> Sprint : int
+    + {static} <<readonly>> Crouch : int
+    + {static} <<readonly>> Idle : int
+}
+enum AnimatorWeapon {
+    RELAX= -1,
+    UNARMED= 0,
+    TWOHANDSWORD= 1,
+    TWOHANDSPEAR= 2,
+    TWOHANDAXE= 3,
+    TWOHANDBOW= 4,
+    TWOHANDCROSSBOW= 5,
+    STAFF= 6,
+    ARMED= 7,
+    RIFLE= 18,
+}
+enum CharacterState {
+    Idle= 0,
+    Move= 1,
+    Jump= 2,
+    DoubleJump= 3,
+    Fall= 4,
+    Swim= 5,
+    Block= 6,
+    ClimbLadder= 7,
+    Roll= 8,
+    Knockback= 9,
+    Knockdown= 10,
+    DiveRoll= 11,
+    Crawl= 12,
+}
+class HandlerTypes {
+    + {static} <<readonly>> Aim : string = "Aim"
+    + {static} <<readonly>> Attack : string = "Attack"
+    + {static} <<readonly>> Block : string = "Block"
+    + {static} <<readonly>> Cast : string = "Cast"
+    + {static} <<readonly>> AttackCast : string = "AttackCast"
+    + {static} <<readonly>> Crouch : string = "Crouch"
+    + {static} <<readonly>> Death : string = "Death"
+    + {static} <<readonly>> Dodge : string = "Dodge"
+    + {static} <<readonly>> Emote : string = "Emote"
+    + {static} <<readonly>> EmoteCombat : string = "EmoteCombat"
+    + {static} <<readonly>> Face : string = "Face"
+    + {static} <<readonly>> HipShoot : string = "HipShoot"
+    + {static} <<readonly>> Injure : string = "Injure"
+    + {static} <<readonly>> Null : string = "Null"
+    + {static} <<readonly>> Reload : string = "Reload"
+    + {static} <<readonly>> Shoot : string = "Shoot"
+    + {static} <<readonly>> SlowTime : string = "SlowTime"
+    + {static} <<readonly>> Sprint : string = "Sprint"
+    + {static} <<readonly>> Strafe : string = "Strafe"
+    + {static} <<readonly>> Turn : string = "Turn"
+    + {static} <<readonly>> ClimbLadder : string = "ClimbLadder"
+    + {static} <<readonly>> AcquiringGround : string = "AcquiringGround"
+    + {static} <<readonly>> Crawl : string = "Crawl"
+    + {static} <<readonly>> Fall : string = "Fall"
+    + {static} <<readonly>> Idle : string = "Idle"
+    + {static} <<readonly>> Move : string = "Move"
+    + {static} <<readonly>> Navigation : string = "Navigation"
+    + {static} <<readonly>> Relax : string = "Relax"
+    + {static} <<readonly>> Roll : string = "Roll"
+    + {static} <<readonly>> Knockback : string = "Knockback"
+    + {static} <<readonly>> Knockdown : string = "Knockdown"
+    + {static} <<readonly>> Swim : string = "Swim"
+    + {static} <<readonly>> MaintainingGround : string = "MaintainingGround"
+    + {static} <<readonly>> GetHit : string = "GetHit"
+    + {static} <<readonly>> SwitchWeapon : string = "SwitchWeapon"
+    + {static} <<readonly>> Switch : string = "Switch"
+    + {static} <<readonly>> Charge : string = "Charge"
+    + {static} <<readonly>> DiveRoll : string = "DiveRoll"
+    + {static} <<readonly>> Jump : string = "Jump"
+    + {static} <<readonly>> DoubleJump : string = "DoubleJump"
+    + {static} <<readonly>> Talk : string = "Talk"
+}
+enum Weapon {
+    Relax= -1,
+    Unarmed= 0,
+    TwoHandSword= 1,
+    TwoHandSpear= 2,
+    TwoHandAxe= 3,
+    TwoHandBow= 4,
+    TwoHandCrossbow= 5,
+    TwoHandStaff= 6,
+    Shield= 7,
+    LeftSword= 8,
+    RightSword= 9,
+    LeftMace= 10,
+    RightMace= 11,
+    LeftDagger= 12,
+    RightDagger= 13,
+    LeftItem= 14,
+    RightItem= 15,
+    LeftPistol= 16,
+    RightPistol= 17,
+    Rifle= 18,
+    RightSpear= 19,
+}
+class WeaponGroupings {
+}
+class CameraController {
+    + cameraTargetOffsetY : float
+    + rotateSpeed : float = 2.0f
+    - rotate : float
+    + height : float = 6.0f
+    + distance : float = 5.0f
+    + zoomAmount : float = 0.1f
+    + smoothing : float = 2.0f
+    - following : bool = true
+    - inputFollow : bool
+    - inputRotateR : bool
+    - inputRotateL : bool
+    - inputMouseScrollUp : bool
+    - inputMouseScrollDown : bool
+    - Start() : void
+    - SetStartPosition() : void
+    - Inputs() : void
+    - Update() : void
+    - CameraFollow() : void
+    - LateUpdate() : void
+}
+MonoBehaviour <|-- CameraController
+CameraController --> "cameraTarget" GameObject
+CameraController --> "cameraTargetOffset" Vector3
+CameraController --> "offset" Vector3
+CameraController --> "lastPosition" Vector3
+class GUIControls {
+    - charge : float
+    - idleStatic : float
+    - useHips : bool
+    - useDual : bool
+    - useInstant : bool
+    - isTalking : bool
+    - isAiming : bool
+    - hipShooting : bool
+    - useNavigation : bool
+    - swimTimeout : float
+    - Start() : void
+    - OnGUI() : void
+    - Charging() : void
+    - Idle() : void
+    - Navigation() : void
+    - Attacks() : void
+    - Damage() : void
+    - Sprinting() : void
+    - Crouching() : void
+    - Blocking() : void
+    - RollDodgeTurn() : void
+    - Casting() : void
+    - Jumping() : void
+    - Emotes() : void
+    - Climbing() : void
+    - Swimming() : void
+    - Misc() : void
+    - DebugRPGCharacter() : void
+    - ChangeMap() : void
+    - WeaponSwitching() : void
+}
+MonoBehaviour <|-- GUIControls
+GUIControls --> "rpgCharacterController" RPGCharacterController
+GUIControls --> "rpgCharacterWeaponController" RPGCharacterWeaponController
+GUIControls --> "jumpInput" Vector3
+GUIControls --> "nav" GameObject
+class HighJumpTrampoline {
+    - oldJumpSpeed : float
+    - Update() : void
+    - OnTriggerEnter(collide:Collider) : void
+    - OnTriggerExit(collide:Collider) : void
+}
+MonoBehaviour <|-- HighJumpTrampoline
+HighJumpTrampoline --> "character" GameObject
+class NoJumpSlime {
+    - OnTriggerEnter(collide:Collider) : void
+    - OnTriggerExit(collide:Collider) : void
+}
+MonoBehaviour <|-- NoJumpSlime
+NoJumpSlime --> "controller" RPGCharacterController
+NoJumpSlime --> "oldJumpHandler" IActionHandler
+class NPC {
+    - Awake() : void
+    - Update() : void
+    - RandomOffset(position:Vector3) : Vector3
+    - IsOutOfRange(npc:Vector3, player:Vector3) : bool
+}
+MonoBehaviour <|-- NPC
+NPC --> "navMeshAgent" NavMeshAgent
+NPC --> "rpgCharacterController" RPGCharacterController
+NPC --> "rpgNavigationController" RPGCharacterNavigationController
+NPC --> "targetPosition" Vector3
+class BSPTree {
+    - drawMeshTreeOnStart : bool = false
+    - triangleCount : int
+    - vertexCount : int
+    - Awake() : void
+    - Start() : void
+    + ClosestPointOn(to:Vector3, radius:float) : Vector3
+    - FindClosestTriangles(node:Node, to:Vector3, radius:float, triangles:List<int>) : void
+    - ClosestPointOnTriangle(triangles:int[], to:Vector3) : Vector3
+    - BuildTriangleTree() : void
+    - RecursivePartition(triangles:List<int>, depth:int, parent:Node) : void
+    - Split(triangles:List<int>, partitionPoint:Vector3, partitionNormal:Vector3, positiveTriangles:List<int>, negativeTriangles:List<int>) : void
+    - PointAbovePlane(planeOrigin:Vector3, planeNormal:Vector3, point:Vector3) : bool
+    - PointDistanceFromPlane(planeOrigin:Vector3, planeNormal:Vector3, point:Vector3) : float
+    + {static} ClosestPointOnTriangleToPoint(vertex1:Vector3, vertex2:Vector3, vertex3:Vector3, point:Vector3, result:Vector3) : void
+    - DrawTriangleSet(triangles:int[], color:Color) : void
+}
+class Node {
+}
+MonoBehaviour <|-- BSPTree
+BSPTree --> "mesh" Mesh
+BSPTree --> "tree" Node
+BSPTree +-- Node
+Node --> "partitionPoint" Vector3
+Node --> "partitionNormal" Vector3
+Node --> "positiveChild" Node
+Node --> "negativeChild" Node
+class CollisionSphere {
+    + offset : float
+    + isFeet : bool
+    + isHead : bool
+    + CollisionSphere(offset:float, isFeet:bool, isHead:bool)
+}
+class SuperCharacterController <<partial>> {
+}
+struct IgnoredCollider {
+    + layer : int
+    + IgnoredCollider(collider:Collider, layer:int)
+}
+SuperCharacterController +-- IgnoredCollider
+IgnoredCollider --> "collider" Collider
+class SuperCharacterController <<partial>> {
+    - fixedTimeStep : bool = false
+    - fixedUpdatesPerSecond : int = 0
+    - clampToMovingGround : bool = true
+    - debugSpheres : bool = true
+    - debugGrounding : bool = true
+    - debugPushbackMesssages : bool = true
+    + radius : float = 0.5f
+    + deltaTime : float <<get>>
+    + height : float <<get>>
+    + heightScale : float <<get>> <<set>>
+    + radiusScale : float <<get>> <<set>>
+    + manualUpdateOnly : bool <<get>> <<set>>
+    +  <<event>> AfterSingleUpdate : UpdateDelegate 
+    - clamping : bool = true
+    - slopeLimiting : bool = true
+    - <<const>> Tolerance : float = 0.1f
+    - <<const>> TinyTolerance : float = 0.02f
+    - <<const>> TemporaryLayer : string = "TempCast"
+    - <<const>> MaxPushbackIterations : int = 2
+    - TemporaryLayerIndex : int
+    - fixedDeltaTime : float
+    - Awake() : void
+    - Update() : void
+    - LateUpdate() : void
+    + ManualUpdate(deltaTime:float) : void
+    - SingleUpdate() : void
+    - ProbeGround(iter:int) : void
+    - SlopeLimit() : bool
+    - ClampToGround() : void
+    + EnableClamping() : void
+    + DisableClamping() : void
+    + EnableSlopeLimit() : void
+    + DisableSlopeLimit() : void
+    + IsClamping() : bool
+    - RecursivePushback(depth:int, maxDepth:int) : void
+    - PushIgnoredColliders() : void
+    - PopIgnoredColliders() : void
+    - OnDrawGizmos() : void
+    + SpherePosition(sphere:CollisionSphere) : Vector3
+    + PointBelowHead(point:Vector3) : bool
+    + PointAboveFeet(point:Vector3) : bool
+    + IgnoreCollider(col:Collider) : void
+    + RemoveIgnoredCollider(col:Collider) : void
+    + ClearIgnoredColliders() : void
+}
+class "List`1"<T> {
+}
+MonoBehaviour <|-- SuperCharacterController
+SuperCharacterController o-> "debugMove" Vector3
+SuperCharacterController o-> "triggerInteraction" QueryTriggerInteraction
+SuperCharacterController --> "Walkable" LayerMask
+SuperCharacterController --> "ownCollider" Collider
+SuperCharacterController --> "currentGround" SuperGround
+SuperCharacterController --> "feet" CollisionSphere
+SuperCharacterController --> "head" CollisionSphere
+SuperCharacterController --> "up" Vector3
+SuperCharacterController --> "down" Vector3
+SuperCharacterController --> "collisionData<SuperCollision>" "List`1"
+SuperCharacterController --> "currentlyClampedTo" Transform
+SuperCharacterController --> "initialPosition" Vector3
+SuperCharacterController --> "groundOffset" Vector3
+SuperCharacterController --> "lastGroundPosition" Vector3
+SuperCharacterController --> "ignoredColliders<Collider>" "List`1"
+SuperCharacterController --> "ignoredColliderStack<IgnoredCollider>" "List`1"
+SuperCharacterController --> "defaultCollisionType" SuperCollisionType
+class SuperCollider <<static>> {
+    + {static} ClosestPointOnSurface(collider:Collider, to:Vector3, radius:float, closestPointOnSurface:Vector3) : bool
+    + {static} ClosestPointOnSurface(collider:SphereCollider, to:Vector3) : Vector3
+    + {static} ClosestPointOnSurface(collider:BoxCollider, to:Vector3) : Vector3
+    + {static} ClosestPointOnSurface(collider:CapsuleCollider, to:Vector3) : Vector3
+    + {static} ClosestPointOnSurface(collider:TerrainCollider, to:Vector3, radius:float, debug:bool) : Vector3
+}
+struct SuperCollision {
+}
+SuperCollision --> "collisionSphere" CollisionSphere
+SuperCollision --> "superCollisionType" SuperCollisionType
+SuperCollision --> "gameObject" GameObject
+SuperCollision --> "point" Vector3
+SuperCollision --> "normal" Vector3
+class SuperCollisionType {
+    + StandAngle : float = 80.0f
+    + SlopeLimit : float = 80.0f
+}
+MonoBehaviour <|-- SuperCollisionType
+class SuperCharacterController <<partial>> {
+}
+class SuperGround {
+    + SuperGround(walkable:LayerMask, controller:SuperCharacterController, triggerInteraction:QueryTriggerInteraction)
+    - <<const>> groundingUpperBoundAngle : float = 60.0f
+    - <<const>> groundingMaxPercentFromCenter : float = 0.85f
+    - <<const>> groundingMinPercentFromcenter : float = 0.50f
+    + ProbeGround(origin:Vector3, iter:int) : void
+    - ResetGrounds() : void
+    + IsGrounded(currentlyGrounded:bool, distance:float) : bool
+    + IsGrounded(currentlyGrounded:bool, distance:float, groundNormal:Vector3) : bool
+    - OnSteadyGround(normal:Vector3, point:Vector3) : bool
+    + PrimaryNormal() : Vector3
+    + Distance() : float
+    + DebugGround(primary:bool, near:bool, far:bool, flush:bool, step:bool) : void
+    - SimulateSphereCast(groundNormal:Vector3, hit:RaycastHit) : bool
+}
+class GroundHit {
+    + distance : float <<get>>
+    + GroundHit(point:Vector3, normal:Vector3, distance:float)
+}
+SuperCharacterController +-- SuperGround
+SuperGround --> "walkable" LayerMask
+SuperGround --> "controller" SuperCharacterController
+SuperGround --> "triggerInteraction" QueryTriggerInteraction
+SuperGround --> "primaryGround" GroundHit
+SuperGround --> "nearGround" GroundHit
+SuperGround --> "farGround" GroundHit
+SuperGround --> "stepGround" GroundHit
+SuperGround --> "flushGround" GroundHit
+SuperGround --> "superCollisionType" SuperCollisionType
+SuperGround --> "transform" Transform
+SuperGround +-- GroundHit
+GroundHit --> "point" Vector3
+GroundHit --> "normal" Vector3
+class SuperMath <<static>> {
+    + {static} ClampAngleOnPlane(origin:Vector3, direction:Vector3, angle:float, planeNormal:Vector3) : Vector3
+    + {static} BoundedInterpolation(bounds:float[], values:float[], t:float) : float
+    + {static} PointAbovePlane(planeNormal:Vector3, planePoint:Vector3, point:Vector3) : bool
+    + {static} Timer(startTime:float, duration:float) : bool
+    + {static} ClampAngle(angle:float) : float
+    + {static} CalculateJumpSpeed(jumpHeight:float, gravity:float) : float
+}
+class SuperStateMachine {
+    # timeEnteredState : float
+    - ChangingState() : void
+    - ConfigureCurrentState() : void
+    - ConfigureDelegate(methodRoot:string, Default:T) : T
+    - SuperUpdate() : void
+    # <<virtual>> EarlyGlobalSuperUpdate() : void
+    # <<virtual>> LateGlobalSuperUpdate() : void
+    - {static} DoNothing() : void
+}
+class State {
+}
+class "Dictionary`2"<T1,T2> {
+}
+MonoBehaviour <|-- SuperStateMachine
+SuperStateMachine o-> "state" State
+SuperStateMachine --> "currentState" Enum
+SuperStateMachine --> "lastState" Enum
+SuperStateMachine o-> "_cache<Enum,Dictionary<string, Delegate>>" "Dictionary`2"
+SuperStateMachine +-- State
+State o-> "DoSuperUpdate" Action
+State o-> "enterState" Action
+State o-> "exitState" Action
+State --> "currentState" Enum
+class Gravity {
+    - Update() : void
+}
+MonoBehaviour <|-- Gravity
+Gravity o-> "planet" Transform
+class PlayerCamera {
+    + Distance : float = 5.0f
+    + Height : float = 2.0f
+    - yRotation : float
+    - Start() : void
+    - LateUpdate() : void
+}
+MonoBehaviour <|-- PlayerCamera
+PlayerCamera --> "PlayerTarget" GameObject
+PlayerCamera --> "input" PlayerInputController
+PlayerCamera --> "target" Transform
+PlayerCamera --> "machine" PlayerMachine
+PlayerCamera --> "controller" SuperCharacterController
+class PlayerInputController {
+    - Start() : void
+    - Update() : void
+}
+struct PlayerInputData {
+    + JumpInput : bool
+}
+MonoBehaviour <|-- PlayerInputController
+PlayerInputController --> "Current" PlayerInputData
+PlayerInputController o-> "RightStickMultiplier" Vector2
+PlayerInputData --> "MoveInput" Vector3
+PlayerInputData --> "MouseInput" Vector2
+class PlayerMachine {
+    + WalkSpeed : float = 4.0f
+    + WalkAcceleration : float = 30.0f
+    + JumpAcceleration : float = 5.0f
+    + JumpHeight : float = 3.0f
+    + Gravity : float = 25.0f
+    - Start() : void
+    # <<override>> EarlyGlobalSuperUpdate() : void
+    # <<override>> LateGlobalSuperUpdate() : void
+    - AcquiringGround() : bool
+    - MaintainingGround() : bool
+    + RotateGravity(up:Vector3) : void
+    - LocalMovement() : Vector3
+    - CalculateJumpSpeed(jumpHeight:float, gravity:float) : float
+    - Idle_EnterState() : void
+    - Idle_SuperUpdate() : void
+    - Idle_ExitState() : void
+    - Walk_SuperUpdate() : void
+    - Jump_EnterState() : void
+    - Jump_SuperUpdate() : void
+    - Fall_EnterState() : void
+    - Fall_SuperUpdate() : void
+}
+enum PlayerStates {
+    Idle,
+    Walk,
+    Jump,
+    Fall,
+}
+SuperStateMachine <|-- PlayerMachine
+PlayerMachine --> "AnimatedMesh" Transform
+PlayerMachine --> "controller" SuperCharacterController
+PlayerMachine --> "moveDirection" Vector3
+PlayerMachine --> "lookDirection" Vector3
+PlayerMachine --> "input" PlayerInputController
+PlayerMachine +-- PlayerStates
+class PlayerMachineDebug {
+    - timeScale : float = 1.0f
+    - Awake() : void
+    - OnGUI() : void
+}
+MonoBehaviour <|-- PlayerMachineDebug
+PlayerMachineDebug --> "playerMachine" PlayerMachine
+class SimpleStateMachine {
+    + DebugGui : bool
+    + DebugGuiTitle : string = "Simple Machine"
+    - OnGUI() : void
+    # timeEnteredState : float
+    - ChangingState() : void
+    - ConfigureCurrentState() : void
+    - ConfigureDelegate(methodRoot:string, Default:T) : T
+    - Update() : void
+    - FixedUpdate() : void
+    - LateUpdate() : void
+    # <<virtual>> EarlyGlobalSuperUpdate() : void
+    # <<virtual>> LateGlobalSuperUpdate() : void
+    - {static} DoNothing() : void
+}
+class State {
+}
+class "Dictionary`2"<T1,T2> {
+}
+MonoBehaviour <|-- SimpleStateMachine
+SimpleStateMachine --> "DebugGuiPosition" Vector2
+SimpleStateMachine --> "queueCommand" Enum
+SimpleStateMachine o-> "state" State
+SimpleStateMachine --> "currentState" Enum
+SimpleStateMachine --> "lastState" Enum
+SimpleStateMachine o-> "_cache<Enum,Dictionary<string, Delegate>>" "Dictionary`2"
+SimpleStateMachine +-- State
+State o-> "DoUpdate" Action
+State o-> "DoFixedUpdate" Action
+State o-> "DoLateUpdate" Action
+State o-> "DoManualUpdate" Action
+State o-> "enterState" Action
+State o-> "exitState" Action
+State --> "currentState" Enum
+class Attack {
+    + <<override>> CanStartAction(controller:RPGCharacterController) : bool
+    + <<override>> CanEndAction(controller:RPGCharacterController) : bool
+    # <<override>> _StartAction(controller:RPGCharacterController, context:AttackContext) : void
+    # <<override>> _EndAction(controller:RPGCharacterController) : void
+}
+class "BaseActionHandler`1"<T> {
+}
+"BaseActionHandler`1" "<AttackContext>" <|-- Attack
+class AttackCast {
+    + <<override>> CanStartAction(controller:RPGCharacterController) : bool
+    + <<override>> CanEndAction(controller:RPGCharacterController) : bool
+    # <<override>> _StartAction(controller:RPGCharacterController, context:AttackCastContext) : void
+    # <<override>> _EndAction(controller:RPGCharacterController) : void
+}
+class "BaseActionHandler`1"<T> {
+}
+"BaseActionHandler`1" "<AttackCastContext>" <|-- AttackCast
+class AttackCastContext {
+    + AttackCastContext(type:AttackCastType, side:Side)
+}
+AttackCastContext --> "Type" AttackCastType
+AttackCastContext --> "Side" Side
+class AttackContext {
+    + type : string
+    + number : int
+    + AttackContext(type:string, side:Side, number:int)
+}
+AttackContext --> "Side" Side
+class Cast {
+    + <<override>> CanStartAction(controller:RPGCharacterController) : bool
+    + <<override>> CanEndAction(controller:RPGCharacterController) : bool
+    # <<override>> _StartAction(controller:RPGCharacterController, context:CastContext) : void
+    # <<override>> _EndAction(controller:RPGCharacterController) : void
+}
+class "BaseActionHandler`1"<T> {
+}
+"BaseActionHandler`1" "<CastContext>" <|-- Cast
+class CastContext {
+    + CastContext(type:CastType, side:Side)
+}
+CastContext --> "Type" CastType
+CastContext --> "Side" Side
+class Dodge {
+    + <<override>> CanStartAction(controller:RPGCharacterController) : bool
+    # <<override>> _StartAction(controller:RPGCharacterController, dodgeType:DodgeType) : void
+}
+class "InstantActionHandler`1"<T> {
+}
+"InstantActionHandler`1" "<DodgeType>" <|-- Dodge
+class Emote {
+    + <<override>> CanStartAction(controller:RPGCharacterController) : bool
+    + <<override>> CanEndAction(controller:RPGCharacterController) : bool
+    # <<override>> _StartAction(controller:RPGCharacterController, emoteType:EmoteType) : void
+    # <<override>> _EndAction(controller:RPGCharacterController) : void
+}
+class "BaseActionHandler`1"<T> {
+}
+"BaseActionHandler`1" "<EmoteType>" <|-- Emote
+class EmoteCombat {
+    + <<override>> CanStartAction(controller:RPGCharacterController) : bool
+    # <<override>> _StartAction(controller:RPGCharacterController, emoteType:EmoteType) : void
+}
+class "InstantActionHandler`1"<T> {
+}
+"InstantActionHandler`1" "<EmoteType>" <|-- EmoteCombat
+class Reload {
+    + <<override>> CanStartAction(controller:RPGCharacterController) : bool
+    # <<override>> _StartAction(controller:RPGCharacterController, context:EmptyContext) : void
+}
+class "InstantActionHandler`1"<T> {
+}
+"InstantActionHandler`1" "<EmptyContext>" <|-- Reload
+class Shoot {
+    + <<override>> CanStartAction(controller:RPGCharacterController) : bool
+    # <<override>> _StartAction(controller:RPGCharacterController, context:EmptyContext) : void
+}
+class "InstantActionHandler`1"<T> {
+}
+"InstantActionHandler`1" "<EmptyContext>" <|-- Shoot
+class SlowTime {
+    + <<override>> CanStartAction(controller:RPGCharacterController) : bool
+    + <<override>> CanEndAction(controller:RPGCharacterController) : bool
+    # <<override>> _StartAction(controller:RPGCharacterController, context:float) : void
+    # <<override>> _EndAction(controller:RPGCharacterController) : void
+}
+class "BaseActionHandler`1"<T> {
+}
+"BaseActionHandler`1" "<float>" <|-- SlowTime
+class Talk {
+    + <<override>> CanStartAction(controller:RPGCharacterController) : bool
+    + <<override>> CanEndAction(controller:RPGCharacterController) : bool
+    # <<override>> _StartAction(controller:RPGCharacterController, context:int) : void
+    # <<override>> _EndAction(controller:RPGCharacterController) : void
+}
+class "BaseActionHandler`1"<T> {
+}
+"BaseActionHandler`1" "<int>" <|-- Talk
+class Turn {
+    + <<override>> CanStartAction(controller:RPGCharacterController) : bool
+    # <<override>> _StartAction(controller:RPGCharacterController, turnType:TurnType) : void
+}
+class "InstantActionHandler`1"<T> {
+}
+"InstantActionHandler`1" "<TurnType>" <|-- Turn
+class ClimbLadder {
+    + ClimbLadder(movement:RPGCharacterMovementController)
+    + <<override>> CanStartAction(controller:RPGCharacterController) : bool
+    # <<override>> _StartAction(controller:RPGCharacterController, context:EmptyContext) : void
+    + <<override>> IsActive() : bool
+}
+class "MovementActionHandler`1"<T> {
+}
+"MovementActionHandler`1" "<EmptyContext>" <|-- ClimbLadder
+class Crawl {
+    + Crawl(movement:RPGCharacterMovementController)
+    + <<override>> CanStartAction(controller:RPGCharacterController) : bool
+    # <<override>> _StartAction(controller:RPGCharacterController, context:EmptyContext) : void
+    + <<override>> IsActive() : bool
+}
+class "MovementActionHandler`1"<T> {
+}
+"MovementActionHandler`1" "<EmptyContext>" <|-- Crawl
+class DiveRoll {
+    + DiveRoll(movement:RPGCharacterMovementController)
+    + <<override>> CanStartAction(controller:RPGCharacterController) : bool
+    # <<override>> _StartAction(controller:RPGCharacterController, rollType:DiveRollType) : void
+    + <<override>> IsActive() : bool
+}
+class "MovementActionHandler`1"<T> {
+}
+"MovementActionHandler`1" "<DiveRollType>" <|-- DiveRoll
+class DoubleJump {
+    + DoubleJump(movement:RPGCharacterMovementController)
+    + <<override>> CanStartAction(controller:RPGCharacterController) : bool
+    # <<override>> _StartAction(controller:RPGCharacterController, context:EmptyContext) : void
+    + <<override>> IsActive() : bool
+}
+class "MovementActionHandler`1"<T> {
+}
+"MovementActionHandler`1" "<EmptyContext>" <|-- DoubleJump
+class Fall {
+    + Fall(movement:RPGCharacterMovementController)
+    + <<override>> CanStartAction(controller:RPGCharacterController) : bool
+    # <<override>> _StartAction(controller:RPGCharacterController, context:EmptyContext) : void
+    + <<override>> IsActive() : bool
+}
+class "MovementActionHandler`1"<T> {
+}
+"MovementActionHandler`1" "<EmptyContext>" <|-- Fall
+class GetHit {
+    + GetHit(movement:RPGCharacterMovementController)
+    + <<override>> CanStartAction(controller:RPGCharacterController) : bool
+    # <<override>> _StartAction(controller:RPGCharacterController, context:HitContext) : void
+}
+class "MovementActionHandler`1"<T> {
+}
+"MovementActionHandler`1" "<HitContext>" <|-- GetHit
+class HitContext {
+    + number : int
+    + force : float
+    + variableForce : float
+    + relative : bool
+    + HitContext()
+    + HitContext(number:int, direction:Vector3, force:float, variableForce:float, relative:bool)
+}
+HitContext --> "direction" Vector3
+class Idle {
+    + Idle(movement:RPGCharacterMovementController)
+    + <<override>> CanStartAction(controller:RPGCharacterController) : bool
+    # <<override>> _StartAction(controller:RPGCharacterController, context:EmptyContext) : void
+    + <<override>> IsActive() : bool
+    - StartRandomIdleCountdown(controller:RPGCharacterController) : void
+    - RandomIdle(controller:RPGCharacterController) : IEnumerator
+}
+class "MovementActionHandler`1"<T> {
+}
+"MovementActionHandler`1" "<EmptyContext>" <|-- Idle
+Idle --> "randomIdleCoroutine" IEnumerator
+class Jump {
+    + Jump(movement:RPGCharacterMovementController)
+    + <<override>> CanStartAction(controller:RPGCharacterController) : bool
+    # <<override>> _StartAction(controller:RPGCharacterController, context:EmptyContext) : void
+    + <<override>> IsActive() : bool
+}
+class "MovementActionHandler`1"<T> {
+}
+"MovementActionHandler`1" "<EmptyContext>" <|-- Jump
+class Knockback {
+    + Knockback(movement:RPGCharacterMovementController)
+    + <<override>> CanStartAction(controller:RPGCharacterController) : bool
+    # <<override>> _StartAction(controller:RPGCharacterController, context:HitContext) : void
+    + <<override>> IsActive() : bool
+}
+class "MovementActionHandler`1"<T> {
+}
+"MovementActionHandler`1" "<HitContext>" <|-- Knockback
+class Knockdown {
+    + Knockdown(movement:RPGCharacterMovementController)
+    + <<override>> CanStartAction(controller:RPGCharacterController) : bool
+    # <<override>> _StartAction(controller:RPGCharacterController, context:HitContext) : void
+    + <<override>> IsActive() : bool
+}
+class "MovementActionHandler`1"<T> {
+}
+"MovementActionHandler`1" "<HitContext>" <|-- Knockdown
+class Move {
+    + Move(movement:RPGCharacterMovementController)
+    + <<override>> CanStartAction(controller:RPGCharacterController) : bool
+    # <<override>> _StartAction(controller:RPGCharacterController, context:EmptyContext) : void
+    + <<override>> IsActive() : bool
+}
+class "MovementActionHandler`1"<T> {
+}
+"MovementActionHandler`1" "<EmptyContext>" <|-- Move
+abstract class "MovementActionHandler`1"<TContext> {
+    + MovementActionHandler(movement:RPGCharacterMovementController)
+}
+class "InstantActionHandler`1"<T> {
+}
+"InstantActionHandler`1" "<TContext>" <|-- "MovementActionHandler`1"
+"MovementActionHandler`1" --> "movement" RPGCharacterMovementController
+class Navigation {
+    + Navigation(navigation:RPGCharacterNavigationController)
+    + <<override>> CanStartAction(controller:RPGCharacterController) : bool
+    + <<override>> CanEndAction(controller:RPGCharacterController) : bool
+    # <<override>> _StartAction(controller:RPGCharacterController, context:Vector3) : void
+    + <<override>> IsActive() : bool
+    # <<override>> _EndAction(controller:RPGCharacterController) : void
+}
+class "BaseActionHandler`1"<T> {
+}
+"BaseActionHandler`1" "<Vector3>" <|-- Navigation
+Navigation --> "navigation" RPGCharacterNavigationController
+class Roll {
+    + Roll(movement:RPGCharacterMovementController)
+    + <<override>> CanStartAction(controller:RPGCharacterController) : bool
+    # <<override>> _StartAction(controller:RPGCharacterController, rollType:RollType) : void
+    + <<override>> IsActive() : bool
+}
+class "MovementActionHandler`1"<T> {
+}
+"MovementActionHandler`1" "<RollType>" <|-- Roll
+class Swim {
+    + Swim(movement:RPGCharacterMovementController)
+    + <<override>> CanStartAction(controller:RPGCharacterController) : bool
+    # <<override>> _StartAction(controller:RPGCharacterController, context:EmptyContext) : void
+    + <<override>> IsActive() : bool
+}
+class "MovementActionHandler`1"<T> {
+}
+"MovementActionHandler`1" "<EmptyContext>" <|-- Swim
+class Relax {
+    + <<override>> CanStartAction(controller:RPGCharacterController) : bool
+    + <<override>> CanEndAction(controller:RPGCharacterController) : bool
+    # <<override>> _StartAction(controller:RPGCharacterController, instant:bool?) : void
+    # <<override>> _EndAction(controller:RPGCharacterController) : void
+}
+class "BaseActionHandler`1"<T> {
+}
+"BaseActionHandler`1" "<bool?>" <|-- Relax
+class SwitchWeaponContext {
+    + type : string
+    + side : string
+    + sheathLocation : string
+    + SwitchWeaponContext()
+    + SwitchWeaponContext(type:string, side:string, sheathLocation:string, rightWeapon:Weapon, leftWeapon:Weapon)
+    + LowercaseStrings() : void
+}
+class SwitchWeapon {
+    + <<override>> CanStartAction(controller:RPGCharacterController) : bool
+    + <<override>> CanEndAction(controller:RPGCharacterController) : bool
+    # <<override>> _StartAction(controller:RPGCharacterController, context:SwitchWeaponContext) : void
+    - EndSwitch(controller:RPGCharacterController, weaponController:RPGCharacterWeaponController, changeRight:bool, toRightWeapon:Weapon, changeLeft:bool, toLeftWeapon:Weapon) : void
+    - {static} DebugIncomingContext(context:SwitchWeaponContext) : void
+    - {static} DebugSwitchWeapon(weaponController:RPGCharacterWeaponController, context:SwitchWeaponContext, changeRight:bool, changeLeft:bool, sheathRight:bool, sheathLeft:bool, unsheathRight:bool, unsheathLeft:bool, fromRightWeapon:Weapon, toRightWeapon:Weapon, fromLeftWeapon:Weapon, toLeftWeapon:Weapon, dualWielding:bool, dualUnsheath:bool, dualSheath:bool) : void
+    # <<override>> _EndAction(controller:RPGCharacterController) : void
+}
+class "BaseActionHandler`1"<T> {
+}
+SwitchWeaponContext --> "rightWeapon" Weapon
+SwitchWeaponContext --> "leftWeapon" Weapon
+"BaseActionHandler`1" "<SwitchWeaponContext>" <|-- SwitchWeapon
+enum AnimatorTrigger {
+    NoTrigger= 0,
+    IdleTrigger= 1,
+    ActionTrigger= 2,
+    ClimbLadderTrigger= 3,
+    AttackTrigger= 4,
+    AttackKickTrigger= 5,
+    AttackDualTrigger= 6,
+    AttackCastTrigger= 7,
+    SpecialAttackTrigger= 8,
+    SpecialEndTrigger= 9,
+    CastTrigger= 10,
+    CastEndTrigger= 11,
+    GetHitTrigger= 12,
+    RollTrigger= 13,
+    TurnTrigger= 14,
+    WeaponSheathTrigger= 15,
+    WeaponUnsheathTrigger= 16,
+    DodgeTrigger= 17,
+    JumpTrigger= 18,
+    BlockTrigger= 19,
+    DeathTrigger= 20,
+    ReviveTrigger= 21,
+    BlockBreakTrigger= 22,
+    SwimTrigger= 23,
+    ReloadTrigger= 24,
+    InstantSwitchTrigger= 25,
+    KnockbackTrigger= 26,
+    KnockdownTrigger= 27,
+    DiveRollTrigger= 28,
+    CrawlTrigger= 29,
+}
+enum AttackCastType {
+    Unknown= -1,
+    Cast1= 1,
+    Cast2= 2,
+    Cast3= 3,
+}
+enum BlockedHitType {
+    BlockedHit1= 1,
+    BlockedHit2= 2,
+}
+enum CastType {
+    Unknown= 0,
+    Buff1= 1,
+    Buff2= 2,
+    AOE1= 3,
+    AOE2= 4,
+    Summon1= 5,
+    Summon2= 6,
+}
+enum ClimbType {
+    ClimbUp= 1,
+    ClimbDown= 2,
+    DismountTop= 3,
+    DismountBottom= 4,
+    MountTop= 5,
+    MountBottom= 6,
+}
+enum CrawlType {
+    Crawl= 1,
+    StopCrawl= 2,
+}
+enum DaggerAttack {
+    Unknown= 0,
+    LeftAttack1= 1,
+    LeftAttack2= 2,
+    LeftAttack3= 3,
+    RightAttack1= 4,
+    RightAttack2= 5,
+    RightAttack3= 6,
+}
+enum DiveRollType {
+    DiveRoll1= 1,
+}
+enum DodgeType {
+    Left= 1,
+    Right= 2,
+    Backward= 3,
+}
+enum DualAttack {
+    Unknown= 0,
+    Attack1= 1,
+    Attack2= 2,
+    Attack3= 3,
+}
+enum DualPistolAttack {
+    Unknown= 0,
+    Attack1= 1,
+    Attack2= 2,
+    Attack3= 3,
+}
+enum EmoteType {
+    Unknown= -1,
+    Sit= 0,
+    Laydown= 1,
+    Pickup= 2,
+    Activate= 3,
+    Drink= 4,
+    Bow1= 5,
+    Bow2= 6,
+    No= 7,
+    Yes= 8,
+    Boost= 9,
+    StandFromSitting= 9,
+    StandFromLaying= 10,
+}
+enum HitType {
+    Forward1= 1,
+    Forward2= 2,
+    Back1= 3,
+    Left1= 4,
+    Right1= 5,
+}
+enum ItemAttack {
+    Unknown= 0,
+    LeftAttack1= 1,
+    LeftAttack2= 2,
+    LeftAttack3= 3,
+    LeftAttack4= 4,
+    RightAttack1= 5,
+    RightAttack2= 6,
+    RightAttack3= 7,
+    RightAttack4= 8,
+}
+enum KickType {
+    LeftKick1= 1,
+    LeftKick2= 2,
+    RightKick1= 3,
+    RightKick2= 4,
+}
+enum KnockbackType {
+    Knockback1= 1,
+    Knockback2= 2,
+}
+enum KnockdownType {
+    Knockdown1= 1,
+}
+enum MaceAttack {
+    Unknown= 0,
+    LeftAttack1= 1,
+    LeftAttack2= 2,
+    LeftAttack3= 3,
+    RightAttack1= 4,
+    RightAttack2= 5,
+    RightAttack3= 6,
+}
+enum PistolAttack {
+    Unknown= 0,
+    LeftAttack1= 1,
+    LeftAttack2= 2,
+    LeftAttack3= 3,
+    RightAttack1= 4,
+    RightAttack2= 5,
+    RightAttack3= 6,
+}
+enum RollType {
+    Forward= 1,
+    Right= 2,
+    Backward= 3,
+    Left= 4,
+}
+enum ShieldAttack {
+    Unknown= 0,
+    Attack1= 1,
+    Attack2= 2,
+    Attack3= 3,
+}
+enum ShootingAttack {
+    Unknown= 0,
+    Attack1= 1,
+    Attack2= 2,
+}
+enum Side {
+    Unchanged= -1,
+    None= 0,
+    Left= 1,
+    Right= 2,
+    Dual= 3,
+}
+enum SpearAttack {
+    Unknown= 0,
+    RightAttack1= 1,
+    RightAttack2= 2,
+    RightAttack3= 3,
+    RightAttack4= 4,
+    RightAttack5= 5,
+    RightAttack6= 6,
+}
+enum SwordAttack {
+    Unknown= 0,
+    LeftAttack1= 1,
+    LeftAttack2= 2,
+    LeftAttack3= 3,
+    LeftAttack4= 4,
+    LeftAttack5= 5,
+    LeftAttack6= 6,
+    LeftAttack7= 7,
+    RightAttack1= 8,
+    RightAttack2= 9,
+    RightAttack3= 10,
+    RightAttack4= 11,
+    RightAttack5= 12,
+    RightAttack6= 13,
+    RightAttack7= 14,
+}
+enum TalkType {
+    None= 0,
+    Talk1= 1,
+    Talk2= 2,
+    Talk3= 3,
+    Talk4= 4,
+    Talk5= 5,
+    Talk6= 6,
+    Talk7= 7,
+    Talk8= 8,
+}
+enum TurnType {
+    Left= 1,
+    Right= 2,
+    Left180= 3,
+    Right180= 4,
+}
+enum TwoHandedAxeAttack {
+    Unknown= 0,
+    Attack1= 1,
+    Attack2= 2,
+    Attack3= 3,
+    Attack4= 4,
+    Attack5= 5,
+    Attack6= 6,
+}
+enum TwoHandedBowAttack {
+    Unknown= 0,
+    Attack1= 1,
+    Attack2= 2,
+    Attack3= 3,
+    Attack4= 4,
+    Attack5= 5,
+    Attack6= 6,
+}
+enum TwoHandedCrossbowAttack {
+    Unknown= 0,
+    Attack1= 1,
+    Attack2= 2,
+    Attack3= 3,
+    Attack4= 4,
+    Attack5= 5,
+    Attack6= 6,
+}
+enum TwoHandedSpearAttack {
+    Unknown= 0,
+    Attack1= 1,
+    Attack2= 2,
+    Attack3= 3,
+    Attack4= 4,
+    Attack5= 5,
+    Attack6= 6,
+    Attack7= 7,
+    Attack8= 8,
+    Attack9= 9,
+    Attack10= 10,
+    Attack11= 11,
+}
+enum TwoHandedStaffAttack {
+    Unknown= 0,
+    Attack1= 1,
+    Attack2= 2,
+    Attack3= 3,
+    Attack4= 4,
+    Attack5= 5,
+    Attack6= 6,
+}
+enum TwoHandedSwordAttack {
+    Unknown= 0,
+    Attack1= 1,
+    Attack2= 2,
+    Attack3= 3,
+    Attack4= 4,
+    Attack5= 5,
+    Attack6= 6,
+    Attack7= 7,
+    Attack8= 8,
+    Attack9= 9,
+    Attack10= 10,
+    Attack11= 11,
+}
+enum UnarmedAttack {
+    Unknown= 0,
+    LeftAttack1= 1,
+    LeftAttack2= 2,
+    LeftAttack3= 3,
+    RightAttack1= 4,
+    RightAttack2= 5,
+    RightAttack3= 6,
+}
+@enduml

@@ -1,0 +1,13 @@
+@startuml
+class NPC {
+    - Awake() : void
+    - Update() : void
+    - RandomOffset(position:Vector3) : Vector3
+    - IsOutOfRange(npc:Vector3, player:Vector3) : bool
+}
+MonoBehaviour <|-- NPC
+NPC --> "navMeshAgent" NavMeshAgent
+NPC --> "rpgCharacterController" RPGCharacterController
+NPC --> "rpgNavigationController" RPGCharacterNavigationController
+NPC --> "targetPosition" Vector3
+@enduml

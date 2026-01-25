@@ -1,0 +1,11 @@
+@startuml
+class DebugDraw <<static>> {
+    + {static} DrawMarker(position:Vector3, size:float, color:Color, duration:float, depthTest:bool) : void
+    + {static} DrawPlane(position:Vector3, normal:Vector3, size:float, color:Color, duration:float, depthTest:bool) : void
+    + {static} DrawVector(position:Vector3, direction:Vector3, raySize:float, markerSize:float, color:Color, duration:float, depthTest:bool) : void
+    + {static} DrawTriangle(a:Vector3, b:Vector3, c:Vector3, color:Color) : void
+    + {static} DrawTriangle(a:Vector3, b:Vector3, c:Vector3, color:Color, t:Transform) : void
+    + {static} DrawMesh(mesh:Mesh, color:Color, t:Transform) : void
+    + {static} RandomColor() : Color
+}
+@enduml

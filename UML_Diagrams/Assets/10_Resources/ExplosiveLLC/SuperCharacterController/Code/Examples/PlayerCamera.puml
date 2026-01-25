@@ -1,0 +1,15 @@
+@startuml
+class PlayerCamera {
+    + Distance : float = 5.0f
+    + Height : float = 2.0f
+    - yRotation : float
+    - Start() : void
+    - LateUpdate() : void
+}
+MonoBehaviour <|-- PlayerCamera
+PlayerCamera --> "PlayerTarget" GameObject
+PlayerCamera --> "input" PlayerInputController
+PlayerCamera --> "target" Transform
+PlayerCamera --> "machine" PlayerMachine
+PlayerCamera --> "controller" SuperCharacterController
+@enduml

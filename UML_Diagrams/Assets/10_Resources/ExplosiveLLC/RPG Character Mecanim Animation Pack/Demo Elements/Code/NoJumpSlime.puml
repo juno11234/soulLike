@@ -1,0 +1,9 @@
+@startuml
+class NoJumpSlime {
+    - OnTriggerEnter(collide:Collider) : void
+    - OnTriggerExit(collide:Collider) : void
+}
+MonoBehaviour <|-- NoJumpSlime
+NoJumpSlime --> "controller" RPGCharacterController
+NoJumpSlime --> "oldJumpHandler" IActionHandler
+@enduml

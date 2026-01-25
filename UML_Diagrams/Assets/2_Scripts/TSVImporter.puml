@@ -1,0 +1,7 @@
+@startuml
+class TSVImporter {
+    + {static} Parse(textData:string) : List<T>
+    - {static} ConvertType(value:string, type:Type) : object
+}
+MonoBehaviour <|-- TSVImporter
+@enduml

@@ -1,0 +1,9 @@
+@startuml
+class DayDurationController {
+    + Duration : float
+    - Awake() : void
+}
+MonoBehaviour <|-- DayDurationController
+DayDurationController --> "Sky" GameObject
+DayDurationController --> "Glow" GameObject
+@enduml

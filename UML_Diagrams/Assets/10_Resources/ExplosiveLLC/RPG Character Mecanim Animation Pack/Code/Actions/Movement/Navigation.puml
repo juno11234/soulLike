@@ -1,0 +1,14 @@
+@startuml
+class Navigation {
+    + Navigation(navigation:RPGCharacterNavigationController)
+    + <<override>> CanStartAction(controller:RPGCharacterController) : bool
+    + <<override>> CanEndAction(controller:RPGCharacterController) : bool
+    # <<override>> _StartAction(controller:RPGCharacterController, context:Vector3) : void
+    + <<override>> IsActive() : bool
+    # <<override>> _EndAction(controller:RPGCharacterController) : void
+}
+class "BaseActionHandler`1"<T> {
+}
+"BaseActionHandler`1" "<Vector3>" <|-- Navigation
+Navigation --> "navigation" RPGCharacterNavigationController
+@enduml

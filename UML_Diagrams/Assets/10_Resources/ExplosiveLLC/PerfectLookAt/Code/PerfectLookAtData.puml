@@ -1,0 +1,32 @@
+@startuml
+enum FwdDirection {
+    X_AXIS= 0,
+    Y_AXIS= 1,
+    Z_AXIS= 2,
+    MINUS_X_AXIS= 3,
+    MINUS_Y_AXIS= 4,
+    MINUS_Z_AXIS= 5,
+}
+class PerfectLookAtData {
+    + m_RotationLimit : float = 90.0f
+    + m_RotateAroundUpVectorWeight : float = 0.0f
+    + m_ResetToDefaultRotation : bool = false
+    + SetDefaultRotation(rot:Quaternion) : void
+    + GetDefaultRotation() : Quaternion
+    + CheckJointRotation() : void
+}
+class PerfecLookAtLinkedBones {
+    + m_ResetToDefaultRotation : bool = false
+    + SetDefaultRotation(rot:Quaternion) : void
+    + GetDefaultRotation() : Quaternion
+    + SetLastFrameRotation(rotation:Quaternion) : void
+    + GetLastFrameRotation() : Quaternion
+}
+PerfectLookAtData --> "m_DefaultRotation" Quaternion
+PerfectLookAtData --> "m_Bone" Transform
+PerfectLookAtData --> "m_ForwardAxis" FwdDirection
+PerfectLookAtData --> "m_ParentBoneForwardAxis" FwdDirection
+PerfecLookAtLinkedBones --> "m_DefaultRotation" Quaternion
+PerfecLookAtLinkedBones --> "m_LastFrameRotation" Quaternion
+PerfecLookAtLinkedBones --> "m_Bone" Transform
+@enduml

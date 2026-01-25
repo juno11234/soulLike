@@ -1,0 +1,31 @@
+@startuml
+enum CommonNodes {
+    Strafe,
+    Chase,
+    CheckAttackRange,
+    Wait,
+    Cleaner,
+    BackMove,
+    WatchPlayer,
+    Patrol,
+}
+abstract class EnemyAIBase {
+    + attackRange : float = 3f
+    + viewAngle : float
+    + viewDistance : float
+    + findPlayer : bool
+    # IsDead : bool
+    # <<virtual>> ConstructBehaviorTree() : void
+    + Dead() : void
+    + Respawn() : void
+}
+class "Dictionary`2"<T1,T2> {
+}
+MonoBehaviour <|-- EnemyAIBase
+EnemyAIBase --> "player" Transform
+EnemyAIBase o-> "nodeDict<N,BtNode>" "Dictionary`2"
+EnemyAIBase --> "_agent" NavMeshAgent
+EnemyAIBase --> "_rootNode" BtNode
+EnemyAIBase --> "_animator" Animator
+EnemyAIBase --> "_rootMotionHandler" RootMotionHandler
+@enduml

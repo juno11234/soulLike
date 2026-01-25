@@ -1,0 +1,26 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 0}
+  m_Name: TestData
+  m_EditorClassIdentifier: Assembly-CSharp::TestDatabase
+  tsvFile: {fileID: 4900000, guid: b328a81385b9e474bb975636a8c3357c, type: 3}
+  testData:
+  - ID: 201
+    Name: muyo
+    TestFloat: 20.3
+    Description: What the Fuck
+    nice: 0
+  - ID: 202
+    Name: Whaeyo
+    TestFloat: 13.2
+    Description: What are you doing?
+    nice: 1

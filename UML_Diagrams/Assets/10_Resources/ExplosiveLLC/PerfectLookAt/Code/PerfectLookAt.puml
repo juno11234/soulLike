@@ -1,0 +1,36 @@
+@startuml
+class PerfectLookAt {
+    - m_Weight : float = 1.0f
+    + m_LookAtBlendSpeed : float = 5.0f
+    - m_BlendSpeed : float = 0.0f
+    + m_LegStabilizerMinDistanceToStartSolving : float = 0.005f
+    + LegStabilizerMaxIterations : byte = 20
+    + m_DrawDebugLookAtLines : bool = false
+    - m_IsValid : bool = true
+    + GetLookAtWeight() : float
+    + SetLookAtWeight(weight:float) : void
+    + EnablePerfectLookat(time:float, cancelCurrentTransition:bool) : void
+    + DisablePerfectLookat(time:float, cancelCurrentTransition:bool) : void
+    + IsInTransition() : bool
+    + GetTimeToFinishTransition() : float
+    + {static} GetWorldLookAtRotation(targetVector:Vector3, fwdVectorInWorldSpace:Vector3) : Quaternion
+    - PerfectLookAtSlerp(a:Quaternion, b:Quaternion, weight:float) : Quaternion
+    + {static} QuaternionFromAngleAxis(rotationAxis:Vector3, angleRad:float) : Quaternion
+    - CheckForForceDefaultRotation() : void
+    - CheckValidity() : bool
+    - GetAngleFromQuaternionDeg(inputQuat:Quaternion) : float
+    - GetAngleFromQuaternionDeg(inputQuat:Quaternion) : float
+    - GetAngleFromQuaternionRad(inputQuat:Quaternion) : float
+    - GetAngleFromQuaternionRad(inputQuat:Quaternion) : float
+    - GetForwardVector(inputTr:Transform, inputAxis:FwdDirection) : Vector3
+    - BlendTowardTargetVector(inputTr:Transform, inputAxis:FwdDirection) : Vector3
+    - CheckIfCharacterScaleChanged() : void
+    - Start() : void
+    - Update() : void
+    - LateUpdate() : void
+}
+MonoBehaviour <|-- PerfectLookAt
+PerfectLookAt --> "m_gameObjectScale" Vector3
+PerfectLookAt --> "m_TargetObject" GameObject
+PerfectLookAt o-> "m_UpVector" Vector3
+@enduml

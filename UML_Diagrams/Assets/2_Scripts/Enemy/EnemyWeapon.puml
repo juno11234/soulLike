@@ -1,0 +1,15 @@
+@startuml
+class EnemyWeapon {
+    - _damage : int
+    - Start() : void
+    + ActiveCollider(damage:int) : void
+    + DisableCollider() : void
+    - OnTriggerEnter(other:Collider) : void
+}
+class "HashSet`1"<T> {
+}
+MonoBehaviour <|-- EnemyWeapon
+EnemyWeapon --> "_playerLayer" LayerMask
+EnemyWeapon --> "_collider" Collider
+EnemyWeapon o-> "_damaged<FighterView>" "HashSet`1"
+@enduml

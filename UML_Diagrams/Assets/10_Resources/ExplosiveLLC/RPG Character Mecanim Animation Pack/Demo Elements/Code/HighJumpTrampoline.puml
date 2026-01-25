@@ -1,0 +1,10 @@
+@startuml
+class HighJumpTrampoline {
+    - oldJumpSpeed : float
+    - Update() : void
+    - OnTriggerEnter(collide:Collider) : void
+    - OnTriggerExit(collide:Collider) : void
+}
+MonoBehaviour <|-- HighJumpTrampoline
+HighJumpTrampoline --> "character" GameObject
+@enduml

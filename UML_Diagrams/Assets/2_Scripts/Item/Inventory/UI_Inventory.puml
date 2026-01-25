@@ -1,0 +1,29 @@
+@startuml
+class UI_Inventory {
+    - Start() : void
+    - OnDestroy() : void
+    - InitInventoryUI() : void
+    - SetupFilterButtons() : void
+    + SetFilter(filterType:ItemType) : void
+    - UpdateInventoryUI() : void
+    + HandleDrop(fromGO:GameObject, toGO:GameObject) : void
+    - HandleInventoryToInventory(fromSlotUI:UI_InventorySlot, toSlotUI:UI_InventorySlot) : void
+    - HandleInventoryToEquipment(fromSlotUI:UI_InventorySlot, toSlotUI:UI_EquipmentSlot) : void
+    - HandleEquipmentToInventory(fromSlotUI:UI_EquipmentSlot, toSlotUI:UI_InventorySlot) : void
+}
+class "List`1"<T> {
+}
+MonoBehaviour <|-- UI_Inventory
+UI_Inventory --> "playerInventory" PlayerInventory
+UI_Inventory --> "inventorySlotPrefab" GameObject
+UI_Inventory --> "inventorySlotParent" Transform
+UI_Inventory --> "equipmentSlotParent" Transform
+UI_Inventory o-> "inventorySlots<UI_InventorySlot>" "List`1"
+UI_Inventory o-> "equipmentSlots<UI_InventorySlot>" "List`1"
+UI_Inventory --> "allFilterButton" Button
+UI_Inventory --> "weaponFilterButton" Button
+UI_Inventory --> "potionFilterButton" Button
+UI_Inventory --> "materialFilterButton" Button
+UI_Inventory --> "etcFilterButton" Button
+UI_Inventory o-> "currentFilter" ItemType
+@enduml

@@ -1,0 +1,72 @@
+@startuml
+class "@PlayerInput" <<partial>> {
+    + @PlayerInput()
+    + Dispose() : void
+    + Contains(action:InputAction) : bool
+    + GetEnumerator() : IEnumerator<InputAction>
+    - GetEnumerator() : IEnumerator
+    + Enable() : void
+    + Disable() : void
+    + FindAction(actionNameOrId:string, throwIfNotFound:bool) : InputAction
+    + FindBinding(bindingMask:InputBinding, action:InputAction) : int
+}
+class "ReadOnlyArray`1"<T> {
+}
+class "IEnumerable`1"<T> {
+}
+class "List`1"<T> {
+}
+struct PlayerActions {
+    + PlayerActions(wrapper:@PlayerInput)
+    + Get() : InputActionMap
+    + Enable() : void
+    + Disable() : void
+    + enabled : bool <<get>>
+    + AddCallbacks(instance:IPlayerActions) : void
+    - UnregisterCallbacks(instance:IPlayerActions) : void
+    + RemoveCallbacks(instance:IPlayerActions) : void
+    + SetCallbacks(instance:IPlayerActions) : void
+}
+interface IPlayerActions {
+    OnMove(context:InputAction.CallbackContext) : void
+    OnRoll(context:InputAction.CallbackContext) : void
+    OnCamera(context:InputAction.CallbackContext) : void
+    OnAttack(context:InputAction.CallbackContext) : void
+    OnShift(context:InputAction.CallbackContext) : void
+    OnLockOn(context:InputAction.CallbackContext) : void
+    OnQ(context:InputAction.CallbackContext) : void
+    OnE(context:InputAction.CallbackContext) : void
+    OnR(context:InputAction.CallbackContext) : void
+}
+IInputActionCollection2 <|-- "@PlayerInput"
+IDisposable <|-- "@PlayerInput"
+"@PlayerInput" --> "asset" InputActionAsset
+"@PlayerInput" --> "bindingMask" InputBinding
+"@PlayerInput" --> "devices<InputDevice>" "ReadOnlyArray`1"
+"@PlayerInput" --> "controlSchemes<InputControlScheme>" "ReadOnlyArray`1"
+"@PlayerInput" --> "bindings<InputBinding>" "IEnumerable`1"
+"@PlayerInput" --> "m_Player" InputActionMap
+"@PlayerInput" o-> "m_PlayerActionsCallbackInterfaces<IPlayerActions>" "List`1"
+"@PlayerInput" --> "m_Player_Move" InputAction
+"@PlayerInput" --> "m_Player_Roll" InputAction
+"@PlayerInput" --> "m_Player_Camera" InputAction
+"@PlayerInput" --> "m_Player_Attack" InputAction
+"@PlayerInput" --> "m_Player_Shift" InputAction
+"@PlayerInput" --> "m_Player_LockOn" InputAction
+"@PlayerInput" --> "m_Player_Q" InputAction
+"@PlayerInput" --> "m_Player_E" InputAction
+"@PlayerInput" --> "m_Player_R" InputAction
+"@PlayerInput" --> "@Player" PlayerActions
+"@PlayerInput" +-- PlayerActions
+PlayerActions --> "m_Wrapper" "@PlayerInput"
+PlayerActions --> "@Move" InputAction
+PlayerActions --> "@Roll" InputAction
+PlayerActions --> "@Camera" InputAction
+PlayerActions --> "@Attack" InputAction
+PlayerActions --> "@Shift" InputAction
+PlayerActions --> "@LockOn" InputAction
+PlayerActions --> "@Q" InputAction
+PlayerActions --> "@E" InputAction
+PlayerActions --> "@R" InputAction
+"@PlayerInput" +-- IPlayerActions
+@enduml

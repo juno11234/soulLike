@@ -1,0 +1,9 @@
+@startuml
+class Dodge {
+    + <<override>> CanStartAction(controller:RPGCharacterController) : bool
+    # <<override>> _StartAction(controller:RPGCharacterController, dodgeType:DodgeType) : void
+}
+class "InstantActionHandler`1"<T> {
+}
+"InstantActionHandler`1" "<DodgeType>" <|-- Dodge
+@enduml

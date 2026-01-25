@@ -1,0 +1,14 @@
+@startuml
+class PlayerInputController {
+    - Start() : void
+    - Update() : void
+}
+struct PlayerInputData {
+    + JumpInput : bool
+}
+MonoBehaviour <|-- PlayerInputController
+PlayerInputController --> "Current" PlayerInputData
+PlayerInputController o-> "RightStickMultiplier" Vector2
+PlayerInputData --> "MoveInput" Vector3
+PlayerInputData --> "MouseInput" Vector2
+@enduml

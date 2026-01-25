@@ -1,0 +1,8 @@
+@startuml
+class FollowHPBar {
+    - Start() : void
+    - LateUpdate() : void
+}
+MonoBehaviour <|-- FollowHPBar
+FollowHPBar --> "mainCamera" Camera
+@enduml

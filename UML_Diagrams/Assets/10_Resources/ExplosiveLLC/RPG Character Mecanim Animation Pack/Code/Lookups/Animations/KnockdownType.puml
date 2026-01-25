@@ -1,0 +1,5 @@
+@startuml
+enum KnockdownType {
+    Knockdown1= 1,
+}
+@enduml

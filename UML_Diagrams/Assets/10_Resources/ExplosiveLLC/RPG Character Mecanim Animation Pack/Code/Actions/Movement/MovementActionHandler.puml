@@ -1,0 +1,9 @@
+@startuml
+abstract class "MovementActionHandler`1"<TContext> {
+    + MovementActionHandler(movement:RPGCharacterMovementController)
+}
+class "InstantActionHandler`1"<T> {
+}
+"InstantActionHandler`1" "<TContext>" <|-- "MovementActionHandler`1"
+"MovementActionHandler`1" --> "movement" RPGCharacterMovementController
+@enduml

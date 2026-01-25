@@ -1,0 +1,10 @@
+@startuml
+class "Observable`1"<T> {
+    - _value : T
+    +  <<event>> OnValueChanged : Action<T> 
+    + Value : T <<get>> <<set>>
+    + Observable(initialValue:T)
+    + Subscribe(listener:Action<T>) : void
+    + Unsubscribe(listener:Action<T>) : void
+}
+@enduml

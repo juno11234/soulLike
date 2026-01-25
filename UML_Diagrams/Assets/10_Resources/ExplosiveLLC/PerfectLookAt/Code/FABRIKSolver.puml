@@ -1,0 +1,5 @@
+@startuml
+class FABRIKSolver <<static>> {
+    + {static} SolveFabrik(positions:Vector3[], boneLengths:float[], ikTarget:Vector3, ikChainLength:float, iterationNumbers:byte, errorDistToStopSolving:float) : void
+}
+@enduml

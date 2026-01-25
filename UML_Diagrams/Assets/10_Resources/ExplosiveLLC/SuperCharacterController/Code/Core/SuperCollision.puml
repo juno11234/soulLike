@@ -1,0 +1,9 @@
+@startuml
+struct SuperCollision {
+}
+SuperCollision --> "collisionSphere" CollisionSphere
+SuperCollision --> "superCollisionType" SuperCollisionType
+SuperCollision --> "gameObject" GameObject
+SuperCollision --> "point" Vector3
+SuperCollision --> "normal" Vector3
+@enduml

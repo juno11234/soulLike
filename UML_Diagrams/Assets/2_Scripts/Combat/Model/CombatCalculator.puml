@@ -1,0 +1,5 @@
+@startuml
+class CombatCalculator <<static>> {
+    + {static} CalculateDamage(attackPower:int, defender:FighterStats) : int
+}
+@enduml

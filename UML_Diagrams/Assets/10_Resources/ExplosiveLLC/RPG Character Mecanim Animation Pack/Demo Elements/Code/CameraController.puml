@@ -1,0 +1,28 @@
+@startuml
+class CameraController {
+    + cameraTargetOffsetY : float
+    + rotateSpeed : float = 2.0f
+    - rotate : float
+    + height : float = 6.0f
+    + distance : float = 5.0f
+    + zoomAmount : float = 0.1f
+    + smoothing : float = 2.0f
+    - following : bool = true
+    - inputFollow : bool
+    - inputRotateR : bool
+    - inputRotateL : bool
+    - inputMouseScrollUp : bool
+    - inputMouseScrollDown : bool
+    - Start() : void
+    - SetStartPosition() : void
+    - Inputs() : void
+    - Update() : void
+    - CameraFollow() : void
+    - LateUpdate() : void
+}
+MonoBehaviour <|-- CameraController
+CameraController --> "cameraTarget" GameObject
+CameraController --> "cameraTargetOffset" Vector3
+CameraController --> "offset" Vector3
+CameraController --> "lastPosition" Vector3
+@enduml

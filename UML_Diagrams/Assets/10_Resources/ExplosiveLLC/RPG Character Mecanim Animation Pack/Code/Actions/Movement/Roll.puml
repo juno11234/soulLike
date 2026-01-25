@@ -1,0 +1,11 @@
+@startuml
+class Roll {
+    + Roll(movement:RPGCharacterMovementController)
+    + <<override>> CanStartAction(controller:RPGCharacterController) : bool
+    # <<override>> _StartAction(controller:RPGCharacterController, rollType:RollType) : void
+    + <<override>> IsActive() : bool
+}
+class "MovementActionHandler`1"<T> {
+}
+"MovementActionHandler`1" "<RollType>" <|-- Roll
+@enduml

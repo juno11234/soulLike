@@ -1,0 +1,29 @@
+@startuml
+class InputManager {
+    +  <<event>> OnSpaceBarInput : InputButtonHandler 
+    +  <<event>> OnLMBInput : InputButtonHandler 
+    +  <<event>> OnShiftInput : InputButtonHandler 
+    +  <<event>> OnMiddleMouseButtonInput : InputButtonHandler 
+    +  <<event>> OnRInput : InputButtonHandler 
+    +  <<event>> OnQorEInput : InputQEHandler 
+    - Awake() : void
+    - MovePerformed(context:InputAction.CallbackContext) : void
+    - CameraPerformed(context:InputAction.CallbackContext) : void
+    - SpacePerformed(context:InputAction.CallbackContext) : void
+    - SpaceCanceled(context:InputAction.CallbackContext) : void
+    - LmbPerformed(context:InputAction.CallbackContext) : void
+    - LmbCanceled(context:InputAction.CallbackContext) : void
+    - ShiftPerformed(context:InputAction.CallbackContext) : void
+    - ShiftCanceled(context:InputAction.CallbackContext) : void
+    - LockOnPerformed(context:InputAction.CallbackContext) : void
+    - RPerformed(context:InputAction.CallbackContext) : void
+    - QPerformed(context:InputAction.CallbackContext) : void
+    - EKeyPerformed(context:InputAction.CallbackContext) : void
+    - OnEnable() : void
+    - OnDisable() : void
+}
+MonoBehaviour <|-- InputManager
+InputManager --> "_input" PlayerInput
+InputManager --> "MoveInput" Vector2
+InputManager --> "CameraInput" Vector2
+@enduml

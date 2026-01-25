@@ -1,0 +1,37 @@
+@startuml
+class SuperCharacterController <<partial>> {
+}
+class SuperGround {
+    + SuperGround(walkable:LayerMask, controller:SuperCharacterController, triggerInteraction:QueryTriggerInteraction)
+    - <<const>> groundingUpperBoundAngle : float = 60.0f
+    - <<const>> groundingMaxPercentFromCenter : float = 0.85f
+    - <<const>> groundingMinPercentFromcenter : float = 0.50f
+    + ProbeGround(origin:Vector3, iter:int) : void
+    - ResetGrounds() : void
+    + IsGrounded(currentlyGrounded:bool, distance:float) : bool
+    + IsGrounded(currentlyGrounded:bool, distance:float, groundNormal:Vector3) : bool
+    - OnSteadyGround(normal:Vector3, point:Vector3) : bool
+    + PrimaryNormal() : Vector3
+    + Distance() : float
+    + DebugGround(primary:bool, near:bool, far:bool, flush:bool, step:bool) : void
+    - SimulateSphereCast(groundNormal:Vector3, hit:RaycastHit) : bool
+}
+class GroundHit {
+    + distance : float <<get>>
+    + GroundHit(point:Vector3, normal:Vector3, distance:float)
+}
+SuperCharacterController +-- SuperGround
+SuperGround --> "walkable" LayerMask
+SuperGround --> "controller" SuperCharacterController
+SuperGround --> "triggerInteraction" QueryTriggerInteraction
+SuperGround --> "primaryGround" GroundHit
+SuperGround --> "nearGround" GroundHit
+SuperGround --> "farGround" GroundHit
+SuperGround --> "stepGround" GroundHit
+SuperGround --> "flushGround" GroundHit
+SuperGround --> "superCollisionType" SuperCollisionType
+SuperGround --> "transform" Transform
+SuperGround +-- GroundHit
+GroundHit --> "point" Vector3
+GroundHit --> "normal" Vector3
+@enduml

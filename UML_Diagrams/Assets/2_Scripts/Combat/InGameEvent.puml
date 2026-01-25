@@ -1,0 +1,25 @@
+@startuml
+abstract class InGameEvent {
+}
+class CombatEvent {
+    + Damage : int <<get>> <<set>>
+}
+class HealthEvent {
+    + HealAmount : int <<get>> <<set>>
+}
+enum EventType {
+    Unknown,
+    Combat,
+    Heal,
+}
+InGameEvent --> "Sender" FighterView
+InGameEvent --> "Receiver" FighterView
+InGameEvent --> "Type" EventType
+InGameEvent <|-- CombatEvent
+CombatEvent --> "HitPosition" Vector3
+CombatEvent --> "Collider" Collider
+CombatEvent --> "Type" EventType
+InGameEvent <|-- HealthEvent
+HealthEvent --> "Type" EventType
+InGameEvent +-- EventType
+@enduml

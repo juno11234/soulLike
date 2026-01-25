@@ -1,0 +1,10 @@
+@startuml
+class GetHit {
+    + GetHit(movement:RPGCharacterMovementController)
+    + <<override>> CanStartAction(controller:RPGCharacterController) : bool
+    # <<override>> _StartAction(controller:RPGCharacterController, context:HitContext) : void
+}
+class "MovementActionHandler`1"<T> {
+}
+"MovementActionHandler`1" "<HitContext>" <|-- GetHit
+@enduml

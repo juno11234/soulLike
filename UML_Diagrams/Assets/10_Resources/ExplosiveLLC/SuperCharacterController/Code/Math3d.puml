@@ -1,0 +1,40 @@
+@startuml
+class Math3d {
+    + {static} Init() : void
+    + {static} AddVectorLength(vector:Vector3, size:float) : Vector3
+    + {static} SetVectorLength(vector:Vector3, size:float) : Vector3
+    + {static} SubtractRotation(B:Quaternion, A:Quaternion) : Quaternion
+    + {static} PlanePlaneIntersection(linePoint:Vector3, lineVec:Vector3, plane1Normal:Vector3, plane1Position:Vector3, plane2Normal:Vector3, plane2Position:Vector3) : bool
+    + {static} LinePlaneIntersection(intersection:Vector3, linePoint:Vector3, lineVec:Vector3, planeNormal:Vector3, planePoint:Vector3) : bool
+    + {static} LineLineIntersection(intersection:Vector3, linePoint1:Vector3, lineVec1:Vector3, linePoint2:Vector3, lineVec2:Vector3) : bool
+    + {static} ClosestPointsOnTwoLines(closestPointLine1:Vector3, closestPointLine2:Vector3, linePoint1:Vector3, lineVec1:Vector3, linePoint2:Vector3, lineVec2:Vector3) : bool
+    + {static} ProjectPointOnLine(linePoint:Vector3, lineVec:Vector3, point:Vector3) : Vector3
+    + {static} ProjectPointOnLineSegment(linePoint1:Vector3, linePoint2:Vector3, point:Vector3) : Vector3
+    + {static} ProjectPointOnPlane(planeNormal:Vector3, planePoint:Vector3, point:Vector3) : Vector3
+    + {static} ProjectVectorOnPlane(planeNormal:Vector3, vector:Vector3) : Vector3
+    + {static} SignedDistancePlanePoint(planeNormal:Vector3, planePoint:Vector3, point:Vector3) : float
+    + {static} SignedDotProduct(vectorA:Vector3, vectorB:Vector3, normal:Vector3) : float
+    + {static} SignedVectorAngle(referenceVector:Vector3, otherVector:Vector3, normal:Vector3) : float
+    + {static} AngleVectorPlane(vector:Vector3, normal:Vector3) : float
+    + {static} DotProductAngle(vec1:Vector3, vec2:Vector3) : float
+    + {static} PlaneFrom3Points(planeNormal:Vector3, planePoint:Vector3, pointA:Vector3, pointB:Vector3, pointC:Vector3) : void
+    + {static} GetForwardVector(q:Quaternion) : Vector3
+    + {static} GetUpVector(q:Quaternion) : Vector3
+    + {static} GetRightVector(q:Quaternion) : Vector3
+    + {static} QuaternionFromMatrix(m:Matrix4x4) : Quaternion
+    + {static} PositionFromMatrix(m:Matrix4x4) : Vector3
+    + {static} LookRotationExtended(gameObjectInOut:GameObject, alignWithVector:Vector3, alignWithNormal:Vector3, customForward:Vector3, customUp:Vector3) : void
+    + {static} TransformWithParent(childRotation:Quaternion, childPosition:Vector3, parentRotation:Quaternion, parentPosition:Vector3, startParentRotation:Quaternion, startParentPosition:Vector3, startChildRotation:Quaternion, startChildPosition:Vector3) : void
+    + {static} PreciseAlign(gameObjectInOut:GameObject, alignWithVector:Vector3, alignWithNormal:Vector3, alignWithPosition:Vector3, triangleForward:Vector3, triangleNormal:Vector3, trianglePosition:Vector3) : void
+    - VectorsToTransform(gameObjectInOut:GameObject, positionVector:Vector3, directionVector:Vector3, normalVector:Vector3) : void
+    + {static} PointOnWhichSideOfLineSegment(linePoint1:Vector3, linePoint2:Vector3, point:Vector3) : int
+    + {static} MouseDistanceToLine(linePoint1:Vector3, linePoint2:Vector3) : float
+    + {static} MouseDistanceToCircle(point:Vector3, radius:float) : float
+    + {static} IsLineInRectangle(linePoint1:Vector3, linePoint2:Vector3, rectA:Vector3, rectB:Vector3, rectC:Vector3, rectD:Vector3) : bool
+    + {static} IsPointInRectangle(point:Vector3, rectA:Vector3, rectC:Vector3, rectB:Vector3, rectD:Vector3) : bool
+    + {static} AreLineSegmentsCrossing(pointA1:Vector3, pointA2:Vector3, pointB1:Vector3, pointB2:Vector3) : bool
+}
+MonoBehaviour <|-- Math3d
+Math3d o-> "tempChild" Transform
+Math3d o-> "tempParent" Transform
+@enduml

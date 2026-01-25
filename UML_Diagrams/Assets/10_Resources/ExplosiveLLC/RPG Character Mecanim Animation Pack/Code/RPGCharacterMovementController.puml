@@ -1,0 +1,94 @@
+@startuml
+class RPGCharacterMovementController {
+    + acquiringGround : bool <<get>>
+    + maintainingGround : bool <<get>>
+    + knockbackMultiplier : float = 1f
+    + movementAnimationMultiplier : float = 1f
+    - ladderStartBottom : bool
+    + walkSpeed : float = .5f
+    + walkAccel : float = 15f
+    + runSpeed : float = 1f
+    + runAccel : float = 30f
+    + sprintSpeed : float = 2f
+    + sprintAccel : float = 15
+    + crouchSpeed : float = 0.25f
+    + crouchAccel : float = 15
+    + crawlSpeed : float = 0.15f
+    + crawlAccel : float = 15
+    + injuredSpeed : float = .675f
+    + injuredAccel : float = 20f
+    + groundFriction : float = 120f
+    + rotationSpeed : float = 100f
+    - isSprinting : bool
+    + canJump : bool
+    + holdingJump : bool
+    + canDoubleJump : bool = false
+    - doublejumped : bool = false
+    + jumpSpeed : float = 12f
+    + jumpGravity : float = 24f
+    + allowDoubleJump : bool = true
+    + doubleJumpSpeed : float = 8f
+    + inAirSpeed : float = 8f
+    + inAirAccel : float = 16f
+    + fallGravity : float = 32f
+    + fallingControl : bool = false
+    + swimSpeed : float = 4f
+    + swimAccel : float = 4f
+    + strokeSpeed : float = 6f
+    + waterFriction : float = 5f
+    + debugMessages : bool
+    - Awake() : void
+    - Start() : void
+    - Update() : void
+    # <<override>> EarlyGlobalSuperUpdate() : void
+    # <<override>> LateGlobalSuperUpdate() : void
+    - Idle_EnterState() : void
+    - Idle_SuperUpdate() : void
+    - Idle_ExitState() : void
+    - Move_EnterState() : void
+    - Move_SuperUpdate() : void
+    - Move_ExitState() : void
+    - Jump_EnterState() : void
+    - Jump_SuperUpdate() : void
+    - DoubleJump_EnterState() : void
+    - DoubleJump_SuperUpdate() : void
+    - Fall_EnterState() : void
+    - Fall_SuperUpdate() : void
+    - Fall_ExitState() : void
+    - Crawl_EnterState() : void
+    - Crawl_SuperUpdate() : void
+    - Crawl_ExitState() : void
+    - Swim_EnterState() : void
+    - Swim_SuperUpdate() : void
+    - Swim_ExitState() : void
+    - ClimbLadder_EnterState() : void
+    - ClimbLadder_SuperUpdate() : void
+    - ClimbLadder_ExitState() : void
+    - DiveRoll_EnterState() : void
+    - DiveRoll_SuperUpdate() : void
+    - Roll_EnterState() : void
+    - Knockback_EnterState() : void
+    - Knockdown_EnterState() : void
+    + ClimbLadder(ladderStartBottom:bool) : void
+    - RotateTowardsMovementDir() : void
+    - RotateTowardsTarget(targetPosition:Vector3) : void
+    - RotateTowardsDirection(direction:Vector3) : void
+    + KnockbackForce(knockDirection:Vector3, knockBackAmount:float, variableAmount:float) : void
+    - _KnockbackForce(knockDirection:Vector3, knockBackAmount:float, variableAmount:float) : IEnumerator
+    - OnTriggerEnter(collide:Collider) : void
+    - OnTriggerExit(collide:Collider) : void
+    + LockMovement() : void
+    + UnlockMovement() : void
+    + AnimatorMove(deltaPosition:Vector3, rootRotation:Quaternion) : void
+    + IdleOnceAfterMoveUnlock() : void
+    + InstantSwitchOnceAfterMoveUnlock() : void
+}
+SuperStateMachine <|-- RPGCharacterMovementController
+RPGCharacterMovementController --> "superCharacterController" SuperCharacterController
+RPGCharacterMovementController --> "rpgCharacterController" RPGCharacterController
+RPGCharacterMovementController --> "rb" Rigidbody
+RPGCharacterMovementController --> "animator" Animator
+RPGCharacterMovementController --> "capCollider" CapsuleCollider
+RPGCharacterMovementController --> "lookDirection" Vector3
+RPGCharacterMovementController --> "currentVelocity" Vector3
+@enduml

@@ -1,0 +1,9 @@
+@startuml
+class SkeletonAI {
+    - Awake() : void
+    - Start() : void
+    - Update() : void
+    # <<override>> ConstructBehaviorTree() : void
+}
+EnemyAIBase <|-- SkeletonAI
+@enduml

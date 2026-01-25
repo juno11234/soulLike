@@ -1,0 +1,6 @@
+@startuml
+class DatabaseEditor {
+    + <<override>> OnInspectorGUI() : void
+}
+Editor <|-- DatabaseEditor
+@enduml

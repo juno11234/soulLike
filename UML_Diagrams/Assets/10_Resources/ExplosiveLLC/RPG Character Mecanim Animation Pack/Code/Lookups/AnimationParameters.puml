@@ -1,0 +1,31 @@
+@startuml
+class AnimationParameters {
+    + {static} <<readonly>> TriggerNumber : int
+    + {static} <<readonly>> Trigger : int
+    + {static} <<readonly>> Moving : int
+    + {static} <<readonly>> Aiming : int
+    + {static} <<readonly>> Stunned : int
+    + {static} <<readonly>> Swimming : int
+    + {static} <<readonly>> Blocking : int
+    + {static} <<readonly>> Injured : int
+    + {static} <<readonly>> Weapon : int
+    + {static} <<readonly>> WeaponSwitch : int
+    + {static} <<readonly>> Side : int
+    + {static} <<readonly>> LeftWeapon : int
+    + {static} <<readonly>> RightWeapon : int
+    + {static} <<readonly>> Jumping : int
+    + {static} <<readonly>> Action : int
+    + {static} <<readonly>> SheathLocation : int
+    + {static} <<readonly>> Talking : int
+    + {static} <<readonly>> VelocityX : int
+    + {static} <<readonly>> VelocityZ : int
+    + {static} <<readonly>> AimHorizontal : int
+    + {static} <<readonly>> AimVertical : int
+    + {static} <<readonly>> BowPull : int
+    + {static} <<readonly>> Charge : int
+    + {static} <<readonly>> AnimationSpeed : int
+    + {static} <<readonly>> Sprint : int
+    + {static} <<readonly>> Crouch : int
+    + {static} <<readonly>> Idle : int
+}
+@enduml

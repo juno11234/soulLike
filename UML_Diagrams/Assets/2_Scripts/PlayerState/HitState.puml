@@ -1,0 +1,11 @@
+@startuml
+class HitState {
+    - <<readonly>> _hit : int
+    + HitState(player:PlayerStateMachine)
+    + Enter() : void
+    + UpdateLogic() : void
+    + Exit() : void
+}
+IState <|-- HitState
+HitState --> "_player" PlayerStateMachine
+@enduml

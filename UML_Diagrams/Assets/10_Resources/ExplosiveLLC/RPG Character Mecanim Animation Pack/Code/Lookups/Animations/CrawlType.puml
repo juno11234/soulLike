@@ -1,0 +1,6 @@
+@startuml
+enum CrawlType {
+    Crawl= 1,
+    StopCrawl= 2,
+}
+@enduml

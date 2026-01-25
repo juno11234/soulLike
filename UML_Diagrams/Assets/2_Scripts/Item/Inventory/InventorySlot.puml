@@ -1,0 +1,9 @@
+@startuml
+class InventorySlot {
+    + Quantity : int
+    + InventorySlot(item:Item, quantity:int)
+    + AddQuantity(amount:int) : void
+    + RemoveQuantity(amount:int) : void
+}
+InventorySlot --> "Item" Item
+@enduml

@@ -1,0 +1,23 @@
+@startuml
+class RPGCharacterNavigationController {
+    + debugNavigation : bool
+    + isNavigating : bool
+    - moveSpeed : float = 1f
+    - rotationSpeed : float = 1f
+    - maxNavPathLength : float = 40f
+    - Awake() : void
+    - Start() : void
+    - Update() : void
+    - GetPathLength(path:NavMeshPath) : float
+    + CanMoveTo(destination:Vector3) : bool
+    + MeshNavToPoint(destination:Vector3) : void
+    + StopNavigating() : void
+    + StopAnimation() : void
+    - RotateTowardsMovementDir() : void
+}
+MonoBehaviour <|-- RPGCharacterNavigationController
+RPGCharacterNavigationController --> "navMeshAgent" NavMeshAgent
+RPGCharacterNavigationController --> "rpgCharacterController" RPGCharacterController
+RPGCharacterNavigationController --> "rpgCharacterMovementController" RPGCharacterMovementController
+RPGCharacterNavigationController --> "animator" Animator
+@enduml

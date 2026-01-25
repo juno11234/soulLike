@@ -1,0 +1,38 @@
+@startuml
+class PlayerMachine {
+    + WalkSpeed : float = 4.0f
+    + WalkAcceleration : float = 30.0f
+    + JumpAcceleration : float = 5.0f
+    + JumpHeight : float = 3.0f
+    + Gravity : float = 25.0f
+    - Start() : void
+    # <<override>> EarlyGlobalSuperUpdate() : void
+    # <<override>> LateGlobalSuperUpdate() : void
+    - AcquiringGround() : bool
+    - MaintainingGround() : bool
+    + RotateGravity(up:Vector3) : void
+    - LocalMovement() : Vector3
+    - CalculateJumpSpeed(jumpHeight:float, gravity:float) : float
+    - Idle_EnterState() : void
+    - Idle_SuperUpdate() : void
+    - Idle_ExitState() : void
+    - Walk_SuperUpdate() : void
+    - Jump_EnterState() : void
+    - Jump_SuperUpdate() : void
+    - Fall_EnterState() : void
+    - Fall_SuperUpdate() : void
+}
+enum PlayerStates {
+    Idle,
+    Walk,
+    Jump,
+    Fall,
+}
+SuperStateMachine <|-- PlayerMachine
+PlayerMachine --> "AnimatedMesh" Transform
+PlayerMachine --> "controller" SuperCharacterController
+PlayerMachine --> "moveDirection" Vector3
+PlayerMachine --> "lookDirection" Vector3
+PlayerMachine --> "input" PlayerInputController
+PlayerMachine +-- PlayerStates
+@enduml

@@ -1,0 +1,73 @@
+@startuml
+class "@PlayerControls" <<partial>> {
+    + @PlayerControls()
+    + Dispose() : void
+    + Contains(action:InputAction) : bool
+    + GetEnumerator() : IEnumerator<InputAction>
+    - GetEnumerator() : IEnumerator
+    + Enable() : void
+    + Disable() : void
+    + FindAction(actionNameOrId:string, throwIfNotFound:bool) : InputAction
+    + FindBinding(bindingMask:InputBinding, action:InputAction) : int
+}
+class "ReadOnlyArray`1"<T> {
+}
+class "IEnumerable`1"<T> {
+}
+class "List`1"<T> {
+}
+struct PlayerMovementActions {
+    + PlayerMovementActions(wrapper:@PlayerControls)
+    + Get() : InputActionMap
+    + Enable() : void
+    + Disable() : void
+    + enabled : bool <<get>>
+    + AddCallbacks(instance:IPlayerMovementActions) : void
+    - UnregisterCallbacks(instance:IPlayerMovementActions) : void
+    + RemoveCallbacks(instance:IPlayerMovementActions) : void
+    + SetCallbacks(instance:IPlayerMovementActions) : void
+}
+struct PlayerActionActions {
+    + PlayerActionActions(wrapper:@PlayerControls)
+    + Get() : InputActionMap
+    + Enable() : void
+    + Disable() : void
+    + enabled : bool <<get>>
+    + AddCallbacks(instance:IPlayerActionActions) : void
+    - UnregisterCallbacks(instance:IPlayerActionActions) : void
+    + RemoveCallbacks(instance:IPlayerActionActions) : void
+    + SetCallbacks(instance:IPlayerActionActions) : void
+}
+interface IPlayerMovementActions {
+    OnMovement(context:InputAction.CallbackContext) : void
+    OnCamera(context:InputAction.CallbackContext) : void
+}
+interface IPlayerActionActions {
+    OnRoll(context:InputAction.CallbackContext) : void
+}
+IInputActionCollection2 <|-- "@PlayerControls"
+IDisposable <|-- "@PlayerControls"
+"@PlayerControls" --> "asset" InputActionAsset
+"@PlayerControls" --> "bindingMask" InputBinding
+"@PlayerControls" --> "devices<InputDevice>" "ReadOnlyArray`1"
+"@PlayerControls" --> "controlSchemes<InputControlScheme>" "ReadOnlyArray`1"
+"@PlayerControls" --> "bindings<InputBinding>" "IEnumerable`1"
+"@PlayerControls" --> "m_PlayerMovement" InputActionMap
+"@PlayerControls" o-> "m_PlayerMovementActionsCallbackInterfaces<IPlayerMovementActions>" "List`1"
+"@PlayerControls" --> "m_PlayerMovement_Movement" InputAction
+"@PlayerControls" --> "m_PlayerMovement_Camera" InputAction
+"@PlayerControls" --> "@PlayerMovement" PlayerMovementActions
+"@PlayerControls" --> "m_PlayerAction" InputActionMap
+"@PlayerControls" o-> "m_PlayerActionActionsCallbackInterfaces<IPlayerActionActions>" "List`1"
+"@PlayerControls" --> "m_PlayerAction_Roll" InputAction
+"@PlayerControls" --> "@PlayerAction" PlayerActionActions
+"@PlayerControls" +-- PlayerMovementActions
+PlayerMovementActions --> "m_Wrapper" "@PlayerControls"
+PlayerMovementActions --> "@Movement" InputAction
+PlayerMovementActions --> "@Camera" InputAction
+"@PlayerControls" +-- PlayerActionActions
+PlayerActionActions --> "m_Wrapper" "@PlayerControls"
+PlayerActionActions --> "@Roll" InputAction
+"@PlayerControls" +-- IPlayerMovementActions
+"@PlayerControls" +-- IPlayerActionActions
+@enduml

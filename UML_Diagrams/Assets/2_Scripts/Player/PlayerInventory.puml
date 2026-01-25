@@ -1,0 +1,11 @@
+@startuml
+class PlayerInventory {
+    + inventorySize : int = 20
+    - Awake() : void
+    + AddItemToInventory(item:Item, quantity:int) : bool
+    + RemoveItemFromInventory(item:Item, quantity:int) : bool
+    + GetInventorySlot(index:int) : InventorySlot
+}
+MonoBehaviour <|-- PlayerInventory
+PlayerInventory --> "inventory" Inventory
+@enduml

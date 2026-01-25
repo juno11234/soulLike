@@ -1,0 +1,12 @@
+@startuml
+class MoveObjectTestCode {
+    - m_switch : bool = true
+    - Start() : void
+    - OnGUI() : void
+    - Update() : void
+}
+MonoBehaviour <|-- MoveObjectTestCode
+MoveObjectTestCode --> "m_PerfectLookAt" PerfectLookAt
+MoveObjectTestCode --> "m_Style" GUIStyle
+MoveObjectTestCode --> "m_Anim" Animator
+@enduml

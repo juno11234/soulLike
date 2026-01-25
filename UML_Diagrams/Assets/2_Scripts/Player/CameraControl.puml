@@ -1,0 +1,41 @@
+@startuml
+class CameraControl {
+    + IsLockedOn : bool <<get>>
+    - smoothSpeed : float = 10f
+    - lockOnHeightOffset : float = 1f
+    - cameraSensitivity : float = 0.3f
+    - cameraMinPitch : float
+    - cameraMaxPitch : float = 30f
+    - searchRadius : float = 10f
+    - isLockedOn : bool = false
+    + collideOffset : float = 0.2f
+    + cameraRadius : float = 0.3f
+    + moveSpeed : float = 15f
+    - _defaultDistance : float
+    - _yaw : float
+    - _pitch : float
+    - Start() : void
+    - Update() : void
+    - LateUpdate() : void
+    - HandleTargetSwitching(isQForLeft:bool) : void
+    - FindAndSwitchTarget(isLeft:bool) : void
+    - FollowPlayer() : void
+    - HandleCamera() : void
+    - CameraCollision() : void
+    - LockOn(isPressed:bool) : void
+    - UnlockOn() : void
+    - LockOnCamControl() : void
+}
+MonoBehaviour <|-- CameraControl
+CameraControl --> "CurrentTarget" LockOnTarget
+CameraControl --> "inputManager" InputManager
+CameraControl --> "player" Transform
+CameraControl --> "offset" Vector3
+CameraControl --> "cameraPivot" Transform
+CameraControl --> "cameraTransform" Transform
+CameraControl --> "targetLayer" LayerMask
+CameraControl --> "lockOnIndicator" RectTransform
+CameraControl --> "currentTarget" LockOnTarget
+CameraControl --> "collisionLayer" LayerMask
+CameraControl --> "_cameraVelocity" Vector3
+@enduml

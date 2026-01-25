@@ -1,0 +1,12 @@
+@startuml
+class WeaponHolderSlot {
+    + isLeftHandSlot : bool
+    + isRightHandSlot : bool
+    + UnloadWeapon() : void
+    + UnloadWeaponAndDestroy() : void
+    + LoadWeaponModel(weaponItem:WeaponItem) : void
+}
+MonoBehaviour <|-- WeaponHolderSlot
+WeaponHolderSlot --> "parentOverride" Transform
+WeaponHolderSlot --> "currentWeaponModel" GameObject
+@enduml

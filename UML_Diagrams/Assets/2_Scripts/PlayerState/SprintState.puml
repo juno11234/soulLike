@@ -1,0 +1,10 @@
+@startuml
+class SprintState {
+    + SprintState(player:PlayerStateMachine)
+    + Enter() : void
+    + UpdateLogic() : void
+    + Exit() : void
+}
+IState <|-- SprintState
+SprintState --> "_player" PlayerStateMachine
+@enduml

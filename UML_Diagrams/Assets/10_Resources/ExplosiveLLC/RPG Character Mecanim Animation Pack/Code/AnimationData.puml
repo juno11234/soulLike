@@ -1,0 +1,13 @@
+@startuml
+class AnimationData {
+    + {static} ConvertToAnimatorWeapon(leftWeapon:Weapon, rightWeapon:Weapon) : AnimatorWeapon
+    + {static} AttackDuration(attackSide:Side, weapon:Weapon, attackNumber:int) : float
+    + {static} SheathDuration(attackSide:Side, weapon:Weapon) : float
+    + {static} RandomAttackNumber(sideType:Side, weapon:Weapon) : int
+    + {static} RandomBow() : EmoteType
+    + {static} HitDirection(hitType:HitType) : Vector3
+    + {static} HitDirection(hitType:KnockbackType) : Vector3
+    + {static} HitDirection(hitType:BlockedHitType) : Vector3
+    + {static} HitDirection(hitType:KnockdownType) : Vector3
+}
+@enduml

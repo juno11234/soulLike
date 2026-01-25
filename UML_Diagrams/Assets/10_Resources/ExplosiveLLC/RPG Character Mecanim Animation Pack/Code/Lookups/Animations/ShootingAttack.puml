@@ -1,0 +1,7 @@
+@startuml
+enum ShootingAttack {
+    Unknown= 0,
+    Attack1= 1,
+    Attack2= 2,
+}
+@enduml

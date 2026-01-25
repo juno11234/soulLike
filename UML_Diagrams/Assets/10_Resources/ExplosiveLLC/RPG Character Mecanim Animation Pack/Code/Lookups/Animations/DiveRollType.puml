@@ -1,0 +1,5 @@
+@startuml
+enum DiveRollType {
+    DiveRoll1= 1,
+}
+@enduml

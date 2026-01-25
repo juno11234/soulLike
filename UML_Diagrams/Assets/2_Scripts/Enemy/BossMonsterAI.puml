@@ -1,0 +1,14 @@
+@startuml
+class BossMonsterAI {
+    + skillRange : float = 5f
+    + secondPhase : bool = false
+    + skillCool : bool = false
+    + skillTimer : float = 0f
+    - Awake() : void
+    - Start() : void
+    - Update() : void
+    + SecondPhase() : void
+    # <<override>> ConstructBehaviorTree() : void
+}
+EnemyAIBase <|-- BossMonsterAI
+@enduml

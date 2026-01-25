@@ -1,0 +1,14 @@
+@startuml
+class SkillTiming {
+    - firstIndex : int
+    - secondIndex : int
+    + startNormalizedTime : float = 0f
+    - _passStartTime : bool
+    + endNormalizedTime : float = 0f
+    - _passEndTime : bool
+    <<override>> + OnStateEnter(animator:Animator, stateInfo:AnimatorStateInfo, layerIndex:int) : void
+    <<override>> + OnStateUpdate(animator:Animator, stateInfo:AnimatorStateInfo, layerIndex:int) : void
+}
+StateMachineBehaviour <|-- SkillTiming
+SkillTiming --> "_self" ISkillAble
+@enduml

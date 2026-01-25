@@ -1,0 +1,9 @@
+@startuml
+class Test {
+    - Start() : void
+    - Update() : void
+    - OnTriggerEnter(other:Collider) : void
+}
+MonoBehaviour <|-- Test
+Test --> "_collider" Collider
+@enduml

@@ -1,0 +1,5 @@
+@startuml
+class BuildAuto <<static>> {
+    + {static} Build() : void
+}
+@enduml

@@ -1,0 +1,61 @@
+@startuml
+class RPGCharacterWeaponController {
+    + singleAnimSwitch : bool = true
+    + singleAnimSwitchDual : bool = true
+    + debugWalkthrough : bool = true
+    + debugIncomingWeaponContext : bool = true
+    + debugSwitchWeaponContext : bool = true
+    + debugDoWeaponSwitch : bool = true
+    + debugWeaponVisibility : bool = true
+    + debugSetAnimator : bool = true
+    - isWeaponSwitching : bool = false
+    - dualSwitch : bool
+    - Awake() : void
+    - Start() : void
+    + AddCallback(callback:System.Action) : void
+    + UnsheathWeapon(weapon:Weapon, dual:bool) : void
+    - _UnSheathWeapon(weapon:Weapon) : IEnumerator
+    + _DualUnSheath(weapon:Weapon) : IEnumerator
+    + SheathWeapon(fromWeapon:Weapon, toWeapon:Weapon, dual:bool) : void
+    + _SheathWeapon(weaponToSheath:Weapon, weaponToUnsheath:Weapon) : IEnumerator
+    + _DualSheath(weaponToSheath:Weapon, weaponToUnsheath:Weapon) : IEnumerator
+    + SheathAndUnSheath(weaponFrom:Weapon, weaponTo:Weapon, side:Side) : void
+    - _SheathAndUnSheath(weaponFrom:Weapon, weaponTo:Weapon, side:Side) : IEnumerator
+    + DualSheathAndUnSheath(weaponFrom:Weapon, weaponTo:Weapon, side:Side) : void
+    - _DualSheathAndUnSheath(weaponFrom:Weapon, weaponTo:Weapon, side:Side) : IEnumerator
+    + InstantWeaponSwitch(weapon:Weapon) : void
+    + _InstantWeaponSwitch(weapon:Weapon) : IEnumerator
+    - DoWeaponSwitch(weaponSwitch:int, weapon:Weapon, animatorWeapon:AnimatorWeapon, side:Side, sheath:bool) : void
+    - SetWeaponWithDebug(animatorWeapon:AnimatorWeapon, weaponSwitch:int, leftWeapon:Weapon, rightWeapon:Weapon, weaponSide:Side) : void
+    + WeaponSwitch() : void
+    + SafeSetVisibility(weaponObject:GameObject, visibility:bool) : void
+    + HideAllWeapons() : void
+    + _HideAllWeapons(timed:bool, resetToUnarmed:bool) : IEnumerator
+    + _WeaponVisibility(weaponNumber:Weapon, visible:bool, dual:bool) : IEnumerator
+    + SyncWeaponVisibility() : void
+    - _SyncWeaponVisibility() : IEnumerator
+}
+MonoBehaviour <|-- RPGCharacterWeaponController
+RPGCharacterWeaponController --> "rpgCharacterController" RPGCharacterController
+RPGCharacterWeaponController --> "animator" Animator
+RPGCharacterWeaponController --> "coroQueue" CoroutineQueue
+RPGCharacterWeaponController --> "twoHandAxe" GameObject
+RPGCharacterWeaponController --> "twoHandSword" GameObject
+RPGCharacterWeaponController --> "twoHandSpear" GameObject
+RPGCharacterWeaponController --> "twoHandBow" GameObject
+RPGCharacterWeaponController --> "twoHandCrossbow" GameObject
+RPGCharacterWeaponController --> "staff" GameObject
+RPGCharacterWeaponController --> "swordL" GameObject
+RPGCharacterWeaponController --> "swordR" GameObject
+RPGCharacterWeaponController --> "maceL" GameObject
+RPGCharacterWeaponController --> "maceR" GameObject
+RPGCharacterWeaponController --> "daggerL" GameObject
+RPGCharacterWeaponController --> "daggerR" GameObject
+RPGCharacterWeaponController --> "itemL" GameObject
+RPGCharacterWeaponController --> "itemR" GameObject
+RPGCharacterWeaponController --> "shield" GameObject
+RPGCharacterWeaponController --> "pistolL" GameObject
+RPGCharacterWeaponController --> "pistolR" GameObject
+RPGCharacterWeaponController --> "rifle" GameObject
+RPGCharacterWeaponController --> "spear" GameObject
+@enduml

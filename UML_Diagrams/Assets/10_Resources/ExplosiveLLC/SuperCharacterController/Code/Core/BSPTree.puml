@@ -1,0 +1,29 @@
+@startuml
+class BSPTree {
+    - drawMeshTreeOnStart : bool = false
+    - triangleCount : int
+    - vertexCount : int
+    - Awake() : void
+    - Start() : void
+    + ClosestPointOn(to:Vector3, radius:float) : Vector3
+    - FindClosestTriangles(node:Node, to:Vector3, radius:float, triangles:List<int>) : void
+    - ClosestPointOnTriangle(triangles:int[], to:Vector3) : Vector3
+    - BuildTriangleTree() : void
+    - RecursivePartition(triangles:List<int>, depth:int, parent:Node) : void
+    - Split(triangles:List<int>, partitionPoint:Vector3, partitionNormal:Vector3, positiveTriangles:List<int>, negativeTriangles:List<int>) : void
+    - PointAbovePlane(planeOrigin:Vector3, planeNormal:Vector3, point:Vector3) : bool
+    - PointDistanceFromPlane(planeOrigin:Vector3, planeNormal:Vector3, point:Vector3) : float
+    + {static} ClosestPointOnTriangleToPoint(vertex1:Vector3, vertex2:Vector3, vertex3:Vector3, point:Vector3, result:Vector3) : void
+    - DrawTriangleSet(triangles:int[], color:Color) : void
+}
+class Node {
+}
+MonoBehaviour <|-- BSPTree
+BSPTree --> "mesh" Mesh
+BSPTree --> "tree" Node
+BSPTree +-- Node
+Node --> "partitionPoint" Vector3
+Node --> "partitionNormal" Vector3
+Node --> "positiveChild" Node
+Node --> "negativeChild" Node
+@enduml

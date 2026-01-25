@@ -1,0 +1,27 @@
+@startuml
+class CombatSystem {
+    - <<const>> Max_Event_Count : int = 10
+    - Awake() : void
+    - Update() : void
+    + RegisterFighter(monster:FighterView) : void
+    + GetFighter(coll:Collider) : FighterView
+    + RemoveFighter(coll:Collider) : void
+    + AddInGameEvent(e:InGameEvent) : void
+}
+class Callback {
+}
+class "Dictionary`2"<T1,T2> {
+}
+class "Queue`1"<T> {
+}
+class "Action`1"<T> {
+}
+MonoBehaviour <|-- CombatSystem
+CombatSystem --> "Instance" CombatSystem
+CombatSystem o-> "fightersDict<Collider,FighterView>" "Dictionary`2"
+CombatSystem o-> "eventQueue<InGameEvent>" "Queue`1"
+CombatSystem o-> "Events" Callback
+CombatSystem +-- Callback
+Callback --> "OnCombatEvent<CombatEvent>" "Action`1"
+Callback --> "OnHealEvent<HealthEvent>" "Action`1"
+@enduml

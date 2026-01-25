@@ -1,0 +1,6 @@
+@startuml
+class CollectionExtensions <<static>> {
+    + {static} TakeRandom(collection:ICollection<T>) : T
+    + {static} TakeRandom(array:T[]) : T
+}
+@enduml

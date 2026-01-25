@@ -5,7 +5,8 @@ public class FighterViewModel
     private readonly FighterStats _stats;
 
     // View가 구독할 수 있는 데이터
-    public readonly Observable<int> CurrentHealth;
+    private readonly Observable<int> CurrentHealth;
+    public readonly Observable<float> HealthRatio;
     public readonly Observable<float> CurrentStamina;
 
     // View에게 특정 액션을 알리는 이벤트
@@ -19,12 +20,14 @@ public class FighterViewModel
     {
         _stats = stats;
         CurrentHealth = new Observable<int>(_stats.MaxHealth);
+        HealthRatio = new Observable<float>(1.0f);
         CurrentStamina = new Observable<float>(_stats.MaxStamina);
     }
 
     public void Respawn()
     {
         CurrentHealth.Value = _stats.MaxHealth;
+        HealthRatio.Value = 1.0f;
         OnTakeDamage?.Invoke(0);
         _isDead = false;
     }
@@ -49,6 +52,7 @@ public class FighterViewModel
         {
             OnTakeDamage?.Invoke(damage);
         }
+        HealthRatio.Value = (float)CurrentHealth.Value / _stats.MaxHealth;
     }
 
     public void StaminaChange(float value)
@@ -82,5 +86,6 @@ public class FighterViewModel
         {
             CurrentHealth.Value += heal;
         }
+        HealthRatio.Value = (float)CurrentHealth.Value / _stats.MaxHealth;
     }
 }

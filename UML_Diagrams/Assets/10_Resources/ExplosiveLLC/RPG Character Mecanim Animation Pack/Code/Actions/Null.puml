@@ -1,0 +1,9 @@
+@startuml
+class Null {
+    + <<override>> CanStartAction(controller:RPGCharacterController) : bool
+    # <<override>> _StartAction(controller:RPGCharacterController, context:EmptyContext) : void
+}
+class "InstantActionHandler`1"<T> {
+}
+"InstantActionHandler`1" "<EmptyContext>" <|-- Null
+@enduml

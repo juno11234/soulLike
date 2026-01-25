@@ -1,0 +1,10 @@
+@startuml
+class SuperCharacterController <<partial>> {
+}
+struct IgnoredCollider {
+    + layer : int
+    + IgnoredCollider(collider:Collider, layer:int)
+}
+SuperCharacterController +-- IgnoredCollider
+IgnoredCollider --> "collider" Collider
+@enduml

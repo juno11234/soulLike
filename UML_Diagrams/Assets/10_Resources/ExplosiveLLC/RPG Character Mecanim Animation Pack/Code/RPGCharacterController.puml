@@ -1,0 +1,165 @@
+@startuml
+class RPGCharacterController {
+    +  <<event>> OnLockActions : System.Action 
+    +  <<event>> OnUnlockActions : System.Action 
+    +  <<event>> OnLockMovement : System.Action 
+    +  <<event>> OnUnlockMovement : System.Action 
+    + animationSpeed : float = 1
+    + headLook : bool = false
+    + isHeadlook : bool <<get>>
+    - _isHeadlook : bool = false
+    + idleAlert : bool = true
+    + canAction : bool <<get>>
+    - _canAction : bool
+    + canFace : bool <<get>>
+    - _canFace : bool = true
+    + canMove : bool <<get>>
+    - _canMove : bool
+    + canStrafe : bool <<get>>
+    - _canStrafe : bool = true
+    + acquiringGround : bool <<get>>
+    + isAiming : bool <<get>>
+    + isAttacking : bool <<get>>
+    - _isAttacking : bool
+    + isBlocking : bool <<get>>
+    + isCasting : bool <<get>>
+    + isClimbing : bool <<get>>
+    + isCrouching : bool <<get>>
+    + isCrawling : bool <<get>>
+    + isDead : bool <<get>>
+    + isFacing : bool <<get>>
+    + isFalling : bool <<get>>
+    + isHipShooting : bool <<get>>
+    + isIdle : bool <<get>>
+    + isInjured : bool <<get>>
+    + isMoving : bool <<get>>
+    + isNavigating : bool <<get>>
+    + isNearCliff : bool = false
+    + isNearLadder : bool = false
+    + isRelaxed : bool <<get>>
+    + isRolling : bool <<get>>
+    + isKnockback : bool <<get>>
+    + isKnockdown : bool <<get>>
+    + isSitting : bool = false
+    + isSpecial : bool = false
+    + isSprinting : bool <<get>>
+    + isStrafing : bool <<get>>
+    + isSwimming : bool <<get>>
+    + isTalking : bool = false
+    + maintainingGround : bool <<get>>
+    + bowPull : float <<get>>
+    - _bowPull : float
+    + hasRightWeapon : bool <<get>>
+    + hasLeftWeapon : bool <<get>>
+    + hasDualWeapons : bool <<get>>
+    + hasTwoHandedWeapon : bool <<get>>
+    + hasShield : bool <<get>>
+    + hasAimedWeapon : bool <<get>>
+    + hasNoWeapon : bool <<get>>
+    + hasCastableWeapon : bool <<get>>
+    - Awake() : void
+    + SetHandler(action:string, handler:IActionHandler) : void
+    + GetHandler(action:string) : IActionHandler
+    + HandlerExists(action:string) : bool
+    + TryGetHandlerActive(action:string) : bool
+    + IsActive(action:string) : bool
+    + CanStartAction(action:string) : bool
+    + TryStartAction(action:string, context:object) : bool
+    + TryEndAction(action:string) : bool
+    + CanEndAction(action:string) : bool
+    + StartAction(action:string, context:object) : void
+    + EndAction(action:string) : void
+    - LateUpdate() : void
+    + SetMoveInput(_moveInput:Vector3) : void
+    + SetFaceInput(_faceInput:Vector3) : void
+    + SetAimInput(_aimInput:Vector3) : void
+    + SetJumpInput(_jumpInput:Vector3) : void
+    + SetBowPull(_bowPull:float) : void
+    + ToggleHeadlook() : void
+    + Shoot(action:int) : void
+    + Reload() : void
+    + Aim(aiming:bool, target:Vector3, bowPull:float) : void
+    + StopAim() : void
+    + StartSprint() : void
+    + EndSprint() : void
+    + Turn(turnType:TurnType) : void
+    + DiveRoll(rollType:DiveRollType) : void
+    + Roll(rollNumber:RollType) : void
+    + Knockback(direction:KnockbackType) : void
+    + Knockdown(direction:KnockdownType) : void
+    + Dodge(dodgeType:DodgeType) : void
+    + ClimbLadder(climbType:ClimbType) : void
+    + Crawl() : void
+    + EndCrawl() : void
+    + GetAngry() : void
+    + Attack(attackNumber:int, attackSide:Side, leftWeapon:Weapon, rightWeapon:Weapon, duration:float) : void
+    + RunningAttack(side:Side, leftWeapon:bool, rightWeapon:bool, dualWeapon:bool, twoHandedWeapon:bool) : void
+    + AirAttack() : void
+    + AttackKick(kickSide:int) : void
+    + StartSpecial(special:int) : void
+    + EndSpecial() : void
+    + StartCast(castType:CastType, attackSide:Side) : void
+    + StartCast(attackCastType:AttackCastType, attackSide:Side) : void
+    + EndCast() : void
+    + StartBlock() : void
+    + EndBlock() : void
+    + StartFace() : void
+    + EndFace() : void
+    + StartStrafe() : void
+    + EndStrafe() : void
+    + GetHit(hitNumber:int) : void
+    + Death() : void
+    + Revive() : void
+    + Sit() : void
+    + Laydown() : void
+    + Stand() : void
+    + Pickup() : void
+    + Activate() : void
+    + Drink() : void
+    + Bow() : void
+    + No() : void
+    + Yes() : void
+    + Boost() : void
+    + StartInjured() : void
+    + EndInjured() : void
+    + StartCrouch() : void
+    + EndCrouch() : void
+    + StartConversation() : void
+    + EndConversation() : void
+    - _PlayConversationClip() : IEnumerator
+    + RandomIdle() : void
+    + GetAnimatorTarget() : GameObject
+    - CurrentAnimationLength(animationlayer:int) : float
+    - LockHeadlook() : void
+    - UnlockHeadlook() : void
+    + Lock(lockMovement:bool, lockAction:bool, timed:bool, delayTime:float, lockTime:float) : void
+    - _Lock(lockMovement:bool, lockAction:bool, timed:bool, delayTime:float, lockTime:float) : IEnumerator
+    + Unlock(movement:bool, actions:bool) : void
+    + SetIKOff() : void
+    + SetIKOn(weapon:Weapon) : void
+    + SetIKPause(pauseTime:float) : void
+}
+class "Dictionary`2"<T1,T2> {
+}
+MonoBehaviour <|-- RPGCharacterController
+RPGCharacterController --> "animator" Animator
+RPGCharacterController --> "mainCamera" Camera
+RPGCharacterController --> "ikHands" IKHands
+RPGCharacterController --> "ladder" Collider
+RPGCharacterController --> "cliff" Collider
+RPGCharacterController --> "target" Transform
+RPGCharacterController --> "headLookController" PerfectLookAt
+RPGCharacterController --> "moveInput" Vector3
+RPGCharacterController --> "_moveInput" Vector3
+RPGCharacterController --> "aimInput" Vector3
+RPGCharacterController --> "_aimInput" Vector3
+RPGCharacterController --> "faceInput" Vector3
+RPGCharacterController --> "_faceInput" Vector3
+RPGCharacterController --> "jumpInput" Vector3
+RPGCharacterController --> "_jumpInput" Vector3
+RPGCharacterController --> "cameraRelativeInput" Vector3
+RPGCharacterController --> "_cameraRelativeInput" Vector3
+RPGCharacterController o-> "rightWeapon" Weapon
+RPGCharacterController o-> "leftWeapon" Weapon
+RPGCharacterController o-> "actionHandlers<string,IActionHandler>" "Dictionary`2"
+@enduml

@@ -1,0 +1,19 @@
+@startuml
+class FighterViewModel {
+    +  <<event>> OnTakeDamage : Action<int> 
+    +  <<event>> OnStaminaZero : Action 
+    +  <<event>> OnDied : Action 
+    +  <<event>> OnSecondPhase : Action 
+    - _isDead : bool
+    + FighterViewModel(stats:FighterStats)
+    + Respawn() : void
+    + TakeDamage(damage:int) : void
+    + StaminaChange(value:float) : void
+    + TakeHeal(heal:int) : void
+}
+class "Observable`1"<T> {
+}
+FighterViewModel --> "_stats" FighterStats
+FighterViewModel --> "CurrentHealth<int>" "Observable`1"
+FighterViewModel --> "CurrentStamina<float>" "Observable`1"
+@enduml

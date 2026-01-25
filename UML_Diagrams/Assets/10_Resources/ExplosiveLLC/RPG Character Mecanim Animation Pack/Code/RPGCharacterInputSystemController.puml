@@ -1,0 +1,7 @@
+@startuml
+class RPGCharacterInputSystemController {
+    - Start() : void
+    + PauseInput(timeout:float) : void
+}
+MonoBehaviour <|-- RPGCharacterInputSystemController
+@enduml

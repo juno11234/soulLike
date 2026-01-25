@@ -1,0 +1,26 @@
+@startuml
+class SuperStateMachine {
+    # timeEnteredState : float
+    - ChangingState() : void
+    - ConfigureCurrentState() : void
+    - ConfigureDelegate(methodRoot:string, Default:T) : T
+    - SuperUpdate() : void
+    # <<virtual>> EarlyGlobalSuperUpdate() : void
+    # <<virtual>> LateGlobalSuperUpdate() : void
+    - {static} DoNothing() : void
+}
+class State {
+}
+class "Dictionary`2"<T1,T2> {
+}
+MonoBehaviour <|-- SuperStateMachine
+SuperStateMachine o-> "state" State
+SuperStateMachine --> "currentState" Enum
+SuperStateMachine --> "lastState" Enum
+SuperStateMachine o-> "_cache<Enum,Dictionary<string, Delegate>>" "Dictionary`2"
+SuperStateMachine +-- State
+State o-> "DoSuperUpdate" Action
+State o-> "enterState" Action
+State o-> "exitState" Action
+State --> "currentState" Enum
+@enduml

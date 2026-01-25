@@ -1,0 +1,7 @@
+@startuml
+class CastContext {
+    + CastContext(type:CastType, side:Side)
+}
+CastContext --> "Type" CastType
+CastContext --> "Side" Side
+@enduml

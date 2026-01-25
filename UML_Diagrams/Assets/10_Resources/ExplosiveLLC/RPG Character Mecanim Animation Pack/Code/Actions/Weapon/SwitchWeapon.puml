@@ -1,0 +1,24 @@
+@startuml
+class SwitchWeaponContext {
+    + type : string
+    + side : string
+    + sheathLocation : string
+    + SwitchWeaponContext()
+    + SwitchWeaponContext(type:string, side:string, sheathLocation:string, rightWeapon:Weapon, leftWeapon:Weapon)
+    + LowercaseStrings() : void
+}
+class SwitchWeapon {
+    + <<override>> CanStartAction(controller:RPGCharacterController) : bool
+    + <<override>> CanEndAction(controller:RPGCharacterController) : bool
+    # <<override>> _StartAction(controller:RPGCharacterController, context:SwitchWeaponContext) : void
+    - EndSwitch(controller:RPGCharacterController, weaponController:RPGCharacterWeaponController, changeRight:bool, toRightWeapon:Weapon, changeLeft:bool, toLeftWeapon:Weapon) : void
+    - {static} DebugIncomingContext(context:SwitchWeaponContext) : void
+    - {static} DebugSwitchWeapon(weaponController:RPGCharacterWeaponController, context:SwitchWeaponContext, changeRight:bool, changeLeft:bool, sheathRight:bool, sheathLeft:bool, unsheathRight:bool, unsheathLeft:bool, fromRightWeapon:Weapon, toRightWeapon:Weapon, fromLeftWeapon:Weapon, toLeftWeapon:Weapon, dualWielding:bool, dualUnsheath:bool, dualSheath:bool) : void
+    # <<override>> _EndAction(controller:RPGCharacterController) : void
+}
+class "BaseActionHandler`1"<T> {
+}
+SwitchWeaponContext --> "rightWeapon" Weapon
+SwitchWeaponContext --> "leftWeapon" Weapon
+"BaseActionHandler`1" "<SwitchWeaponContext>" <|-- SwitchWeapon
+@enduml

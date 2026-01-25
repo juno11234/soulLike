@@ -1,0 +1,11 @@
+@startuml
+class RollState {
+    - <<readonly>> _roll : int
+    + RollState(player:PlayerStateMachine)
+    + Enter() : void
+    + UpdateLogic() : void
+    + Exit() : void
+}
+IState <|-- RollState
+RollState --> "_player" PlayerStateMachine
+@enduml

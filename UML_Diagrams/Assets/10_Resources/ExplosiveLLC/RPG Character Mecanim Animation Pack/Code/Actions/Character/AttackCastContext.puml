@@ -1,0 +1,7 @@
+@startuml
+class AttackCastContext {
+    + AttackCastContext(type:AttackCastType, side:Side)
+}
+AttackCastContext --> "Type" AttackCastType
+AttackCastContext --> "Side" Side
+@enduml

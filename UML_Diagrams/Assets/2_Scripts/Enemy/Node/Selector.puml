@@ -1,0 +1,25 @@
+@startuml
+class Selector {
+    + Selector(children:List<BtNode>)
+    + <<override>> Evaluate() : NodeState
+}
+class Selector_Random {
+    + Selector_Random(children:List<BtNode>)
+    + <<override>> Evaluate() : NodeState
+}
+class Sequence {
+    + Sequence()
+    + Sequence(children:List<BtNode>)
+    + <<override>> Evaluate() : NodeState
+}
+class Sequence_Memory {
+    - _lastRunningChildIndex : int = 0
+    + Sequence_Memory(children:List<BtNode>)
+    + <<override>> Evaluate() : NodeState
+}
+BtNode <|-- Selector
+BtNode <|-- Selector_Random
+Selector_Random --> "_chosenNode" BtNode
+BtNode <|-- Sequence
+BtNode <|-- Sequence_Memory
+@enduml

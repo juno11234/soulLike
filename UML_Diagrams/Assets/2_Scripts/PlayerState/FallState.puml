@@ -1,0 +1,12 @@
+@startuml
+class FallState {
+    - <<readonly>> _land : int
+    - <<readonly>> _fall : int
+    + FallState(player:PlayerStateMachine)
+    + Enter() : void
+    + UpdateLogic() : void
+    + Exit() : void
+}
+IState <|-- FallState
+FallState --> "_player" PlayerStateMachine
+@enduml

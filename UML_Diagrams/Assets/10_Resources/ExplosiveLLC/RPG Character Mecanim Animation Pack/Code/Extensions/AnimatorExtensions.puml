@@ -1,0 +1,25 @@
+@startuml
+class AnimatorExtensions <<static>> {
+    + {static} SetAnimatorTrigger(animator:Animator, trigger:AnimatorTrigger) : void
+    + {static} SetActionTrigger(animator:Animator, trigger:AnimatorTrigger, actionNumber:int) : void
+    + {static} TriggerEmote(animator:Animator, emote:EmoteType) : void
+    + {static} SetSide(animator:Animator, side:Side) : void
+    + {static} TriggerTalking(animator:Animator, talkType:TalkType) : void
+    + {static} TriggerDodge(animator:Animator, dodgeType:DodgeType) : void
+    + {static} TriggerClimb(animator:Animator, climbType:ClimbType) : void
+    + {static} TriggerCrawl(animator:Animator, crawlType:CrawlType) : void
+    + {static} TriggerTurn(animator:Animator, turnType:TurnType) : void
+    + {static} TriggerDiveRoll(animator:Animator, rollType:DiveRollType) : void
+    + {static} TriggerRoll(animator:Animator, rollType:RollType) : void
+    + {static} TriggerKnockback(animator:Animator, knockbackType:KnockbackType) : void
+    + {static} TriggerKnockdown(animator:Animator, knockdownType:KnockdownType) : void
+    + {static} TriggerCast(animator:Animator, castType:CastType) : void
+    + {static} TriggerAttackCast(animator:Animator, castType:AttackCastType) : void
+    + {static} TriggerGettingHit(animator:Animator, hitType:HitType) : void
+    + {static} TriggerGettingHit(animator:Animator, hitType:int) : void
+    + {static} TriggerBlockGettingHit(animator:Animator, hitType:BlockedHitType) : void
+    + {static} LegacySetAnimationTrigger(animator:Animator, trigger:string) : void
+    + {static} DebugAnimatorParameters(animator:Animator) : void
+    + {static} SetWeapons(animator:Animator, animatorWeapon:AnimatorWeapon, weaponSwitch:int, leftWeapon:Weapon, rightWeapon:Weapon, weaponSide:Side) : void
+}
+@enduml

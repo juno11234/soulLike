@@ -1,0 +1,9 @@
+@startuml
+class PlayerEquipment {
+    +  <<event>> onEquipmentChanged : OnEquipmentChanged 
+    + Equip(newItem:WeaponItem) : void
+    + Unequip() : WeaponItem
+}
+MonoBehaviour <|-- PlayerEquipment
+PlayerEquipment --> "equippedWeapon" WeaponItem
+@enduml

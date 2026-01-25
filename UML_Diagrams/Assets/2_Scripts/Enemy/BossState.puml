@@ -1,0 +1,14 @@
+@startuml
+class BossState {
+    # <<override>> Dead() : void
+    # <<override>> Initialized() : void
+    - SecondParticleOn() : void
+    + UseSkillFirstTiming(skillIndex:int) : void
+    + UseSkillSecondTiming(skillIndex:int) : void
+}
+EnemyState <|-- BossState
+ISkillAble <|-- BossState
+BossState --> "secondPhaseParticle" GameObject
+BossState --> "boneFire" GameObject
+BossState --> "bossWall" GameObject
+@enduml
